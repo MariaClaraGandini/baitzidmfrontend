@@ -40,6 +40,7 @@ function Navbar() {
      backgroundColor:'white',
      position: 'fixed',
      boxShadow: 'rgba(0.4, 0.4, 0.4, 0.2) 3px 2px 8px',
+     marginBottom:'5rem'
     }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>

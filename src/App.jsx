@@ -26,7 +26,7 @@ function App() {
   return (
     <ThemeProvider theme={customTheme}>
       <Navbar />
-        <Outlet style={{marginTop:'300px'}} />
+        <Outlet />
         </ThemeProvider>
   );
 }

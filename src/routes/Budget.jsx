@@ -24,7 +24,7 @@ function Budget() {
       marginTop: '7rem',
       borderRadius: '10px', // Valor ajustável para arredondar as bordas
     }}>
-    <h1 className="titulo-customizado">Orçamento</h1>
+    <h1 className="titulo-customizado" style={{textAlign: 'center'}}>Orçamento</h1>
 
       <TextField
         margin="normal"
@@ -80,7 +80,7 @@ function Budget() {
       />
       </Grid>
       </Grid>
-     <h2 className="titulo-customizado" style={{fontSize:"40px"}}>Formação Musical</h2>
+     <h2 className="titulo-customizado" style={{fontSize:"40px", textAlign: 'center'}}>Formação Musical</h2>
 
       <FormControl fullWidth>
         <FormControlLabel
