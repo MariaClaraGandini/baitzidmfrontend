@@ -11,6 +11,7 @@ import ErrorPage from './routes/ErrorPage.jsx';
 import Videos from './routes/Videos.jsx';
 import Budget from './routes/Budget.jsx';
 import SignUp from './routes/SignUp.jsx';
+import Videostest from  './routes/Videostest.jsx'
 
 const root = createRoot(document.getElementById('root'));
 root.render(
@@ -22,6 +23,7 @@ root.render(
           <Route path="/entrar" element={<SignIn />} />
           <Route path="/registrar" element={<SignUp />} />
           <Route path="/videos" element={<Videos />} />
+          <Route path="/videos2" element={<Videostest />} />
           <Route path="/orcamento" element={<Budget />} />
         </Route>
         <Route path="*" element={<ErrorPage />} />
