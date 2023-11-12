@@ -1,0 +1,149 @@
+a{
+    color: rgb(110, 110, 110);
+}
+
+.fc .fc-daygrid-day.fc-day-today {
+    background-color: transparent;
+ 
+}
+
+.fc .fc-daygrid-day.fc-day-today a{
+    background-color: #c0623c;
+    border-radius: 30px;
+    color:white;
+    font-weight: 00;
+    width: 2rem;
+    text-align: center;
+    margin: 3px;
+}
+
+
+.container{
+    padding: 2rem;
+    margin-top:3rem;
+}
+.fc-event{
+    background-color: rgb(255, 240, 217);
+}
+.fc-today-button, .fc-button ,.fc-button-primary{
+    background-color: aliceblue;
+}
+
+.fc-col-header-cell-cushion{
+    font-weight: bold;
+}
+
+.fc-daygrid-event-dot{
+   border-color: #c0623c;;
+}
+
+
+/* Estilos padrão para o cabeçalho */
+.fc-header-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  /* Adapte para dispositivos menores */
+  @media (max-width: 600px) {
+    .fc-header-toolbar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .fc-header-toolbar .fc-center {
+      order: 2; /* Mude a ordem para movê-lo para baixo na coluna */
+      margin-bottom: 5px; /* Adapte a margem conforme necessário */
+    }
+  
+    .fc-header-toolbar .fc-end {
+      order: 1; /* Mude a ordem para movê-lo para cima na coluna */
+    }
+  
+    .fc-header-toolbar button {
+      margin-bottom: 5px; /* Adapte a margem conforme necessário */
+    }
+  }
+  
+
+.fc-button-group button{
+    background-color: #c0623c;
+}
+
+/* .fc .fc-button-primary{
+    background-color: rgb(91, 90, 90);
+    border-color: rgb(64, 64, 64);
+
+}
+
+.fc .fc-button-primary:hover{
+    background-color: rgb(70, 70, 70);
+
+}
+
+.fc .fc-button-primary:not(:disabled).fc-button-active{
+    background-color: rgb(48, 48, 48);
+
+} */
+
+
+.fc .fc-button-primary, .fc-today-button{
+    background-color: transparent;
+    border-color: transparent;
+    color:rgb(55, 55, 55);
+    padding-left:0.4rem;
+    padding-right:0.4rem;
+    padding-bottom: 0.2rem;
+
+
+}
+
+.fc .fc-button-primary:disabled{
+    color: #000;
+    background-color: transparent;
+    border: transparent;
+}
+
+.fc .fc-button-primary:hover{
+    background-color: transparent;
+    border:0 solid transparent;
+    border-bottom: 2px solid #c0623c; /* Substitua #000 pela cor desejada */
+    color:#c0623c}
+
+
+    
+.fc .fc-button-primary:not(:disabled).fc-button-active,
+.fc .fc-today-button .fc-button-primary:disabled{
+    background-color: transparent;
+    border: 0 solid transparent;
+    -webkit-outline: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    border-bottom: 2px solid #c0623c; /* Substitua #000 pela cor desejada */
+    color: #c0623c;
+}
+.fc-button-primary:focus{
+    background-color: transparent;
+    border: 0 solid transparent;
+    -webkit-outline: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    border-bottom: 2px solid #c0623c; /* Substitua #000 pela cor desejada */
+    color:#c0623c
+}
+
+
+
+/* Botões Próximo e Anterior */
+.fc-next-button:hover,
+.fc-prev-button:hover,
+.fc-next-button:focus,
+.fc-prev-button:focus
+{
+    border: 0 solid transparent !important;
+    color: #000;
+    background-color: transparent;
+
+}
+

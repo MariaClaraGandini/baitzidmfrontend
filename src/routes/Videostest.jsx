@@ -5,6 +5,7 @@ import { Grid, Card, CardContent } from '@mui/material';
 export default function VideoGallery() {
   const [videos, setVideos] = useState([]);
   const [selectedVideo, setSelectedVideo] = useState(null); // Estado para o vídeo selecionado
+  const [defaultVideo, setDefaultVideo] = useState('70w85gZ0wj0'); // Vídeo padrão
 
 
   useEffect(() => {
@@ -43,33 +44,30 @@ export default function VideoGallery() {
       <Grid container style={{ width: '100%', padding:'1rem' }} spacing={2}>
         <Grid item xs={12} sm={6}>
         {selectedVideo ? (
-          <div className="videocontainer">
-           <iframe
-                width="100%"
-                height="100%"
-                style={{borderRadius:"0.5rem"}}
-                src={`https://www.youtube.com/embed/${selectedVideo.videoId}`}
-                title={selectedVideo.title}
-                frameBorder="0"
-                allowFullScreen
-              ></iframe>
-
-          </div>
-        ) :(
-          <div className="videocontainer">
-          <iframe
-               width="100%"
-               height="100%"
-               style={{borderRadius:"0.5rem"}}
-               src={`https://www.youtube.com/embed/70w85gZ0wj0`}
-               title={selectedVideo.title}
-               frameBorder="0"
-               allowFullScreen
-             ></iframe>
-
-         </div>
-
-        )}
+  <div className="videocontainer">
+    <iframe
+      width="100%"
+      height="100%"
+      style={{ borderRadius: "0.5rem" }}
+      src={`https://www.youtube.com/embed/${selectedVideo.videoId}`}
+      title={selectedVideo.title} // Título do vídeo selecionado
+      frameBorder="0"
+      allowFullScreen
+    ></iframe>
+  </div>
+) : (
+  <div className="videocontainer">
+    <iframe
+      width="100%"
+      height="100%"
+      style={{ borderRadius: "0.5rem" }}
+      src={`https://www.youtube.com/embed/${defaultVideo}`}
+      title="Vídeo Padrão" // Título do vídeo padrão
+      frameBorder="0"
+      allowFullScreen
+    ></iframe>
+  </div>
+)}
           <p className="titulovideo">Marcha Nupcial</p>
         </Grid>
         <Grid item xs={12} sm={6}>

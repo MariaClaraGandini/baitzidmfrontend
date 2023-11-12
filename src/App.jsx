@@ -2,6 +2,7 @@
 import './App.css';
 import { Outlet } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const customTheme = createTheme({
@@ -27,6 +28,7 @@ function App() {
     <ThemeProvider theme={customTheme}>
       <Navbar />
         <Outlet />
+      <Footer />
         </ThemeProvider>
   );
 }
