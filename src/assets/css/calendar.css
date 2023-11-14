@@ -147,3 +147,55 @@ a{
 
 }
 
+
+
+
+/* MODAL */
+
+/* Adicione ou ajuste essas regras CSS conforme necessário */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal {
+    position: relative;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 600px;
+    width: 100%;
+    z-index: 1001;
+    margin-top: 3rem;
+  }
+  
+  .modal-close-button {
+    position: absolute;
+    top: 10px; /* Ajustado para o canto superior direito */
+    right: 10px; /* Ajustado para o canto direito */
+    background-color: #ffff;
+    color: #cacaca; /* Adiciona cor ao ícone "x" */
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 18px; /* Tamanho do ícone "x" */
+    line-height: 1; /* Alinha o ícone verticalmente no meio do círculo */
+  }
+  
+  @font-face {
+    font-family: 'Notera';
+    src: url('./fonts/Notera.ttf') format('truetype');
+  }
+  
+  .titulo-customizado {
+    font-family: 'Notera', sans-serif;
+    color:#c0623c;
+      }
