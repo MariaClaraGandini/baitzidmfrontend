@@ -56,7 +56,7 @@ function Calendar() {
         },
         body: JSON.stringify({
           title: eventName,
-          start: `${eventDate}T${eventHour}:00`,
+          start: `${eventDate}T${eventHour}:00.000Z`,
           local: eventLocal,
           description: eventDescription,
         }),
