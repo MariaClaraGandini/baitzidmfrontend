@@ -4,17 +4,15 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import ptBrLocale from "@fullcalendar/core/locales/pt-br";
-import '../index.css'
-
-import "../assets/css/calendar.css"; // Importe seu arquivo CSS aqui
 import Modal from "../components/Modal"
 import TextField from '@mui/material/TextField';
-import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import { getAllEvents } from "../api/calendar";
-
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import '../index.css'
+import "../assets/css/calendar.css"; // Importe seu arquivo CSS aqui
 
 function Calendar() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -24,19 +22,21 @@ function Calendar() {
   const [eventDescription, setEventDescription] = useState('');
   const [eventLocal, setEventLocal] = useState('');
   const [events, setEvents] = useState([]);
+  const [event, setEvent] = useState([]);
 
 
+  const fetchEvents = async () => {
+    try {
+      const data = await getAllEvents();
+      setEvents(data);
+      console.log(data)
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+// Usa método GET quando carrega a tela
   useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const data = await getAllEvents();
-        setEvents(data);
-        console.log(data)
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
     fetchEvents();
   }, []);
 
@@ -45,10 +45,9 @@ function Calendar() {
     
   };
 
-
+//Cria o evento
   const handleCreateEvent = async () => {
     try {
-      // Enviar dados do evento para o backend
       const response = await fetch('http://localhost:5000/event/create', {
         method: 'POST',
         headers: {
@@ -65,7 +64,8 @@ function Calendar() {
       if (response.ok) {
         // Lógica de sucesso
         setModalOpen(false); // Fechar o modal após o sucesso
-      
+        fetchEvents();
+       toast.success("Evento cadastrado com sucesso!");
       } else {
         console.log(eventHour)
         console.log(eventDate)
@@ -78,6 +78,25 @@ function Calendar() {
       // Lógica de erro
     }
   };
+  const handleEventClick = async (eventClickInfo) => {
+    try {
+      const eventId = eventClickInfo.event.extendedProps._id;
+      console.log(eventId)
+      
+      const response = await fetch(`http://localhost:5000/event/getEvent/${eventId}`);
+      if (response.ok) {
+        const eventData = await response.json();
+        setEvent(eventData.event);
+        setModalOpen(true);
+        setEventName(event.title)
+      } else {
+        // Lógica de erro ao obter detalhes do evento
+        console.error("Erro na resposta do servidor:", response.status, response.statusText);      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
 
   return (
     <div className="container">
@@ -92,7 +111,7 @@ function Calendar() {
         locale={ptBrLocale}
         events={events
         }
-        // Adicione o evento para lidar com o clique no botão do cabeçalho
+        eventClick={handleEventClick} 
         customButtons={{
           modal: {
             text: 'Add Event',
@@ -102,7 +121,7 @@ function Calendar() {
       />
 
              {/* Botão para abrir o modal */}
-
+        <ToastContainer />
 {/* Renderiza o componente Modal com base no estado modalOpen */}
 <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)}>
 <TextField

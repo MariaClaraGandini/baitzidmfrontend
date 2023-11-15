@@ -22,12 +22,11 @@ const customTheme = createTheme({
   },
 });
 
-
 function App() {
   return (
     <ThemeProvider theme={customTheme}>
       <Navbar />
-        <Outlet />
+      <Outlet />
       <Footer />
         </ThemeProvider>
   );
