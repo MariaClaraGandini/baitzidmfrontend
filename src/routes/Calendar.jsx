@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -15,6 +16,9 @@ import '../index.css'
 import "../assets/css/calendar.css"; // Importe seu arquivo CSS aqui
 
 function Calendar() {
+  const { register, handleSubmit, setValue, reset, watch } = useForm();
+  const {formState } = useForm();
+
   const [modalOpen, setModalOpen] = useState(false);
   const [eventName, setEventName] = useState('');
   const [eventDate, setEventDate] = useState('');
@@ -42,6 +46,11 @@ function Calendar() {
 
   const handleOpenModal = () => {
     setModalOpen(true);
+
+    if(modalOpen==false){
+      reset(); 
+
+    }
     
   };
 
@@ -60,12 +69,15 @@ function Calendar() {
           description: eventDescription,
         }),
       });
+      
 
       if (response.ok) {
         // Lógica de sucesso
         setModalOpen(false); // Fechar o modal após o sucesso
         fetchEvents();
        toast.success("Evento cadastrado com sucesso!");
+       reset(); // Limpa os valores do formulário após o envio bem-sucedido
+
       } else {
         console.log(eventHour)
         console.log(eventDate)
@@ -88,7 +100,12 @@ function Calendar() {
         const eventData = await response.json();
         setEvent(eventData.event);
         setModalOpen(true);
-        setEventName(event.title)
+
+        setValue("eventName", eventData.event.title);
+        setValue("eventDate", eventData.event.start);
+        setValue("eventHour", ""); // Talvez você precise ajustar isso dependendo do formato da hora
+        setValue("eventLocal", eventData.event.local);
+        setValue("eventDescription", eventData.event.description);
       } else {
         // Lógica de erro ao obter detalhes do evento
         console.error("Erro na resposta do servidor:", response.status, response.statusText);      }
@@ -131,11 +148,15 @@ function Calendar() {
         id="eventname"
         label="Evento"
         name="eventname"
-        onChange={(e) => setEventName(e.target.value)}
+        {...register('eventname', { required: 'Nome do evento é obrigatório' })}
+        value={watch('hour')}  // Obtendo o valor do campo usando react-hook-form
         InputLabelProps={{
           shrink: true,
         }}
       />
+{formState.errors?.eventname && (
+  <p>{formState.errors.eventname.message}</p>
+)}
 <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
     <TextField
