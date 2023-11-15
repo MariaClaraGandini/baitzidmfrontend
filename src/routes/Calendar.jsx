@@ -11,6 +11,8 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import { getAllEvents } from "../api/calendar";
 import { ToastContainer, toast } from 'react-toastify';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 import 'react-toastify/dist/ReactToastify.css';
 import '../index.css'
 import "../assets/css/calendar.css"; // Importe seu arquivo CSS aqui
@@ -45,6 +47,7 @@ function Calendar() {
     fetchEvents();
   }, []);
 
+  
   const handleOpenModal = () => {
     setModalOpen(true);
 
@@ -55,9 +58,15 @@ function Calendar() {
 
   };
 
+
+  
+
+
   //Cria o evento
   const handleCreateEvent = async () => {
     try {
+      const startDate = new Date(`${watch('data')}T${watch('hour')}:00.000`);
+
       const response = await fetch('http://localhost:5000/event/create', {
         method: 'POST',
         headers: {
@@ -65,7 +74,7 @@ function Calendar() {
         },
         body: JSON.stringify({
           title: watch('eventname'),
-          start: `${watch('data')}T${watch('hour')}:00.000Z`,
+          start: `${watch('data')}T${watch('hour')}:00.000`,
           local: watch('local'),
           description: watch('description'),
         }),
@@ -103,7 +112,7 @@ function Calendar() {
         },
         body: JSON.stringify({
           title: watch('eventname'),
-          start: `${watch('data')}T${watch('hour')}:00.000Z`,
+          start: `${watch('data')}T${watch('hour')}:00.000`,
           local: watch('local'),
           description: watch('description'),
         }),
@@ -132,11 +141,14 @@ function Calendar() {
       const response = await fetch(`http://localhost:5000/event/getEvent/${eventId}`);
       if (response.ok) {
         const eventData = await response.json();
+        const formattedDate = format(new Date(eventData.event.start), 'yyyy-MM-dd', { locale: ptBR });
+        const formattedHour = format(new Date(eventData.event.start), 'HH:mm', { locale: ptBR });
+
         setModalOpen(true);
         setValue("eventId", eventId);  // Defina o valor do eventId
         setValue("eventname", eventData.event.title);
-        setValue("data", eventData.event.start);
-        setValue("hour", "");
+        setValue("data", formattedDate);
+        setValue("hour", formattedHour);
         setValue("local", eventData.event.local);
         setValue("description", eventData.event.description);
 
@@ -160,10 +172,9 @@ function Calendar() {
           start: "title",
           end: "today prev,next,dayGridMonth,timeGridWeek,timeGridDay, modal",
         }}
-        height="90vh"
         locale={ptBrLocale}
-        events={events
-        }
+        events={events}
+        timeZone="local"  // Definindo o fuso horário local
         eventClick={handleEventClick}
         customButtons={{
           modal: {
@@ -223,7 +234,10 @@ function Calendar() {
               name="hour"
               type="time"
               {...register('hour', { required: 'Horário do evento é obrigatório' })}
-              value={watch('hour')}  // Ajuste para usar 'eventname' em vez de 'hour'
+              value={watch('hour')}
+              InputLabelProps={{
+                shrink: true,
+              }} 
             />
           </Grid>
         </Grid>
@@ -255,7 +269,10 @@ function Calendar() {
 
         <Button
           type="submit"
-          onClick={handleSubmit(watch("eventId") ? handleEditEvent : handleCreateEvent)}
+          onClick={(e) => {
+            e.preventDefault(); // Adicione o preventDefault aqui
+            handleSubmit(watch("eventId") ? handleEditEvent : handleCreateEvent)();
+          }}
           fullWidth
           variant="contained"
           sx={{

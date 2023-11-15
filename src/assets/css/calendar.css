@@ -34,7 +34,7 @@ a{
 }
 
 .fc-daygrid-event-dot{
-   border-color: #c0623c;;
+   border-color: #c0623c;
 }
 
 
@@ -192,7 +192,7 @@ a{
   
   @font-face {
     font-family: 'Notera';
-    src: url('./fonts/Notera.ttf') format('truetype');
+    src: url('../../fonts/Notera.ttf') format('truetype');
   }
   
   .titulo-customizado {
