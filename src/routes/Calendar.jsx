@@ -92,15 +92,15 @@ function Calendar() {
       const eventId = eventClickInfo.event.extendedProps._id;
       console.log(eventId)
 
-      const response = await fetch(`http://localhost:5000/event/getEvent/${eventId}`);
+      const response = await fetch(`http://localhost:5000/event/getEvent/${eventId}`)
       if (response.ok) {
         const eventData = await response.json();
         setModalOpen(true);
-        setValue("eventName", eventData.event.title);
-        setValue("eventDate", eventData.event.start);
-        setValue("eventHour", ""); // Talvez você precise ajustar isso dependendo do formato da hora
-        setValue("eventLocal", eventData.event.local);
-        setValue("eventDescription", eventData.event.description);
+        setValue("eventname", eventData.event.title);
+        setValue("data", eventData.event.start);
+        setValue("hour", ""); // Talvez você precise ajustar isso dependendo do formato da hora
+        setValue("local", eventData.event.local);
+        setValue("description", eventData.event.description);
       } else {
         // Lógica de erro ao obter detalhes do evento
         console.error("Erro na resposta do servidor:", response.status, response.statusText);
