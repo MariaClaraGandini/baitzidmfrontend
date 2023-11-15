@@ -18,6 +18,7 @@ import "../assets/css/calendar.css"; // Importe seu arquivo CSS aqui
 function Calendar() {
   const { register, handleSubmit, setValue, reset, watch, formState } = useForm({
     defaultValues: {
+      eventId: '',  // Adicione o campo eventId aos defaultValues
       eventname: '',
       data: '',
       hour: '',
@@ -87,22 +88,60 @@ function Calendar() {
       // Lógica de erro
     }
   };
+  
+
+  const handleEditEvent = async () => {
+    try {
+      const eventId = watch("eventId"); // Adicionado para obter o ID do evento
+
+      console.log(eventId);
+
+      const editResponse = await fetch(`http://localhost:5000/event/edit/${eventId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: watch('eventname'),
+          start: `${watch('data')}T${watch('hour')}:00.000Z`,
+          local: watch('local'),
+          description: watch('description'),
+        }),
+      });
+
+      
+
+      if (editResponse.ok) {
+        setModalOpen(false);
+        fetchEvents();
+        toast.success("Evento atualizado com sucesso!");
+        reset();
+      } else {
+        console.error("Erro na edição do evento:", editResponse.status, editResponse.statusText);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleEventClick = async (eventClickInfo) => {
     try {
       const eventId = eventClickInfo.event.extendedProps._id;
-      console.log(eventId)
+      console.log(eventId);
 
-      const response = await fetch(`http://localhost:5000/event/getEvent/${eventId}`)
+      const response = await fetch(`http://localhost:5000/event/getEvent/${eventId}`);
       if (response.ok) {
         const eventData = await response.json();
         setModalOpen(true);
+        setValue("eventId", eventId);  // Defina o valor do eventId
         setValue("eventname", eventData.event.title);
         setValue("data", eventData.event.start);
-        setValue("hour", ""); // Talvez você precise ajustar isso dependendo do formato da hora
+        setValue("hour", "");
         setValue("local", eventData.event.local);
         setValue("description", eventData.event.description);
+
+        // Agora chamamos a função handleEditEvent aqui, após ter sido definida
       } else {
-        // Lógica de erro ao obter detalhes do evento
         console.error("Erro na resposta do servidor:", response.status, response.statusText);
       }
     } catch (error) {
@@ -110,6 +149,7 @@ function Calendar() {
     }
   };
 
+  
 
   return (
     <div className="container">
@@ -215,7 +255,7 @@ function Calendar() {
 
         <Button
           type="submit"
-          onClick={handleSubmit(handleCreateEvent)}
+          onClick={handleSubmit(watch("eventId") ? handleEditEvent : handleCreateEvent)}
           fullWidth
           variant="contained"
           sx={{
@@ -232,6 +272,8 @@ function Calendar() {
         >
           Enviar
         </Button>
+
+   
       </Modal>
 
     </div>
