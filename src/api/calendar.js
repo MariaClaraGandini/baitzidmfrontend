@@ -35,3 +35,4 @@ export const getAllEvents = async () => {
       throw new Error("Error creating event");
     }
   };
+

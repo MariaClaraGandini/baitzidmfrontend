@@ -7,7 +7,7 @@ const Modal = ({ isOpen, onClose, children }) => {
     <div className="modal-overlay">
       <div className="modal">
 
-      <h1 className="titulo-customizado" style={{textAlign: 'center'}}>Novo evento</h1>
+      {/* <h1 className="titulo-customizado" style={{textAlign: 'center'}}>Inserir evento</h1> */}
       <button className="modal-close-button" onClick={onClose}>
           X
         </button>

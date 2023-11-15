@@ -198,4 +198,12 @@ a{
   .titulo-customizado {
     font-family: 'Notera', sans-serif;
     color:#c0623c;
+    font-size: 3rem;
+    padding:0
       }
+
+.fc-toolbar-title{
+  color:#c0623c;
+  font-weight: 300;
+
+}

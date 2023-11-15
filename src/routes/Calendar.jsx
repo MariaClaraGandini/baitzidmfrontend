@@ -29,7 +29,10 @@ function Calendar() {
     },
   });
 
-  const [modalOpen, setModalOpen] = useState(false);
+  // const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpenCreate, setModalOpenCreate] = useState(false);
+  const [modalOpenEdit, setModalOpenEdit] = useState(false);
+
   const [events, setEvents] = useState([]);
 
 
@@ -48,10 +51,21 @@ function Calendar() {
   }, []);
 
   
-  const handleOpenModal = () => {
-    setModalOpen(true);
+  const handleOpenModalCreate = () => {
+    setModalOpenCreate(true);
 
-    if (modalOpen == false) {
+    if (modalOpenCreate == false) {
+      reset();
+
+    }
+
+  };
+
+
+  const handleOpenModalEdit = () => {
+    setModalOpenEdit(true);
+
+    if (modalOpenEdit == false) {
       reset();
 
     }
@@ -65,7 +79,6 @@ function Calendar() {
   //Cria o evento
   const handleCreateEvent = async () => {
     try {
-
       const response = await fetch('http://localhost:5000/event/create', {
         method: 'POST',
         headers: {
@@ -82,7 +95,7 @@ function Calendar() {
 
       if (response.ok) {
         // Lógica de sucesso
-        setModalOpen(false); // Fechar o modal após o sucesso
+        setModalOpenCreate(false); // Fechar o modal após o sucesso
         fetchEvents();
         toast.success("Evento cadastrado com sucesso!");
         reset(); // Limpa os valores do formulário após o envio bem-sucedido
@@ -120,7 +133,7 @@ function Calendar() {
       
 
       if (editResponse.ok) {
-        setModalOpen(false);
+        setModalOpenEdit(false);
         fetchEvents();
         toast.success("Evento atualizado com sucesso!");
         reset();
@@ -143,7 +156,7 @@ function Calendar() {
         const formattedDate = format(new Date(eventData.event.start), 'yyyy-MM-dd', { locale: ptBR });
         const formattedHour = format(new Date(eventData.event.start), 'HH:mm', { locale: ptBR });
 
-        setModalOpen(true);
+        setModalOpenEdit(true);
         setValue("eventId", eventId);  // Defina o valor do eventId
         setValue("eventname", eventData.event.title);
         setValue("data", formattedDate);
@@ -159,6 +172,35 @@ function Calendar() {
       console.error(error);
     }
   };
+
+
+  const handleDeleteEvent = async () => {
+    try {
+      const eventId = watch("eventId"); // Adicionado para obter o ID do evento
+
+      console.log(eventId);
+
+      const deleteResponse = await fetch(`http://localhost:5000/event/delete/${eventId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+    if (deleteResponse.ok) {
+      setModalOpenEdit(false);
+      fetchEvents();
+      toast.success("Evento excluído com sucesso!");
+      reset();
+    } else {
+      console.error("Erro na exclusão do evento:", deleteResponse.status, deleteResponse.statusText);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+  };
+
+
 
   
 
@@ -178,7 +220,7 @@ function Calendar() {
         customButtons={{
           modal: {
             text: 'Add Event',
-            click: handleOpenModal,
+            click: handleOpenModalCreate,
           },
         }}
       />
@@ -186,7 +228,9 @@ function Calendar() {
       {/* Botão para abrir o modal */}
       <ToastContainer />
       {/* Renderiza o componente Modal com base no estado modalOpen */}
-      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)}>
+      <Modal isOpen={modalOpenCreate} onClose={() => setModalOpenCreate(false)}>
+       <h1 className="titulo-customizado" style={{textAlign: 'center'}}>Criar evento</h1> 
+
         <TextField
           margin="normal"
           required
@@ -268,10 +312,10 @@ function Calendar() {
 
         <Button
           type="submit"
-          onClick={(e) => {
-            e.preventDefault(); // Adicione o preventDefault aqui
-            handleSubmit(watch("eventId") ? handleEditEvent : handleCreateEvent)();
-          }}
+           onClick={(e) => {
+    e.preventDefault(); // Adicione o preventDefault aqui
+    handleSubmit(watch("eventId") ? handleEditEvent : handleCreateEvent)();
+  }}
           fullWidth
           variant="contained"
           sx={{
@@ -291,6 +335,131 @@ function Calendar() {
 
    
       </Modal>
+
+      <Modal isOpen={modalOpenEdit} onClose={() => setModalOpenEdit(false)}>
+      <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="eventname"
+          label="Evento"
+          name="eventname"
+          {...register('eventname', { required: 'Nome do evento é obrigatório' })}
+          value={watch('eventname')}  // Ajuste para usar 'eventname' em vez de 'hour'
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
+        {formState.errors?.eventname && (
+          <p>{formState.errors.eventname.message}</p>
+        )}
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="data"
+              label="Data"
+              name="data"
+              type="date"  // Defina o tipo como "date" para obter um campo de entrada de data
+              {...register('data', { required: 'Data do evento é obrigatório' })}
+              value={watch('data')}  // Ajuste para usar 'eventname' em vez de 'hour'
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+
+          </Grid>
+          <Grid item xs={12} sm={6}>
+
+
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="hour"
+              label="Hora"
+              name="hour"
+              type="time"
+              {...register('hour', { required: 'Horário do evento é obrigatório' })}
+              value={watch('hour')}
+              InputLabelProps={{
+                shrink: true,
+              }} 
+            />
+          </Grid>
+        </Grid>
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="local"
+          label="Endereço"
+          name="local"
+          {...register('local', { required: 'Local do evento é obrigatório' })}
+          value={watch('local')}  // Ajuste para usar 'eventname' em vez de 'hour'
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="textarea"
+          label="Descrição"
+          name="description"
+          multiline  // Indica que este é um campo de texto de área
+          rows={4}
+          {...register('description')}
+          value={watch('description')}  // Ajuste para usar 'eventname' em vez de 'hour'
+          InputLabelProps={{
+            shrink: true,
+          }} // Define o número inicial de linhas visíveis
+        />
+
+        <Button
+          type="submit"
+           onClick={handleSubmit(handleEditEvent)}
+          fullWidth
+          variant="contained"
+          sx={{
+            mt: 3,
+            mb: 2,
+            backgroundColor: '#c0623c',
+            ':hover': {
+              backgroundColor: '#a5522d',
+            },
+            ':active': {
+              backgroundColor: '#8f4324', // Cor para quando o botão estiver ativo
+            },
+          }}
+        >
+          Enviar
+        </Button>
+        <Button
+          type="submit"
+           onClick={handleSubmit(handleDeleteEvent)}
+          fullWidth
+          variant="contained"
+          sx={{
+            mt: 3,
+            mb: 2,
+            backgroundColor: '#c0623c',
+            ':hover': {
+              backgroundColor: '#a5522d',
+            },
+            ':active': {
+              backgroundColor: '#8f4324', // Cor para quando o botão estiver ativo
+            },
+          }}
+        >
+          Deletar
+        </Button>
+      </Modal>
+
+
+
+
+      
 
     </div>
   );
