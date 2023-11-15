@@ -16,15 +16,22 @@ import '../index.css'
 import "../assets/css/calendar.css"; // Importe seu arquivo CSS aqui
 
 function Calendar() {
-  const { register, handleSubmit, setValue, reset, watch } = useForm();
-  const {formState } = useForm();
+  const { register, handleSubmit, setValue, reset, watch, formState } = useForm({
+    defaultValues: {
+      eventname: '',
+      data: '',
+      hour: '',
+      local: '',
+      description: '',
+    },
+  });
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [eventName, setEventName] = useState('');
-  const [eventDate, setEventDate] = useState('');
-  const [eventHour, setEventHour] = useState('');
-  const [eventDescription, setEventDescription] = useState('');
-  const [eventLocal, setEventLocal] = useState('');
+  // const [eventName, setEventName] = useState('');
+  // const [eventDate, setEventDate] = useState('');
+  // const [eventHour, setEventHour] = useState('');
+  // const [eventDescription, setEventDescription] = useState('');
+  // const [eventLocal, setEventLocal] = useState('');
   const [events, setEvents] = useState([]);
   const [event, setEvent] = useState([]);
 
@@ -63,10 +70,10 @@ function Calendar() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          title: eventName,
-          start: `${eventDate}T${eventHour}:00.000Z`,
-          local: eventLocal,
-          description: eventDescription,
+          title: watch('eventname'),
+          start: `${watch('data')}T${watch('hour')}:00.000Z`,
+          local: watch('local'),
+          description: watch('description'),
         }),
       });
       
@@ -79,14 +86,11 @@ function Calendar() {
        reset(); // Limpa os valores do formulário após o envio bem-sucedido
 
       } else {
-        console.log(eventHour)
-        console.log(eventDate)
-        // Lógica de erro
+   
       }
     } catch (error) {
       console.error(error);
-      console.log(eventHour)
-        console.log(eventDate)
+
       // Lógica de erro
     }
   };
@@ -149,7 +153,7 @@ function Calendar() {
         label="Evento"
         name="eventname"
         {...register('eventname', { required: 'Nome do evento é obrigatório' })}
-        value={watch('hour')}  // Obtendo o valor do campo usando react-hook-form
+        value={watch('eventname')}  // Ajuste para usar 'eventname' em vez de 'hour'
         InputLabelProps={{
           shrink: true,
         }}
@@ -163,11 +167,12 @@ function Calendar() {
       margin="normal"
       required
       fullWidth
-      id="date"
+      id="data"
       label="Data"
       name="data"
       type="date"  // Defina o tipo como "date" para obter um campo de entrada de data
-      onChange={(e) => setEventDate(e.target.value)}
+      {...register('data', { required: 'Data do evento é obrigatório' })}
+      value={watch('data')}  // Ajuste para usar 'eventname' em vez de 'hour'
       InputLabelProps={{
         shrink: true,
       }}
@@ -185,8 +190,8 @@ function Calendar() {
   label="Hora"
   name="hour"
   type="time"
-  value={eventHour}
-  onChange={(e) => setEventHour(e.target.value)}
+  {...register('hour', { required: 'Horário do evento é obrigatório' })}
+  value={watch('hour')}  // Ajuste para usar 'eventname' em vez de 'hour'
 />
       </Grid>
       </Grid>
@@ -197,8 +202,8 @@ function Calendar() {
           id="local"
           label="Endereço"
           name="local"
-          value={eventLocal}
-          onChange={(e) => setEventLocal(e.target.value)}
+          {...register('local', { required: 'Local do evento é obrigatório' })}
+          value={watch('local')}  // Ajuste para usar 'eventname' em vez de 'hour'
         />
         <TextField
       margin="normal"
@@ -206,10 +211,11 @@ function Calendar() {
       fullWidth
       id="textarea"
       label="Descrição"
-      name="descricao"
+      name="description"
       multiline  // Indica que este é um campo de texto de área
       rows={4}  
-      onChange={(e) => setEventDescription(e.target.value)}
+      {...register('description')}
+      value={watch('description')}  // Ajuste para usar 'eventname' em vez de 'hour'
       InputLabelProps={{
         shrink: true,
       }} // Define o número inicial de linhas visíveis
@@ -217,7 +223,7 @@ function Calendar() {
 
 <Button
         type="submit"
-        onClick={handleCreateEvent}
+        onClick={handleSubmit(handleCreateEvent)}
         fullWidth
         variant="contained"
         sx={{
