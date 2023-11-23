@@ -29,7 +29,7 @@ import { Link } from 'react-router-dom';
 function Navbar() {
 
   return (
-   <div className="footercontainer">
+   <div className="footercontainer" >
             <Grid container  className="griditem" style={{padding:"2rem"}}>
                 <Grid  item xs={12} sm={3}>
                     <div >

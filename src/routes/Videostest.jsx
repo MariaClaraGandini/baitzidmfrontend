@@ -54,7 +54,10 @@ export default function VideoGallery() {
       frameBorder="0"
       allowFullScreen
     ></iframe>
+      <p className="titulovideo">
+            {selectedVideo.title}</p>
   </div>
+  
 ) : (
   <div className="videocontainer">
     <iframe
@@ -66,9 +69,11 @@ export default function VideoGallery() {
       frameBorder="0"
       allowFullScreen
     ></iframe>
+      <p className="titulovideo">
+          Exemplo</p>
   </div>
 )}
-          <p className="titulovideo">Marcha Nupcial</p>
+
         </Grid>
         <Grid item xs={12} sm={6}>
           <Card style={{borderRadius:'0.75rem', paddingBottom:'0.2rem'}}>

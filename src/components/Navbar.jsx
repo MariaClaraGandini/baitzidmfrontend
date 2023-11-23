@@ -13,10 +13,14 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import Logo from   '../assets/logo.svg'
 import { Link } from 'react-router-dom';
-
-
+import { useAuth } from '../api/authContext.jsx';
+import {Logout } from '../api/login.js'
 
 function Navbar() {
+  const { user, setUser} = useAuth();
+
+  
+
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -34,6 +38,13 @@ function Navbar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const handleLogout = async () => {
+    await Logout()
+    setUser(null);
+
+  };
+  
 
   return (
     <AppBar  sx={{
@@ -103,6 +114,7 @@ function Navbar() {
                 </MenuItem>
 
             </Menu>
+            
           </Box>
           <Typography
             variant="h5"
@@ -137,7 +149,9 @@ function Navbar() {
               >
            Videos
               </Button>
+    
               </Link>
+
 
               <Link to="/orcamento">
 
@@ -152,41 +166,63 @@ Orçamento
 </Link>
         
           </Box>
+          <div>
 
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-                <MenuItem onClick={handleCloseUserMenu}>
-                <Link to="/" >
-                  <Typography textAlign="center" sx={{color:'gray'}}>Perfil</Typography>
-                  </Link>
-                </MenuItem>
-                <MenuItem onClick={handleCloseUserMenu}>
-                <Link to="/" >
-                  <Typography textAlign="center" sx={{color:'gray'}}>Sair</Typography>
-                  </Link>
-                </MenuItem>
-            </Menu>
-          </Box>
+{user ? (
+  <Box sx={{ flexGrow: 0 }}>
+        <Tooltip title="Open settings">
+        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, display: "flex", alignItems: "center" }}>
+          <Avatar alt="Remy Sharp" src="">
+          </Avatar>
+          <Typography variant="subtitle1" sx={{ marginLeft: 1, color: "gray" }}>
+            {user.user.name}
+          </Typography>
+        </IconButton>
+      </Tooltip>
+
+  <Menu
+    sx={{ mt: '45px' }}
+    id="menu-appbar"
+    anchorEl={anchorElUser}
+    anchorOrigin={{
+      vertical: 'top',
+      horizontal: 'right',
+    }}
+    keepMounted
+    transformOrigin={{
+      vertical: 'top',
+      horizontal: 'right',
+    }}
+    open={Boolean(anchorElUser)}
+    onClose={handleCloseUserMenu}
+  >
+      <MenuItem onClick={handleCloseUserMenu}>
+      <Link to="/" >
+        <Typography textAlign="center" sx={{color:'gray'}}>Perfil</Typography>
+        </Link>
+      </MenuItem>
+      <MenuItem onClick={handleCloseUserMenu}>
+      <Button onClick={handleLogout}>        
+      <Typography textAlign="center" sx={{color:'gray'}}>Sair</Typography>
+        </Button>
+      </MenuItem>
+  </Menu>
+</Box>
+) : (
+  <Link to="/entrar">
+
+  <Button
+    sx={{ my: 2, color: '#d7683a', backgroundColor:'#fcf5ea', display: 'block' , '&:hover': {
+      color: '#ba5a32', backgroundColor:'#f2e4ce'
+    },}}
+  >
+Entrar
+  </Button>
+
+  </Link>
+)}
+</div>
+          
         </Toolbar>
       </Container>
     </AppBar>

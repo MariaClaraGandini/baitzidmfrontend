@@ -11,6 +11,9 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
+import Foto from '../assets/signup.jpeg'; // Importe a imagem de background
+import { ToastContainer, toast } from 'react-toastify';
+
 
 const customTheme = createTheme({
   components: {
@@ -29,33 +32,40 @@ const customTheme = createTheme({
   },
 });
 export default function SignUp() {
-    const handleSubmit = async (event) => {
-      event.preventDefault();
-      const data = new FormData(event.currentTarget);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    
+    try {
+      const requestData = {
+        name: data.get('name'),
+        email: data.get('email'),
+        phone: data.get('phone'),
+        state: data.get('state'),
+        city: data.get('city'),
+        password: data.get('password'),
+        confirmPassword: data.get('confirmPassword'),
+      };
   
-      try {
-        const response = await axios.post('http://localhost:5000/auth/register', {
-          name: data.get('name'),
-          email: data.get('email'),
-          phone: data.get('phone'),
-          state: data.get('state'),
-          city: data.get('city'),
-          password: data.get('password'),
-          confirmpassword: data.get('confirmpassword'), // Certifique-se de que está enviando confirmpassword
-        });
+      console.log('Data being sent to the backend:', requestData);
   
-        console.log(response.data); // Você pode acessar a resposta do servidor aqui
+      const response = await axios.post('http://localhost:5000/auth/register', requestData);
   
-        // Redirecione o usuário para a página de login ou realize outra ação apropriada após o registro bem-sucedido.
+      console.log('Response from the backend:', response.data);
+      
+      toast.success("Evento atualizado com sucesso!");
+
+    } catch (error) {
+      console.error('Error:', error.response.data);
+      toast.error(error.response.data.msg)
+    }
+  };
   
-      } catch (error) {
-        console.error(error.response.data); // Exibe qualquer erro retornado pelo servidor
-      }
-    };
   return (
+    <div>
     <ThemeProvider theme={customTheme}>
-      <Grid container component="main" sx={{ height: '70vh', padding: '2.5rem', }}>
-        <CssBaseline />
+    <ToastContainer />
+      <Grid container component="main" sx={{marginTop:'3rem',padding: '2.5rem' }}>
         <Grid
           item
           xs={false}
@@ -63,7 +73,7 @@ export default function SignUp() {
           sm={4}
           md={4}
           sx={{
-            backgroundImage: 'url("./foto1.jpg")',
+            backgroundImage: `url(${Foto})`,
             backgroundRepeat: 'no-repeat',
             backgroundColor: (t) =>
               t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
@@ -173,10 +183,10 @@ export default function SignUp() {
                 margin="normal"
                 required
                 fullWidth
-                name="confirmpassword"
+                name="confirmPassword"
                 label="Confirme a senha"
                 type="password"
-                id="confirmpassword"
+                id="confirmPassword"
                 autoComplete="current-password"
               />
               </Grid>
@@ -216,5 +226,6 @@ export default function SignUp() {
         </Grid>
       </Grid>
     </ThemeProvider>
+    </div>
   );
 }

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useForm } from 'react-hook-form';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -10,11 +11,12 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Foto from '../assets/signin.jpg'; // Importe a imagem de background
+import Foto from '../assets/signin.jpg';
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom'; // Use useNavigate para Vite
+import { useAuth } from '../api/authContext.jsx';
 
-
-
-// TODO remove, this demo shouldn't need to reset the theme.
 
 const customTheme = createTheme({
   components: {
@@ -34,23 +36,32 @@ const customTheme = createTheme({
 });
 
 export default function SignIn() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+  const { register, handleSubmit, reset, formState: { errors } } = useForm();
+  const navigate = useNavigate(); // Use useNavigate para Vite
+  const { login } = useAuth(); // Obtenha a função de login do contexto AuthContext
+
+
+  const onSubmit = async (data) => {
+    try {
+      await login(data.email, data.password); // Use a função de login do contexto
+      reset();
+      navigate('/');
+      toast.success('Login realizado com sucesso!');
+    } catch (error) {
+      console.error('Error:', error.message);
+      toast.error(error.message);
+    }
   };
 
   return (
     <ThemeProvider theme={customTheme}>
-      <Grid container component="main" sx={{ height: '100vh', padding: '2.5rem',}}>
+      <ToastContainer />
+      <Grid container component="main" sx={{ height: '100vh', marginTop: '3rem', padding: '2.5rem' }}>
         <CssBaseline />
         <Grid
           item
           xs={false}
-          elevation={4} 
+          elevation={4}
           sm={4}
           md={6}
           sx={{
@@ -60,11 +71,10 @@ export default function SignIn() {
               t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
             backgroundSize: 'cover',
             backgroundPosition: 'center',
-            borderRadius:'10px 0 0 10px'
-
+            borderRadius: '10px 0 0 10px',
           }}
         />
-        <Grid item xs={12} sm={8} md={6} component={Paper} elevation={3} sx={{borderRadius:'0px 10px 10px 0px'}} square>
+        <Grid item xs={12} sm={8} md={6} component={Paper} elevation={3} sx={{ borderRadius: '0px 10px 10px 0px' }} square>
           <Box
             sx={{
               my: 8,
@@ -80,17 +90,18 @@ export default function SignIn() {
             <Typography component="h1" variant="h5">
               Fazer Login
             </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+            <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
                 required
                 fullWidth
                 id="email"
                 label="Email Address"
-                name="email"
                 autoComplete="email"
                 autoFocus
-        
+                {...register('email', { required: 'Este campo é obrigatório' })}
+                error={!!errors.email}
+                helperText={errors.email?.message}
               />
               <TextField
                 margin="normal"
@@ -99,13 +110,11 @@ export default function SignIn() {
                 name="password"
                 label="Password"
                 type="password"
-                id="password"
                 autoComplete="current-password"
+                {...register('password', { required: 'Este campo é obrigatório' })}
+                error={!!errors.password}
+                helperText={errors.password?.message}
               />
-              {/* <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
-              /> */}
               <Button
                 type="submit"
                 fullWidth
@@ -118,20 +127,20 @@ export default function SignIn() {
                     backgroundColor: '#a5522d',
                   },
                   ':active': {
-                    backgroundColor: '#8f4324', // Cor para quando o botão estiver ativo
+                    backgroundColor: '#8f4324',
                   },
                 }}
               >
-              Entrar
+                Entrar
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" sx={{color: "#cc6236", textDecorationColor: "#a5522d"}} variant="body2">
-                   Esqueceu a senha?
+                  <Link href="#" sx={{ color: "#cc6236", textDecorationColor: "#a5522d" }} variant="body2">
+                    Esqueceu a senha?
                   </Link>
                 </Grid>
                 <Grid item >
-                  <Link href="#" sx={{color: "#cc6236", textDecorationColor: "#a5522d"}} variant="body2">
+                  <Link href="#" sx={{ color: "#cc6236", textDecorationColor: "#a5522d" }} variant="body2">
                     {"Não possui uma conta? Cadastre-se"}
                   </Link>
                 </Grid>

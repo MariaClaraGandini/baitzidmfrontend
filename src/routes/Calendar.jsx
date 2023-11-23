@@ -15,12 +15,12 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import 'react-toastify/dist/ReactToastify.css';
 import '../index.css'
-import "../assets/css/calendar.css"; // Importe seu arquivo CSS aqui
+import "../assets/css/calendar.css";
 
 function Calendar() {
   const { register, handleSubmit, setValue, reset, watch, formState } = useForm({
     defaultValues: {
-      eventId: '',  // Adicione o campo eventId aos defaultValues
+      eventId: '',  
       eventname: '',
       data: '',
       hour: '',
@@ -62,6 +62,7 @@ function Calendar() {
   };
 
 
+  //  Abrir modal de editar
   const handleOpenModalEdit = () => {
     setModalOpenEdit(true);
 
@@ -71,10 +72,6 @@ function Calendar() {
     }
 
   };
-
-
-  
-
 
   //Cria o evento
   const handleCreateEvent = async () => {
@@ -105,12 +102,10 @@ function Calendar() {
       }
     } catch (error) {
       console.error(error);
-
-      // Lógica de erro
     }
   };
   
-
+//Metodo editar
   const handleEditEvent = async () => {
     try {
       const eventId = watch("eventId"); // Adicionado para obter o ID do evento
@@ -145,6 +140,8 @@ function Calendar() {
     }
   };
 
+
+  //Exine as informações informações do evento no modal
   const handleEventClick = async (eventClickInfo) => {
     try {
       const eventId = eventClickInfo.event.extendedProps._id;

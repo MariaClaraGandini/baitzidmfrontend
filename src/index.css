@@ -151,10 +151,36 @@ align-items: center;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color:gray
-  };
+  }
+
+.imagembackground1{
+  background-image: url("./assets/home/casamentos.png")
+
+}
+
+.imagembackground2{
+  background-image: url("./assets/home/eventos.png")
+
+}
+
+.imagembackground3{
+  background-image: url("./assets/home/festasprivadas.png")
+
+}
+
+.navegar-item1{
+  height: 50vh;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  }
 
 
+.imagembackground4{
+  background-image: url('./assets/belamur.jpg');
+}
 /* VIDEOS */
 
 .videocontainer{
@@ -212,6 +238,7 @@ height: 50vh;}
   width: 100%;
   height: 100%;
   background-color: #fcf5ea;
+  position: static;
 }
 
 .footerlogo{

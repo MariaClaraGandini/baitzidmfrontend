@@ -1,23 +1,65 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
+import { ToastContainer, toast } from 'react-toastify';
+import { useForm } from "react-hook-form";
+import axios from 'axios';
+
+
 
 import '../index.css'
 
 function Budget() {
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Implemente o tratamento do envio do formulário aqui
+  const [selectedMusicalTraining, setSelectedMusicalTraining] = useState([]);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    getValues, 
+  } = useForm()
+
+
+  const handleMusicalTrainingChange = (value) => {
+    setSelectedMusicalTraining((prevSelected) => {
+      if (prevSelected.includes(value)) {
+        return prevSelected.filter((item) => item !== value);
+      } else {
+        return [...prevSelected, value];
+      }
+    });
   };
+  
+ 
+  const handleCreateBudget = async (data) => {
+    try {
+      // Concatene o array antes de criar o objeto formData
+      const musicalTrainingString = selectedMusicalTraining.join(' + ');
+      const formData = {
+        ...data,
+        musicaltraining: musicalTrainingString,
+      };
+  
+      // Make an Axios request to your endpoint with the form data
+      const response = await axios.post('http://localhost:5000/budget/create', formData);
+  
+      // Handle the response as needed (e.g., show a success message)
+      console.log(response.data);
+      toast.success('Budget created successfully!');
+    } catch (error) {
+      // Handle errors (e.g., show an error message)
+      console.error('Error creating budget:', error);
+      toast.error('Error creating budget. Please try again.');
+    }
+  };
+  
 
   return (
-    <Box component="form" noValidate onSubmit={handleSubmit} style={{
+    <Box component="form"       onSubmit={handleSubmit(handleCreateBudget)} noValidate style={{
       margin: '2.5rem',
       padding: '2.5rem',
       boxShadow: 'rgba(0.1, 0.1, 0.1, 0.1) 2px 2px 10px',
@@ -25,6 +67,7 @@ function Budget() {
       borderRadius: '10px', // Valor ajustável para arredondar as bordas
     }}>
     <h1 className="titulo-customizado" style={{textAlign: 'center'}}>Orçamento</h1>
+    <ToastContainer />
 
       <TextField
         margin="normal"
@@ -32,8 +75,7 @@ function Budget() {
         fullWidth
         id="nome"
         label="Nome"
-        name="nome"
-      />
+        {...register('name', { required: 'Name is required' })}      />
     <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
       <TextField
@@ -42,9 +84,8 @@ function Budget() {
         fullWidth
         id="email"
         label="E-mail"
-        name="email"
         autoComplete="email"
-      />
+        {...register('email', { required: 'E-mail is required' })}      />
       </Grid>
       <Grid item xs={12} sm={6}>
 
@@ -54,8 +95,7 @@ function Budget() {
         fullWidth
         id="telefone"
         label="Telefone"
-        name="telefone"
-      />
+        {...register('phone', { required: 'Telefone is required' })}       />
       </Grid>
       </Grid>
       <Grid container spacing={2}>
@@ -66,8 +106,7 @@ function Budget() {
         fullWidth
         id="estado"
         label="Estado"
-        name="estado"
-      />
+        {...register('state', { required: 'Estado is required' })}      />
       </Grid>
         <Grid item xs={12} sm={6}>
       <TextField
@@ -76,38 +115,19 @@ function Budget() {
         fullWidth
         id="cidade"
         label="Cidade"
-        name="cidade"
-      />
+        {...register('city', { required: 'City is required' })}      />
+    
       </Grid>
       </Grid>
      <h2 className="titulo-customizado" style={{fontSize:"40px", textAlign: 'center'}}>Formação Musical</h2>
 
-      <FormControl fullWidth>
-        <FormControlLabel
-          control={<Checkbox />}
-          label="Voz + violão"
-        />
-         <FormControlLabel
-          control={<Checkbox />}
-          label="Cajón"
-        />
-          <FormControlLabel
-          control={<Checkbox />}
-          label="Cello"
-        />
-           <FormControlLabel
-          control={<Checkbox />}
-          label="Teclado"
-        />
-        <FormControlLabel
-          control={<Checkbox />}
-          label="Saxofone"
-        />
-        <FormControlLabel
-          control={<Checkbox />}
-          label="Violino"
-        />
-    
+     <FormControl fullWidth>
+        <FormControlLabel control={<Checkbox onChange={() => handleMusicalTrainingChange('Voz + violão')}/>} label="Voz + violão" />
+        <FormControlLabel control={<Checkbox onChange={() => handleMusicalTrainingChange('Cajón')} />} label="Cajón" />
+        {/* <FormControlLabel control={<Checkbox {...register('musicaltraining')} value="Cello" />} label="Cello" />
+        <FormControlLabel control={<Checkbox {...register('musicaltraining')} value="Teclado" />} label="Teclado" />
+        <FormControlLabel control={<Checkbox {...register('musicaltraining')} value="Saxofone" />} label="Saxofone" />
+        <FormControlLabel control={<Checkbox {...register('musicaltraining')} value="Violino" />} label="Violino" /> */}
       </FormControl>
       <Button
         type="submit"
