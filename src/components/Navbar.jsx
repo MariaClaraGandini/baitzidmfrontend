@@ -45,12 +45,6 @@ function Navbar() {
   };
 
   // Adicionando um useEffect para limpar os estados ao desmontar o componente
-  useEffect(() => {
-    return () => {
-      setAnchorElNav(null);
-      setAnchorElUser(null);
-    };
-  }, []);
 
 
   return (
@@ -159,6 +153,20 @@ function Navbar() {
               </Button>
     
               </Link>
+
+              <Link to="/agenda">
+
+<Button
+  onClick={handleCloseNavMenu}
+  sx={{ my: 2, color: 'gray', display: 'block' , '&:hover': {
+    color: '#d7683a', backgroundColor:'#fcf5ea'
+  },}}
+>
+Agenda
+</Button>
+
+</Link>
+
 
 
               <Link to="/orcamento">

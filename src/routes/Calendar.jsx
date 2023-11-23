@@ -218,7 +218,7 @@ function Calendar() {
         eventClick={handleEventClick}
         customButtons={{
           modal: {
-            text: 'Add Event',
+            text: 'Novo Evento',
             click: handleOpenModalCreate,
           },
         }}
