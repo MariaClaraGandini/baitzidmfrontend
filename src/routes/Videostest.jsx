@@ -5,13 +5,13 @@ import { Grid, Card, CardContent } from '@mui/material';
 export default function VideoGallery() {
   const [videos, setVideos] = useState([]);
   const [selectedVideo, setSelectedVideo] = useState(null); // Estado para o vídeo selecionado
-  const [defaultVideo, setDefaultVideo] = useState('70w85gZ0wj0'); // Vídeo padrão
+  const [defaultVideo, setDefaultVideo] = useState('NZH8qzoLE-c'); // Vídeo padrão
 
 
   useEffect(() => {
     // Substitua 'SUA_CHAVE_DE_API' e 'ID_DO_CANAL' pelos valores apropriados
     const apiKey = 'AIzaSyCUmBvqlf5bKu0z7nj4KVWXnX13acw7t-8';
-    const channelId = 'UCzoXgHhMklCzGk7Sj_u3fxw';
+    const channelId = 'UCVYOB7PBYqjytJS2_PL6jxw';
 
     // Faça a solicitação à API do YouTube para obter a lista de vídeos do canal
     axios.get('https://www.googleapis.com/youtube/v3/search', {
@@ -70,7 +70,7 @@ export default function VideoGallery() {
       allowFullScreen
     ></iframe>
       <p className="titulovideo">
-          Exemplo</p>
+      Pra Você Guardei o Amor - Nando Reis (BelaMur)</p>
   </div>
 )}
 

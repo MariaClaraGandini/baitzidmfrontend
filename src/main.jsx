@@ -12,6 +12,7 @@ import Budget from './routes/Budget.jsx';
 import SignUp from './routes/SignUp.jsx';
 import Videostest from  './routes/Videostest.jsx'
 import Calendar from './routes/Calendar.jsx';
+import Users from  './routes/Users.jsx'
 
 
 const root = createRoot(document.getElementById('root'));
@@ -25,6 +26,7 @@ root.render(
           <Route path="/registrar" element={<SignUp />} />
           <Route path="/agenda" element={<Calendar />} />
           <Route path="/videos" element={<Videostest />} />
+          <Route path="/usuarios" element={<Users />} />
           <Route path="/orcamento" element={<Budget />} />
         </Route>
         <Route path="*" element={<ErrorPage />} />
