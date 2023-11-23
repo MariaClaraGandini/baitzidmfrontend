@@ -13,6 +13,7 @@ import SignUp from './routes/SignUp.jsx';
 import Videostest from  './routes/Videostest.jsx'
 import Calendar from './routes/Calendar.jsx';
 import Users from  './routes/Users.jsx'
+import AboutUs from './routes/AboutUs.jsx'
 
 
 const root = createRoot(document.getElementById('root'));
@@ -28,6 +29,7 @@ root.render(
           <Route path="/videos" element={<Videostest />} />
           <Route path="/usuarios" element={<Users />} />
           <Route path="/orcamento" element={<Budget />} />
+          <Route path="/sobre" element={<AboutUs />} />
         </Route>
         <Route path="*" element={<ErrorPage />} />
       </Routes>

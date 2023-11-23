@@ -154,6 +154,19 @@ function Navbar() {
     
               </Link>
 
+              
+              <Link to="/sobre">
+
+<Button
+  onClick={handleCloseNavMenu}
+  sx={{ my: 2, color: 'gray', display: 'block' , '&:hover': {
+    color: '#d7683a', backgroundColor:'#fcf5ea'
+  },}}
+>
+Sobre Nós
+</Button>
+</Link>
+
               <Link to="/agenda">
 
 <Button

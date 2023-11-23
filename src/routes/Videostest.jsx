@@ -66,7 +66,6 @@ export default function VideoGallery() {
       style={{ borderRadius: "0.5rem" }}
       src={`https://www.youtube.com/embed/${defaultVideo}`}
       title="Vídeo Padrão" // Título do vídeo padrão
-      frameBorder="0"
       allowFullScreen
     ></iframe>
       <p className="titulovideo">

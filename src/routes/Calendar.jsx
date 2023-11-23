@@ -227,7 +227,7 @@ function Calendar() {
       {/* Botão para abrir o modal */}
       <ToastContainer />
       {/* Renderiza o componente Modal com base no estado modalOpen */}
-      <Modal isOpen={modalOpenCreate} onClose={() => setModalOpenCreate(false)}>
+      <Modal className="modal" isOpen={modalOpenCreate} onClose={() => setModalOpenCreate(false)}>
        <h1 className="titulo-customizado" style={{textAlign: 'center'}}>Criar evento</h1> 
 
         <TextField

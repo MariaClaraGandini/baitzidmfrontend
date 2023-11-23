@@ -54,7 +54,7 @@ function Home() {
           </Grid>
         </Grid>
       </Box>
-      <Grid container spacing={3}  sx={{padding:'2rem', justifyContent:'center', alignItems:'center'}}>
+      {/* <Grid container spacing={3}  sx={{padding:'2rem', justifyContent:'center', alignItems:'center'}}>
       <Grid item xs={12} sm={4}>
         <p className="paragráfo">Teste</p>
 </Grid>
@@ -68,7 +68,7 @@ function Home() {
 
 </Grid>
 
-</Grid>
+</Grid> */}
 
 
 
@@ -93,23 +93,6 @@ function Home() {
               </Grid>
               </Grid>
 
-              <Grid container spacing={2}  sx={{padding:'2rem'}}>
-            <Grid item xs={12} sm={4}>
-            <div className="navegar-item1 imagembackground4" />
-              </Grid>
-              <Grid item xs={12} sm={8}>
-              <Typography variant="h4" className="title">
-Sobre Nós
-
-          </Typography>
-              <Typography variant="body1" className="paragraph">
-              Nós, Isabela e Murilo, somos um casal movido à música e aos detalhes que marcam a trilha sonora de momentos especiais. Nossa missão é cantar o amor, seja onde e como for. Já tivemos a honra de contar a história de amor de mais de 80 casais, através de músicas personalizadas e escolhidas a dedo.
-Desde violão, teclado, cello, violino até percussão, saxofone e clarins, contamos com músicos talentosos que estão ao nosso lado para completar as harmonias delicadas e especiais que construímos juntos.
-Nos deixa cantar o seu amor?
-
-          </Typography>
-              </Grid>
-              </Grid>
 
         </div>
 
