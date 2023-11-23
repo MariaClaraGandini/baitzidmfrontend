@@ -80,6 +80,8 @@ function Calendar() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZjQ5YTEyMDkyYWZlMzNlNzU2ZDk4OSIsImlhdCI6MTY5Mzc2NTM1M30.sbJiaY4U67IVXcEUyWTD586lvARn-8VulZ4lCKkrwzI',
+
         },
         body: JSON.stringify({
           title: watch('eventname'),

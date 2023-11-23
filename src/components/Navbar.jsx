@@ -1,32 +1,32 @@
-import React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
+import React, { useState, useEffect } from 'react';
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  IconButton,
+  Typography,
+  Menu,
+  MenuItem,
+  Button,
+  Avatar,
+  Tooltip,
+} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-import Logo from   '../assets/logo.svg'
+import Logo from '../assets/logo.svg';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../api/authContext.jsx';
-import {Logout } from '../api/login.js'
+import { Logout } from '../api/login.js';
 
 function Navbar() {
-  const { user, setUser} = useAuth();
-
-  
-
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const { user, setUser } = useAuth();
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
+
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -40,13 +40,21 @@ function Navbar() {
   };
 
   const handleLogout = async () => {
-    await Logout()
+    await Logout();
     setUser(null);
-
   };
-  
+
+  // Adicionando um useEffect para limpar os estados ao desmontar o componente
+  useEffect(() => {
+    return () => {
+      setAnchorElNav(null);
+      setAnchorElUser(null);
+    };
+  }, []);
+
 
   return (
+  
     <AppBar  sx={{
      backgroundColor:'white',
      position: 'fixed',
@@ -227,7 +235,7 @@ Entrar
       </Container>
     </AppBar>
   );
-}
+  }
 
 export default Navbar;
 

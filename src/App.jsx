@@ -25,14 +25,15 @@ const customTheme = createTheme({
 
 function App() {
   return (
+    <AuthProvider>
     <ThemeProvider theme={customTheme}>
-      <AuthProvider>
 
       <Navbar />
       <Outlet />
       <Footer />
-      </AuthProvider>
         </ThemeProvider>
+        </AuthProvider>
+
   );
 }
 
