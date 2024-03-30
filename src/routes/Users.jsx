@@ -1,103 +1,38 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Typography, TextField, List, ListItem, ListItemText, IconButton, Menu, MenuItem } from '@mui/material';
-import { MoreVert } from '@mui/icons-material';
-import '../index.css';
+import React from 'react';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 
-const UsersList = () => {
-    const [users, setUsers] = useState([]);
-    const [anchorEl, setAnchorEl] = useState(null);
-    const [selectedUserId, setSelectedUserId] = useState(null);
-  
-    const handleClick = (event, userId) => {
-      setAnchorEl(event.currentTarget);
-      setSelectedUserId(userId);
-    };
-  
-    const handleClose = () => {
-      setAnchorEl(null);
-      setSelectedUserId(null);
-    };
-  
-    const handleMakeAdmin = async () => {
-      try {
-        if (!selectedUserId) {
-          console.error('ID do usuário não definido');
-          return;
-        }
-  
-        // Chama o endpoint para tornar o usuário um administrador
-        const response = await fetch(`http://localhost:5000/auth/updateRole/${selectedUserId}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZjQ5YTEyMDkyYWZlMzNlNzU2ZDk4OSIsImlhdCI6MTY5Mzc2NTM1M30.sbJiaY4U67IVXcEUyWTD586lvARn-8VulZ4lCKkrwzI',
-          },
-        });
-  
-        const data = await response.json();
-  
-        if (response.ok) {
-          console.log(data.msg);
-          fetchUsers();
-        } else {
-          console.error(data.msg);
-        }
-      } catch (error) {
-        console.error('Erro ao tornar o usuário um administrador:', error);
-      }
-      
-      handleClose();
-    };
-  
-    const menuOptions = [
-      { label: 'Editar', action: () => handleClose() },
-      { label: 'Excluir', action: () => handleClose() },
-      { label: 'Tornar Admin', action: handleMakeAdmin },
-    ];
-  
-    const fetchUsers = async () => {
-      try {
-        const response = await fetch('http://localhost:5000/auth/getAll');
-        const data = await response.json();
-        setUsers(data.users);
-      } catch (error) {
-        console.error('Erro ao buscar usuários:', error);
-      }
-    };
-  
-    useEffect(() => {
-      // Chama a função de busca ao montar o componente
-      fetchUsers();
-    }, []);
-  
+const MyTable = () => {
+  // Exemplo de dados da tabela
+  const rows = [
+    { id: 1, name: 'John Doe', age: 30, email: 'john@example.com' },
+    { id: 2, name: 'Jane Smith', age: 25, email: 'jane@example.com' },
+    { id: 3, name: 'Bob Johnson', age: 40, email: 'bob@example.com' },
+  ];
+
   return (
-    <Container className="users-list">
-    <Typography variant="h4" gutterBottom>
-      Lista de Usuários
-    </Typography>
-
-    <TextField label="Pesquisar" variant="outlined" fullWidth margin="normal" />
-
-    <List>
-      {users.map((user) => (
-        <ListItem key={user._id} className="list-item">
-          <ListItemText primary={user.name} />
-          <IconButton onClick={(event) => handleClick(event, user._id)}>
-            <MoreVert />
-          </IconButton>
-
-          <Menu style={{ boxShadow: '0' }} anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-            {menuOptions.map((option, index) => (
-              <MenuItem key={index} className="menu-item" onClick={option.action}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </Menu>
-        </ListItem>
-      ))}
-    </List>
-  </Container>
+    <TableContainer sx={{marginTop:'5rem', width:'95%', padding:'2%',  }} >
+      <Table sx={{ minWidth: 500 }} aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell>Nome</TableCell>
+            <TableCell>Login</TableCell>
+            <TableCell>E-mail</TableCell>
+            <TableCell>Acoes</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {rows.map(row => (
+            <TableRow key={row.id}>
+              <TableCell>{row.id}</TableCell>
+              <TableCell>{row.name}</TableCell>
+              <TableCell>{row.age}</TableCell>
+              <TableCell>{row.email}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };
 
-export default UsersList;
+export default MyTable;

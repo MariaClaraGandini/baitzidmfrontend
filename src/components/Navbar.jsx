@@ -7,21 +7,41 @@ import {
   Typography,
   Menu,
   MenuItem,
-  Button,
   Avatar,
   Tooltip,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
-import Logo from '../assets/logo.svg';
+import Logo from '../assets/logo.png';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../api/authContext.jsx';
+import { useAuthToken } from '../api/AuthToken'; // Importe o hook useAuthToken
 import { Logout } from '../api/login.js';
 
+
 function Navbar() {
-  const { user, setUser } = useAuth();
+  const { token } = useAuthToken(); 
+  const { deleteToken } = useAuthToken(); 
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const [user, setUser] = useState(null); // Adicione o estado para armazenar as informações do usuário
+  useEffect(() => {
+    if (token) {
+      const decodedToken = decodeToken(token); // Decodificar o token JWT manualmente
+      setUser(decodedToken);
+    }
+  }, [token]);
+
+  const decodeToken = (token) => {
+    if (token) {
+      const tokenParts = token.split('.');
+      const payload = JSON.parse(atob(tokenParts[1]));
+      const username = payload.username;
+      // Retorne os dados decodificados
+      return { username };
+    } else {
+      return null;
+    }
+  };
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -40,223 +60,93 @@ function Navbar() {
   };
 
   const handleLogout = async () => {
-    await Logout();
+    await Logout(deleteToken);
     setUser(null);
   };
 
-  // Adicionando um useEffect para limpar os estados ao desmontar o componente
-
-
   return (
-  
-    <AppBar  sx={{
-     backgroundColor:'white',
-     position: 'fixed',
-     boxShadow: 'rgba(0.4, 0.4, 0.4, 0.2) 3px 2px 8px',
-     marginBottom:'5rem'
-    }}>
+    <AppBar
+      sx={{
+        backgroundColor: 'white',
+        position: 'fixed',
+        boxShadow: 'rgba(0.4, 0.4, 0.4, 0.2) 3px 2px 8px',
+        marginBottom: '5rem',
+      }}
+    >
       <Container maxWidth="xl">
-        <Toolbar disableGutters>
-  
-          <Typography
-            variant="h6"
-            noWrap
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-          
-            }}
-          >
-        <Link to="/" >
-             <img
-    src={Logo}
-    alt="Logo da sua empresa"
-    style={{
-    width: '9rem',
-    height:'4rem',
-     // Defina a largura máxima da imagem conforme necessário
-    marginRight: '10px', // Adicione margem direita para espaço entre a imagem e o texto
-  }}
-/>
-</Link>
+        <Toolbar disableGutters sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Typography variant="h6" noWrap>
+            <Link to="/" style={{ textDecoration: 'none' }}>
+              <img
+                src={Logo}
+                alt="Logo Baitz"
+                style={{
+                  width: '9rem',
+                  height: '3rem',
+                  marginRight: '10px',
+                }}
+              />
+            </Link>
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              style={{ color: 'gray' }} // Defina a cor personalizada aqui
-
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'block', md: 'none' },
-              }}
-            >
-                <MenuItem  onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">Vídeos</Typography>
-                </MenuItem>
-
-            </Menu>
-            
-          </Box>
-          <Typography
-            variant="h5"
-            noWrap
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-            }}
-          >
-        <Link to="/">
-
-            <img
-    src={Logo}
-    alt="Logo da sua empresa"
-    style={{
-      width: '9rem',
-      height:'4rem', 
-    marginRight: '10px', // Adicione margem direita para espaço entre a imagem e o texto
-  }}
-/>
-</Link>
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-          <Link to="/videos">
-
-              <Button
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'gray', display: 'block' , '&:hover': {
-                  color: '#d7683a', backgroundColor:'#fcf5ea'
-                },}}
-              >
-           Videos
-              </Button>
-    
-              </Link>
-
-              
-              <Link to="/sobre">
-
-<Button
-  onClick={handleCloseNavMenu}
-  sx={{ my: 2, color: 'gray', display: 'block' , '&:hover': {
-    color: '#d7683a', backgroundColor:'#fcf5ea'
-  },}}
->
-Sobre Nós
-</Button>
-</Link>
-
-              <Link to="/agenda">
-
-<Button
-  onClick={handleCloseNavMenu}
-  sx={{ my: 2, color: 'gray', display: 'block' , '&:hover': {
-    color: '#d7683a', backgroundColor:'#fcf5ea'
-  },}}
->
-Agenda
-</Button>
-
-</Link>
-
-
-
-              <Link to="/orcamento">
-
-<Button
-  onClick={handleCloseNavMenu}
-  sx={{ my: 2, color: 'gray', display: 'block' , '&:hover': {
-    color: '#d7683a', backgroundColor:'#fcf5ea'
-  },}}
->
-Orçamento
-</Button>
-</Link>
-        
-          </Box>
           <div>
+            {user ? (
+              <Box sx={{ flexGrow: 0 }}>
+                <Tooltip title="Open settings">
+                  <IconButton
+                    onClick={handleOpenUserMenu}
+                    
+                    sx={{ p: 0, display: 'flex', alignItems: 'center', borderRadius:'0px' }}
+                  >
+                    <Avatar alt="Avatar" src="" />
+                    <Typography variant="subtitle1" sx={{ marginLeft: 1, color: 'gray' }}>
+                      {user.username} {/* Exibindo o nome de usuário */}
+                    </Typography>
+                  </IconButton>
+                </Tooltip>
 
-{user ? (
-  <Box sx={{ flexGrow: 0 }}>
-        <Tooltip title="Open settings">
-        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, display: "flex", alignItems: "center" }}>
-          <Avatar alt="Remy Sharp" src="">
-          </Avatar>
-          <Typography variant="subtitle1" sx={{ marginLeft: 1, color: "gray" }}>
-            {user.user.name}
-          </Typography>
-        </IconButton>
-      </Tooltip>
-
-  <Menu
-    sx={{ mt: '45px' }}
-    id="menu-appbar"
-    anchorEl={anchorElUser}
-    anchorOrigin={{
-      vertical: 'top',
-      horizontal: 'right',
-    }}
-    keepMounted
-    transformOrigin={{
-      vertical: 'top',
-      horizontal: 'right',
-    }}
-    open={Boolean(anchorElUser)}
-    onClose={handleCloseUserMenu}
-  >
-      <MenuItem onClick={handleCloseUserMenu}>
-      <Link to="/" >
-        <Typography textAlign="center" sx={{color:'gray'}}>Perfil</Typography>
-        </Link>
-      </MenuItem>
-      <MenuItem onClick={handleCloseUserMenu}>
-      <Button onClick={handleLogout}>        
-      <Typography textAlign="center" sx={{color:'gray'}}>Sair</Typography>
-        </Button>
-      </MenuItem>
-  </Menu>
-</Box>
-) : (
-  <Link to="/entrar">
-
-  <Button
-    sx={{ my: 2, color: '#d7683a', backgroundColor:'#fcf5ea', display: 'block' , '&:hover': {
-      color: '#ba5a32', backgroundColor:'#f2e4ce'
-    },}}
-  >
-Entrar
-  </Button>
-
-  </Link>
-)}
-</div>
-          
+                <Menu
+                  sx={{ mt: '45px', width:'100%' }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <Link to="/" style={{ textDecoration: 'none' }}>
+                      <Typography textAlign="center" sx={{ color: 'gray' }}>
+                      {user.username}
+                      </Typography>
+                    </Link>
+                  </MenuItem>
+                  <MenuItem sx={{width:'100%'}} onClick={handleCloseUserMenu}>
+                    <Typography
+                      onClick={handleLogout}
+                      textAlign="center"
+                      sx={{ color: 'gray'  }} // Alterando o cursor para parecer um botão clicável
+                    >
+                      Sair
+                    </Typography>
+                  </MenuItem>
+                </Menu>
+              </Box>
+            ) : (
+              <div />
+            )}
+          </div>
         </Toolbar>
       </Container>
     </AppBar>
   );
-  }
+}
 
 export default Navbar;
-

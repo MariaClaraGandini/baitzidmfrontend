@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { AuthProvider } from './api/authContext.jsx';
+// import {  } from './api/authContext.jsx';
 
 const customTheme = createTheme({
   components: {
@@ -25,14 +25,12 @@ const customTheme = createTheme({
 
 function App() {
   return (
-    <AuthProvider>
     <ThemeProvider theme={customTheme}>
 
       <Navbar />
       <Outlet />
       <Footer />
         </ThemeProvider>
-        </AuthProvider>
 
   );
 }

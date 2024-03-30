@@ -4,19 +4,19 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Foto from '../assets/signin.jpg';
+import Foto from '../assets/wallpaper.png';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom'; // Use useNavigate para Vite
-import { useAuth } from '../api/authContext.jsx';
+import { useAuthToken } from '../api/AuthToken.jsx';
 
+import 'react-toastify/dist/ReactToastify.css'; // Importe os estilos CSS do react-toastify
 
 const customTheme = createTheme({
   components: {
@@ -24,10 +24,10 @@ const customTheme = createTheme({
       styleOverrides: {
         root: {
           '& label.Mui-focused': {
-            color: '#c16035', // Altere a cor do label quando o TextField está em foco para azul
+            color: '#2484fc', // Altere a cor do label quando o TextField está em foco para azul
           },
           '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-            borderColor: '#c16035', // Altere a cor da borda quando o TextField está em foco para azul
+            borderColor: '#2484fc', // Altere a cor da borda quando o TextField está em foco para azul
           },
         },
       },
@@ -38,15 +38,16 @@ const customTheme = createTheme({
 export default function SignIn() {
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
   const navigate = useNavigate(); // Use useNavigate para Vite
-  const { login } = useAuth(); // Obtenha a função de login do contexto AuthContext
-
-
+  const { saveToken } = useAuthToken();
+  
   const onSubmit = async (data) => {
     try {
-      await login(data.email, data.password); // Use a função de login do contexto
+      const response = await axios.post('http://localhost:3000/entrar', data); // Faz a solicitação de login para o endpoint '/entrar' no backend
+      const token = response.data.token; // Assume-se que o token JWT é retornado como parte da resposta do backend
+      saveToken(token);
       reset();
-      navigate('/');
-      toast.success('Login realizado com sucesso!');
+      navigate('/usuarios');
+      window.location.reload();
     } catch (error) {
       console.error('Error:', error.message);
       toast.error(error.message);
@@ -56,14 +57,14 @@ export default function SignIn() {
   return (
     <ThemeProvider theme={customTheme}>
       <ToastContainer />
-      <Grid container component="main" sx={{ height: '100vh', marginTop: '3rem', padding: '2.5rem' }}>
+      <Grid container component="main" sx={{ height: '90vh', marginTop: '3rem', padding: '2.5rem' }}>
         <CssBaseline />
         <Grid
           item
           xs={false}
           elevation={4}
-          sm={4}
-          md={6}
+          
+          md={5}
           sx={{
             backgroundImage: `url(${Foto})`,
             backgroundRepeat: 'no-repeat',
@@ -74,7 +75,7 @@ export default function SignIn() {
             borderRadius: '10px 0 0 10px',
           }}
         />
-        <Grid item xs={12} sm={8} md={6} component={Paper} elevation={3} sx={{ borderRadius: '0px 10px 10px 0px' }} square>
+        <Grid item xs={12} sm={12} md={7} component={Paper} elevation={3} sx={{ borderRadius: '0px 10px 10px 0px' }} square>
           <Box
             sx={{
               my: 8,
@@ -84,7 +85,7 @@ export default function SignIn() {
               alignItems: 'center',
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: '#d76a3d' }}>
+            <Avatar sx={{ m: 1, bgcolor: '#3c6cfc' }}>
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
@@ -95,11 +96,11 @@ export default function SignIn() {
                 margin="normal"
                 required
                 fullWidth
-                id="email"
-                label="Email Address"
-                autoComplete="email"
+                id="username"
+                label="Usuário"
+                autoComplete="username"
                 autoFocus
-                {...register('email', { required: 'Este campo é obrigatório' })}
+                {...register('username', { required: 'Este campo é obrigatório' })}
                 error={!!errors.email}
                 helperText={errors.email?.message}
               />
@@ -108,7 +109,7 @@ export default function SignIn() {
                 required
                 fullWidth
                 name="password"
-                label="Password"
+                label="Senha"
                 type="password"
                 autoComplete="current-password"
                 {...register('password', { required: 'Este campo é obrigatório' })}
@@ -122,29 +123,17 @@ export default function SignIn() {
                 sx={{
                   mt: 3,
                   mb: 2,
-                  backgroundColor: '#c0623c',
+                  backgroundColor: '#2484fc',
                   ':hover': {
-                    backgroundColor: '#a5522d',
+                    backgroundColor: '#3c6cfc',
                   },
                   ':active': {
-                    backgroundColor: '#8f4324',
+                    backgroundColor: '#2a47a1',
                   },
                 }}
               >
                 Entrar
               </Button>
-              <Grid container>
-                <Grid item xs>
-                  <Link href="#" sx={{ color: "#cc6236", textDecorationColor: "#a5522d" }} variant="body2">
-                    Esqueceu a senha?
-                  </Link>
-                </Grid>
-                <Grid item >
-                  <Link href="#" sx={{ color: "#cc6236", textDecorationColor: "#a5522d" }} variant="body2">
-                    {"Não possui uma conta? Cadastre-se"}
-                  </Link>
-                </Grid>
-              </Grid>
             </Box>
           </Box>
         </Grid>

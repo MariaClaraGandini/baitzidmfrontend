@@ -1,8 +1,8 @@
-const BASE_URL = "http://localhost:5000";
+const BASE_URL = "http://localhost:3000";
 import axios from 'axios';
 
 
-export const SignUPp = async () => {
+export const SignUp = async () => {
     try {
       const response = await fetch(`${BASE_URL}/event/create`, {
         method: "POST",
@@ -24,9 +24,11 @@ export const SignUPp = async () => {
   };
 
 
-  export const Logout = async () => {
+  export const Logout = async (deleteToken) => {
+
     try {
-      const response = await axios.get(`${BASE_URL}/auth/logout`);
+      const response = await axios.get(`${BASE_URL}/sair`);
+      deleteToken();
   
       if (response.status !== 200) {
         throw new Error('Erro ao fazer logout');
