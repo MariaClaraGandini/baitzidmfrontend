@@ -2,9 +2,7 @@
 import './App.css';
 import { Outlet } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import Footer from './components/Footer';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-// import {  } from './api/authContext.jsx';
 
 const customTheme = createTheme({
   components: {
@@ -29,7 +27,7 @@ function App() {
 
       <Navbar />
       <Outlet />
-      <Footer />
+      {/* <Footer /> */}
         </ThemeProvider>
 
   );

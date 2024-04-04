@@ -1,10 +1,8 @@
-import React from 'react';
 import '../App.css'; // Importe o arquivo CSS onde a classe está definida
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import banner from '../assets/teste2.png'; // Importe a imagem de background
 import { Button } from '@mui/material';
-import Typography from '@mui/material/Typography';
 
 function Home() {
   return (

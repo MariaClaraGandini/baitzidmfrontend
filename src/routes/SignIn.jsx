@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -101,8 +100,8 @@ export default function SignIn() {
                 autoComplete="username"
                 autoFocus
                 {...register('username', { required: 'Este campo é obrigatório' })}
-                error={!!errors.email}
-                helperText={errors.email?.message}
+                error={!!errors.username}
+                helperText={errors.email?.username}
               />
               <TextField
                 margin="normal"

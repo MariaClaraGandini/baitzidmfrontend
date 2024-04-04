@@ -1,0 +1,76 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+
+
+.container {
+    margin-top: 4rem;
+    padding: 2%;
+  }
+  
+  .search-input-container {
+    margin-bottom: 3rem;
+    width: 45%;
+    position: relative;
+  }
+  
+  .search-input {
+    width: 100%;
+    padding: 12px;
+    padding-right: 40px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+  
+  .search-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    color: #888;
+    cursor: pointer;
+  }
+  
+  .table-container {
+    overflow-x: auto;
+    border-radius: 10px;
+    
+  }
+  
+  .custom-table {
+    width: 100%;
+    border-collapse: collapse;
+  
+   
+  
+  }
+  
+  .table-header {
+    background-color: #e8f2fc;
+      padding-left: 5%;
+    padding-right: 5%;
+    color: #374151;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  
+  .table-cell {
+    width: 25%; 
+    padding: 0.75rem;
+    padding-left: 2%;
+    padding-right: 2%;
+    text-align: start;
+    border-bottom: 0.5px solid #e0e0e0;
+  }
+  
+  .table-row:nth-child(even) {
+    background-color: #ffffff;
+  }
+  
+  .table-row:nth-child(odd) {
+    background-color: #ffffff;
+  }
+  

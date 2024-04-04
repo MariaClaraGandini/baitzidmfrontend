@@ -7,7 +7,6 @@ import {
   Typography,
   Menu,
   MenuItem,
-  Avatar,
   Tooltip,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -16,6 +15,9 @@ import Logo from '../assets/logo.png';
 import { Link } from 'react-router-dom';
 import { useAuthToken } from '../api/AuthToken'; // Importe o hook useAuthToken
 import { Logout } from '../api/login.js';
+
+import { Avatar } from 'flowbite-react';
+
 
 
 function Navbar() {
@@ -69,7 +71,7 @@ function Navbar() {
       sx={{
         backgroundColor: 'white',
         position: 'fixed',
-        boxShadow: 'rgba(0.4, 0.4, 0.4, 0.2) 3px 2px 8px',
+        boxShadow: 'rgba(0.2, 0.2, 0.2, 0.1) 2px 1px 6px',
         marginBottom: '5rem',
       }}
     >
@@ -98,7 +100,7 @@ function Navbar() {
                     
                     sx={{ p: 0, display: 'flex', alignItems: 'center', borderRadius:'0px' }}
                   >
-                    <Avatar alt="Avatar" src="" />
+                    <Avatar alt="Avatar" rounded  />
                     <Typography variant="subtitle1" sx={{ marginLeft: 1, color: 'gray' }}>
                       {user.username} {/* Exibindo o nome de usuário */}
                     </Typography>
