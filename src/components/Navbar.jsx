@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import {
   AppBar,
   Box,
@@ -9,7 +9,6 @@ import {
   MenuItem,
   Tooltip,
 } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Logo from '../assets/logo.png';
 import { Link } from 'react-router-dom';
@@ -23,7 +22,7 @@ import { Avatar } from 'flowbite-react';
 function Navbar() {
   const { token } = useAuthToken(); 
   const { deleteToken } = useAuthToken(); 
-  const [anchorElNav, setAnchorElNav] = useState(null);
+  // const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [user, setUser] = useState(null); // Adicione o estado para armazenar as informações do usuário
   useEffect(() => {
@@ -45,17 +44,17 @@ function Navbar() {
     }
   };
 
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
+  // const handleOpenNavMenu = (event) => {
+  //   setAnchorElNav(event.currentTarget);
+  // };
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
+  // const handleCloseNavMenu = () => {
+  //   setAnchorElNav(null);
+  // };
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);

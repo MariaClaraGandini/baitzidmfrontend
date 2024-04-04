@@ -1,12 +1,35 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Table } from 'flowbite-react';
+import { useAuthToken } from '../api/AuthToken'; // Importe o hook useAuthToken
 
 export default function Users() {
+  const { token } = useAuthToken(); 
+
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
 
+
+  useEffect(() => {
+    async function fetchUsers() {
+      try {
+        const response = await axios.get('http://localhost:3000/usuarios/groups', {
+          headers: {
+            Authorization: `Bearer ${token}` // Passa o token no cabeçalho Authorization
+          }
+        });
+        setUsers(response.data);
+        setSearchResults(response.data); // Exibe todos os usuários inicialmente
+      } catch (error) {
+        console.error('Erro ao buscar usuários:', error);
+      }
+    }
+
+    fetchUsers();
+  }, [token]); 
+
+  
   useEffect(() => {
     async function fetchUsers() {
       try {
