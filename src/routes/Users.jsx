@@ -3,7 +3,7 @@ import axios from 'axios';
 import ModalNewUser from  '../components/ModalNewUser';
 import { Table } from 'flowbite-react';
 import { useAuthToken } from '../api/AuthToken'; // Importe o hook useAuthToken
-// import ModalEditUser from  '../components/ModalEditUser';
+import ModalEditUser from  '../components/ModalEditUser';
 // import { HiOutlinePencil  } from 'react-icons/hi';
 
 export default function Users() {
@@ -99,14 +99,14 @@ export default function Users() {
             </Table.Head>
             <Table.Body className="divide-y">
               {searchResults.map(user => (
-                <Table.Row key={user.username} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                <Table.Row key={user.samaccountname} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    {user.name}
+                    {user.givename} {user.sn}
                   </Table.Cell>
                   <Table.Cell>{user.displayname}</Table.Cell>
                  
                   <Table.Cell>
-                  {/* <ModalEditUser user={user}/> */}
+                  <ModalEditUser {...user}/>
 
                     {/* <button className="mr-2 text-blue-500 bg-gray-50">
                       <HiOutlinePencil  style={{ fontSize: '1rem' }} />
