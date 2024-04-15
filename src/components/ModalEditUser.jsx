@@ -61,7 +61,11 @@ function ModalEditUser(user) {
                     console.log('Usuário editado com sucesso:', response.data);
 
                     setOpenModal(false);
+                    setPeriodoacesso('');
+                    setPassword('');
+                    setConfirmPassword('');
                     toast.success("Usuário atualizado com sucesso!");
+                    
 
                 } catch (error) {
                     console.error('Erro ao editar usuário:', error);
@@ -74,7 +78,7 @@ function ModalEditUser(user) {
                 <div>
                         <ToastContainer />
 
-                    <Button className='mr-2 text-blue-500 focus:outline-none' onClick={() => setOpenModal(true)}>
+                    <Button className='mr-2 text-blue-500 bg-gray-50 houver:bg-gray-100 focus:outline-none' onClick={() => setOpenModal(true)}>
                         <HiOutlinePencil style={{ fontSize: '1rem' }} />
                     </Button>
             
@@ -127,6 +131,8 @@ function ModalEditUser(user) {
                                                 className="border border-gray-300 bg-gray-50 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                                 required
                                             >
+                                                <option value="" selected>Selecione o período</option>
+
                                                 <option value="7to19">7:00 às 19:00 horas</option>
                                                 <option value="14to23">14:00 às 23:00</option>
                                                 <option value="7to23">7:00 às 23:00</option>

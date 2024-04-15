@@ -49,7 +49,7 @@ export default function SignIn() {
       window.location.reload();
     } catch (error) {
       console.error('Error:', error.message);
-      toast.error(error.message);
+      toast.error('Sem permissão para autenticar');
     }
   };
 
@@ -100,8 +100,8 @@ export default function SignIn() {
                 autoComplete="username"
                 autoFocus
                 {...register('username', { required: 'Este campo é obrigatório' })}
-                error={!!errors.email}
-                helperText={errors.email?.message}
+                error={!!errors.username}
+                helperText={errors.username?.message}
               />
               <TextField
                 margin="normal"
