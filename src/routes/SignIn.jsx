@@ -100,8 +100,8 @@ export default function SignIn() {
                 autoComplete="username"
                 autoFocus
                 {...register('username', { required: 'Este campo é obrigatório' })}
-                error={!!errors.username}
-                helperText={errors.email?.username}
+                error={!!errors.email}
+                helperText={errors.email?.message}
               />
               <TextField
                 margin="normal"
