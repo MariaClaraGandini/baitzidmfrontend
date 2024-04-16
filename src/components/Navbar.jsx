@@ -71,7 +71,6 @@ function Navbar() {
         backgroundColor: 'white',
         position: 'fixed',
         boxShadow: 'rgba(0.2, 0.2, 0.2, 0.1) 2px 1px 6px',
-        marginBottom: '5rem',
       }}
     >
       <Container maxWidth="xl">
@@ -107,7 +106,7 @@ function Navbar() {
                 </Tooltip>
 
                 <Menu
-                  sx={{ mt: '45px', width:'100%' }}
+                  sx={{ mt: '30px', width:'100%' }}
                   id="menu-appbar"
                   anchorEl={anchorElUser}
                   anchorOrigin={{
@@ -123,9 +122,9 @@ function Navbar() {
                   onClose={handleCloseUserMenu}
                 >
                   <MenuItem onClick={handleCloseUserMenu}>
-                    <Link to="/" style={{ textDecoration: 'none' }}>
+                    <Link to="/alterarsenha" style={{ textDecoration: 'none' }}>
                       <Typography textAlign="center" sx={{ color: 'gray' }}>
-                      {user.username}
+                      Alterar Senha
                       </Typography>
                     </Link>
                   </MenuItem>

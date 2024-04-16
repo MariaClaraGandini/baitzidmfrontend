@@ -4,6 +4,8 @@ import ModalNewUser from  '../components/ModalNewUser';
 import { Table } from 'flowbite-react';
 import { useAuthToken } from '../api/AuthToken'; // Importe o hook useAuthToken
 import ModalEditUser from  '../components/ModalEditUser';
+import { useNavigate } from 'react-router-dom'; // Use useNavigate para Vite
+
 // import { HiOutlinePencil  } from 'react-icons/hi';
 
 export default function Users() {
@@ -13,6 +15,7 @@ export default function Users() {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
 
+  const navigate = useNavigate(); // Use useNavigate para Vite
 
   useEffect(() => {
     async function fetchUsers() {
@@ -26,11 +29,14 @@ export default function Users() {
         setSearchResults(response.data); // Exibe todos os usuários inicialmente
       } catch (error) {
         console.error('Erro ao buscar usuários:', error);
+        if (error.response && error.response.status === 401) {
+          navigate('/alterarsenha');
       }
+    }
     }
 
     fetchUsers();
-  }, [token]); 
+  }, [token,navigate]); 
 
   
   useEffect(() => {
