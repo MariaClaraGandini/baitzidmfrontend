@@ -134,8 +134,10 @@ function ModalEditUser(user) {
                                                 <option value="" selected>Selecione o período</option>
 
                                                 <option value="7to19">7:00 às 19:00 horas</option>
-                                                <option value="14to23">14:00 às 23:00</option>
-                                                <option value="7to23">7:00 às 23:00</option>
+                                                <option value="14to23">14:00 às 23:00 horas</option>
+                                                <option value="7to23">7:00 às 23:00 horas</option>
+                                                <option value="fulltime">Sem restrição de horário - Full Time</option>
+
                                             </select>
                                         </div>
                                     </div>

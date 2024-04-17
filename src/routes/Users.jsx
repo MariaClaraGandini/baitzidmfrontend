@@ -43,9 +43,13 @@ export default function Users() {
     const search = async () => {
       try {
         if (searchTerm.trim() === '') {
-          setSearchResults(users); // Se o campo de pesquisa estiver vazio, exibir todos os usuários
+          setSearchResults(users);
         } else {
-          const response = await axios.get(`http://localhost:3000/usuarios/pesquisar/${searchTerm}`);
+          const response = await axios.get(`http://localhost:3000/usuarios/pesquisar/${searchTerm}`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
           setSearchResults(response.data);
         }
       } catch (error) {
@@ -53,8 +57,10 @@ export default function Users() {
       }
     };
   
-    search(); // Chama a função de pesquisa sempre que o estado searchTerm for atualizado
-  }, [searchTerm, users]);
+    search();
+  }, [searchTerm, users, token]); 
+
+  
   return (
     <div className="p-2 mt-8 bg-gray-100">
       <div className="p-4 bg-white rounded-lg dark:border-gray-700 mt-14">
