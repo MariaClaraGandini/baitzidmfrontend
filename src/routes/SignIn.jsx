@@ -35,24 +35,35 @@ const customTheme = createTheme({
 });
 
 export default function SignIn() {
-  const { register, handleSubmit, reset, formState: { errors } } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm();
   const navigate = useNavigate(); // Use useNavigate para Vite
   const { saveToken } = useAuthToken();
   
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post('http://localhost:3000/entrar', data); // Faz a solicitação de login para o endpoint '/entrar' no backend
-      const token = response.data.token; // Assume-se que o token JWT é retornado como parte da resposta do backend
+      const response = await axios.post('http://localhost:3000/entrar', data);
+      const token = response.data.token;
       saveToken(token);
-      reset();
-      navigate('/usuarios');
-      window.location.reload();
+  
+      // Após o login bem-sucedido, verifique se o usuário possui permissão
+      const permissionResponse = await axios.get('http://localhost:3000/usuarios/groups', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+  
+      if (permissionResponse.status === 200) {
+        // Se o usuário tiver permissão, redirecione-o para a rota '/usuarios'
+        navigate('/usuarios');
+        window.location.reload();
+      } else {
+        // Caso contrário, exiba uma mensagem de erro ou tome outra ação apropriada
+        toast.error('Usuário não possui permissão para acessar esta página.');
+      }
     } catch (error) {
       console.error('Error:', error.message);
-      toast.error('Sem permissão para autenticar');
+      toast.error(error.message);
     }
   };
-
+  
   return (
     <ThemeProvider theme={customTheme}>
       <ToastContainer />

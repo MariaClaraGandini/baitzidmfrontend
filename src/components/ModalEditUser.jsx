@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Button, Label, Modal, TextInput } from 'flowbite-react';
+import { Button, Label, Modal, TextInput,Checkbox } from 'flowbite-react';
 import { HiOutlinePencil } from "react-icons/hi";
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+
 
 
 function ModalEditUser(user) {
@@ -13,16 +14,9 @@ function ModalEditUser(user) {
     const [password, setPassword] = useState('');
     const [periodoacesso, setPeriodoacesso] = useState('');
     const [confirmpassword, setConfirmPassword] = useState('');
+    const [status, setStatus] =useState()
 
     useEffect(() => {
-        console.log(user.samaccountname);
-        if (user) {
-            setDisplayname(user.displayname);
-            setGivename(user.givename);
-            setSn(user.sn);
-            setPeriodoacesso(user.periodoacesso);
-        }
-
         async function fetchUserData() {
             try {
                 const response = await axios.get(`http://localhost:3000/usuarios/exibir/${user.samaccountname}`);
@@ -30,9 +24,9 @@ function ModalEditUser(user) {
                 setGivename(response.data.givename);
                 setSn(response.data.sn);
                 setPeriodoacesso(response.data.periodoacesso);
+                setStatus(response.data.status)
 
             } catch (error) {
-                console.error('Erro ao buscar informações do usuário:', error);
                 toast.error(error.response.data.msg)
 
                 }
@@ -56,7 +50,8 @@ function ModalEditUser(user) {
                         sn,
                         periodoacesso,
                         password,
-                        confirmpassword
+                        confirmpassword,
+                        status
                     });
                     console.log('Usuário editado com sucesso:', response.data);
 
@@ -88,7 +83,17 @@ function ModalEditUser(user) {
                             <div className="space-y-6">
                                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Editar Usuário</h3>
                                 <form>
+                                <div className='m-1'>
+                                        <div className="flex items-center gap-2">
+                                            <Checkbox checked={status} onChange={() => setStatus(!status)} /> {/* checkbox */}
+                                            <Label htmlFor="accept" className="flex">
+                                                Habilitado
+                                            </Label>
+                                        </div>
+
+</div>
                                     <div className='grid md:grid-cols-2 sm:grid-cols-1 py-2'>
+                                   
                                         <div className='mx-1'>
                                             <Label htmlFor="Nome" value="Nome" />
                                             <TextInput
@@ -167,7 +172,7 @@ function ModalEditUser(user) {
                                         </div>
                                     </div>
             
-                                    <div className="w-full">
+                                    <div className="w-full mt-4">
                                         <Button  onClick={onSave} className='bg-blue-500 mb-2 rounded text-white font-semibold hover:bg-blue-600'>
                                             Salvar
                                         </Button>
