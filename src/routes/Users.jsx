@@ -14,6 +14,8 @@ export default function Users() {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const [permissionChecked, setPermissionChecked] = useState(false); // Estado para indicar se a permissão foi verificada
+
 
   const navigate = useNavigate(); // Use useNavigate para Vite
 
@@ -26,7 +28,8 @@ export default function Users() {
           }
         });
         setUsers(response.data);
-        setSearchResults(response.data); // Exibe todos os usuários inicialmente
+        setSearchResults(response.data);
+        setPermissionChecked(true); // Define como verdadeiro quando a verificação da permissão for bem-sucedida
       } catch (error) {
         console.error('Erro ao buscar usuários:', error);
         if (error.response && error.response.status === 401) {
@@ -60,10 +63,12 @@ export default function Users() {
     search();
   }, [searchTerm, users, token]); 
 
-  
+  if (!permissionChecked) {
+    return null; 
+  }
   return (
-    <div className="p-2 mt-8 bg-gray-100">
-      <div className="p-4 bg-white rounded-lg dark:border-gray-700 mt-14">
+    <div className="h-95vh p-2 mt-8 bg-gray-100"> {/* Alteração aqui */}
+      <div className="p-4  bg-white rounded-lg dark:border-gray-700 mt-14">
         <h1 className="text-3xl font-medium mb-1">Usuários</h1>
         <div className="grid grid-cols-3 gap-2 mb-8">
           <form className='col-span-2'>   

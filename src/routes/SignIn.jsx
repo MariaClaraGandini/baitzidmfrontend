@@ -44,7 +44,8 @@ export default function SignIn() {
       const response = await axios.post('http://localhost:3000/entrar', data);
       const token = response.data.token;
       saveToken(token);
-  
+
+       try{
       // Após o login bem-sucedido, verifique se o usuário possui permissão
       const permissionResponse = await axios.get('http://localhost:3000/usuarios/groups', {
         headers: { Authorization: `Bearer ${token}` }
@@ -54,15 +55,29 @@ export default function SignIn() {
         // Se o usuário tiver permissão, redirecione-o para a rota '/usuarios'
         navigate('/usuarios');
         window.location.reload();
-      } else {
-        // Caso contrário, exiba uma mensagem de erro ou tome outra ação apropriada
-        toast.error('Usuário não possui permissão para acessar esta página.');
+
+      }
+    
+      } catch (error) {
+        if (error.response.status === 401) {
+          // Trate o status 401 aqui, como redirecionar para a página de alteração de senha
+          console.error('Usuário não autorizado');
+          navigate('/alterarsenha')
+          window.location.reload();
+
+          // Redirecionamento para a página de alteração de senha ou exibição de uma mensagem de erro
+        } else {
+          // Lidar com outros erros
+          console.error('Erro:', error.message);
+          toast.error('Ocorreu um erro ao fazer a solicitação.');
+        }
       }
     } catch (error) {
       console.error('Error:', error.message);
-      toast.error(error.message);
+      toast.error('Ocorreu um erro ao fazer login.');
     }
   };
+  
   
   return (
     <ThemeProvider theme={customTheme}>
