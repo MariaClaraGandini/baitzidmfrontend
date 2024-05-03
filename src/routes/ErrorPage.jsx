@@ -4,3 +4,4 @@ export default function ErrorPage() {
     <div>ErrorPage</div>
   )
 }
+

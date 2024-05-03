@@ -15,32 +15,37 @@ function ModalEditUser(user) {
     const [periodoacesso, setPeriodoacesso] = useState('');
     const [confirmpassword, setConfirmPassword] = useState('');
     const [status, setStatus] =useState()
+    const [logonhours, setLogonhours] =useState()
+
+
+      async function fetchUserData() {
+        try {
+            const response = await axios.get(`http://localhost:3000/usuarios/exibir/${user.samaccountname}`);
+            setDisplayname(response.data.displayname);
+            setGivename(response.data.givename);
+            setSn(response.data.sn);
+            setPeriodoacesso(response.data.periodoacesso);
+            setStatus(response.data.status);
+            setLogonhours(response.data.logonhours);
+        } catch (error) {
+            toast.error(error.response.data.msg);
+        }
+    }
 
     useEffect(() => {
-        async function fetchUserData() {
-            try {
-                const response = await axios.get(`http://localhost:3000/usuarios/exibir/${user.samaccountname}`);
-                setDisplayname(response.data.displayname);
-                setGivename(response.data.givename);
-                setSn(response.data.sn);
-                setPeriodoacesso(response.data.periodoacesso);
-                setStatus(response.data.status)
+        if (user) {
+            fetchUserData();
+        }
+    },);
 
-            } catch (error) {
-                toast.error(error.response.data.msg)
+    async function onCloseModal() {
 
-                }
-                }
-                
-                if (user) {
-                    fetchUserData();
-                }
-            }, [user]);
-            
-            async function onCloseModal() {
-                setOpenModal(false);
-            }
-            
+        setOpenModal(false);
+        await fetchUserData();
+
+    }
+
+
 
             async function onSave() {
                 try {
@@ -51,14 +56,14 @@ function ModalEditUser(user) {
                         periodoacesso,
                         password,
                         confirmpassword,
-                        status
+                        status,
                     });
                     console.log('Usuário editado com sucesso:', response.data);
 
                     setOpenModal(false);
-                    setPeriodoacesso('');
                     setPassword('');
                     setConfirmPassword('');
+                    
                     toast.success("Usuário atualizado com sucesso!");
                     
 
@@ -131,8 +136,8 @@ function ModalEditUser(user) {
                                             <Label htmlFor="Período de Acesso" value="Período de Acesso" />
                                             <select
                                                 id="periodoacesso"
-                                                value={periodoacesso}
-                                                onChange={(event) => setPeriodoacesso(event.target.value)}
+                                                value={logonhours}
+                                                onChange={(event) => setLogonhours(event.target.value)}
                                                 className="border border-gray-300 bg-gray-50 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                                 required
                                             >
