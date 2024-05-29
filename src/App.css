@@ -101,3 +101,40 @@
   color: #0b379c;
   background-color:#d3e0ff
 }
+
+/* CSS para ocultar a seta padrão do seletor */
+.select-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.select-wrapper select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding-right: 30px; /* Espaço para o ícone personalizado */
+  cursor: pointer; /* Altera o cursor ao passar sobre o select */
+}
+
+.custom-icon {
+  position: absolute;
+  top: 50%;
+  right: 8px; /* Ajuste conforme necessário */
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* Criação da máscara que cobre a seta */
+.select-mask {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  pointer-events: none;
+  background-image: linear-gradient(45deg, transparent 50%, white 50%), linear-gradient(-45deg, transparent 50%, white 50%);
+  background-size: 8px 8px;
+  background-position: calc(100% - 20px) 50%, calc(100% - 16px) 50%;
+  background-repeat: no-repeat;
+}

@@ -12,40 +12,35 @@ function ModalEditUser(user) {
     const [givename, setGivename] = useState('');
     const [sn, setSn] = useState('');
     const [password, setPassword] = useState('');
-    const [periodoacesso, setPeriodoacesso] = useState('');
+    // const [periodoacesso, setPeriodoacesso] = useState('');
     const [confirmpassword, setConfirmPassword] = useState('');
     const [status, setStatus] =useState()
-    const [logonhours, setLogonhours] =useState()
-
-
-      async function fetchUserData() {
-        try {
-            const response = await axios.get(`http://localhost:3000/usuarios/exibir/${user.samaccountname}`);
-            setDisplayname(response.data.displayname);
-            setGivename(response.data.givename);
-            setSn(response.data.sn);
-            setPeriodoacesso(response.data.periodoacesso);
-            setStatus(response.data.status);
-            setLogonhours(response.data.logonhours);
-        } catch (error) {
-            toast.error(error.response.data.msg);
-        }
-    }
 
     useEffect(() => {
-        if (user) {
-            fetchUserData();
-        }
-    },);
+        async function fetchUserData() {
+            try {
+                const response = await axios.get(`http://localhost:3000/usuarios/exibir/${user.samaccountname}`);
+                setDisplayname(response.data.displayname);
+                setGivename(response.data.givename);
+                setSn(response.data.sn);
+                // setPeriodoacesso(response.data.periodoacesso);
+                setStatus(response.data.status)
 
-    async function onCloseModal() {
+            } catch (error) {
+                toast.error(error.response.data.msg)
 
-        setOpenModal(false);
-        await fetchUserData();
-
-    }
-
-
+                }
+                }
+                
+                if (user) {
+                    fetchUserData();
+                }
+            }, [user]);
+            
+            async function onCloseModal() {
+                setOpenModal(false);
+            }
+            
 
             async function onSave() {
                 try {
@@ -53,17 +48,17 @@ function ModalEditUser(user) {
                         displayname,
                         givename,
                         sn,
-                        periodoacesso,
+                        // periodoacesso,
                         password,
                         confirmpassword,
-                        status,
+                        status
                     });
                     console.log('Usuário editado com sucesso:', response.data);
 
                     setOpenModal(false);
+                    // setPeriodoacesso('');
                     setPassword('');
                     setConfirmPassword('');
-                    
                     toast.success("Usuário atualizado com sucesso!");
                     
 
@@ -121,7 +116,6 @@ function ModalEditUser(user) {
                                         </div>
                                     </div>
             
-                                    <div className='grid md:grid-cols-2 sm:grid-cols-1 py-2'>
                                         <div className='mx-1'>
                                             <Label htmlFor="Login" value="Login" />
                                             <TextInput
@@ -132,25 +126,6 @@ function ModalEditUser(user) {
                                                 required
                                             />
                                         </div>
-                                        <div className='mx-1'>
-                                            <Label htmlFor="Período de Acesso" value="Período de Acesso" />
-                                            <select
-                                                id="periodoacesso"
-                                                value={logonhours}
-                                                onChange={(event) => setLogonhours(event.target.value)}
-                                                className="border border-gray-300 bg-gray-50 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                                required
-                                            >
-                                                <option value="" selected>Selecione o período</option>
-
-                                                <option value="7to19">7:00 às 19:00 horas</option>
-                                                <option value="14to23">14:00 às 23:00 horas</option>
-                                                <option value="7to23">7:00 às 23:00 horas</option>
-                                                <option value="fulltime">Sem restrição de horário - Full Time</option>
-
-                                            </select>
-                                        </div>
-                                    </div>
             
                                     <div className='grid md:grid-cols-2 sm:grid-cols-1 py-2'>
                                         <div className='mx-1'>
@@ -176,7 +151,10 @@ function ModalEditUser(user) {
                                             />
                                         </div>
                                     </div>
-            
+  
+
+
+
                                     <div className="w-full mt-4">
                                         <Button  onClick={onSave} className='bg-blue-500 mb-2 rounded text-white font-semibold hover:bg-blue-600'>
                                             Salvar

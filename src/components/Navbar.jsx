@@ -91,7 +91,6 @@ function Navbar() {
                 alt="Logo Baitz"
                 style={{
                   width: '9rem',
-                  height: '3rem',
                   marginRight: '10px',
                 }}
               />

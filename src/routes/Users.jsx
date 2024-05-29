@@ -5,6 +5,7 @@ import { Table } from 'flowbite-react';
 import { useAuthToken } from '../api/AuthToken'; // Importe o hook useAuthToken
 import ModalEditUser from  '../components/ModalEditUser';
 import { useNavigate } from 'react-router-dom'; // Use useNavigate para Vite
+import ModalLogonUser from '../components/ModalLogonUser';
 
 // import { HiOutlinePencil  } from 'react-icons/hi';
 
@@ -123,15 +124,10 @@ export default function Users() {
                   <Table.Cell>{user.displayname}</Table.Cell>
                  
                   <Table.Cell>
-                  <ModalEditUser {...user}/>
-
-                    {/* <button className="mr-2 text-blue-500 bg-gray-50">
-                      <HiOutlinePencil  style={{ fontSize: '1rem' }} />
-                    </button>
-     */}
-                    {/* <button className="text-red-500 focus:outline-none">
-                      <HiTrash style={{ fontSize: '1rem' }} />
-                    </button> */}
+      
+      <ModalEditUser {...user} />
+      <ModalLogonUser {...user} />
+   
                   </Table.Cell>
                 </Table.Row>
               ))}
