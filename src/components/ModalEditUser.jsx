@@ -73,7 +73,7 @@ function ModalEditUser(user) {
                 <div>
                         <ToastContainer />
 
-                    <Button className='mr-2 text-blue-500 bg-gray-50 houver:bg-gray-100 focus:outline-none' onClick={() => setOpenModal(true)}>
+                    <Button className='mr-2 text-blue-500 bg-gray-50 hover:bg-gray-100 focus:outline-none disabled:opacity-50 active:bg-gray-700' onClick={() => setOpenModal(true)}>
                         <HiOutlinePencil style={{ fontSize: '1rem' }} />
                     </Button>
             

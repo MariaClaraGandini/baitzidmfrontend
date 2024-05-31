@@ -80,8 +80,18 @@ function ModalLogonUser(user) {
             setHorarioInicioDomingo('');
             setHorarioFimDomingo('');
             setHorarioInicioSegunda('');
-            se
+            setHorarioFimSegunda('');
+            setHorarioInicioTerca('');
+            setHorarioInicioQuarta('');
+            setHorarioInicioQuinta('');
+            setHorarioFimQuinta('');
+            setHorarioInicioSexta('');
+            setHorarioFimSexta('');
+            setHorarioInicioSabado('');
+            setHorarioFimSabado('');
 
+
+            console.log(horarioiniciodomingo)
             console.log('Usuário editado com sucesso:', response.data);
             setOpenModal(false);
 
@@ -135,7 +145,7 @@ function ModalLogonUser(user) {
                                                         <option>06:00</option>
                                                         <option>07:00</option>
                                                         <option>08:00</option>
-                                                        <option>09:00</option>
+                                                        <option value="09:00">09:00</option>
                                                         <option>10:00</option>
                                                         <option>11:00</option>
                                                         <option>12:00</option>

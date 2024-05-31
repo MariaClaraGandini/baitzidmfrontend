@@ -12,10 +12,10 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Foto from '../assets/wallpaper.png';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; // Use useNavigate para Vite
 import { useAuthToken } from '../api/AuthToken.jsx';
 
-import 'react-toastify/dist/ReactToastify.css';
+import 'react-toastify/dist/ReactToastify.css'; // Importe os estilos CSS do react-toastify
 
 const customTheme = createTheme({
   components: {
@@ -23,10 +23,10 @@ const customTheme = createTheme({
       styleOverrides: {
         root: {
           '& label.Mui-focused': {
-            color: '#2484fc',
+            color: '#2484fc', // Altere a cor do label quando o TextField está em foco para azul
           },
           '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-            borderColor: '#2484fc',
+            borderColor: '#2484fc', // Altere a cor da borda quando o TextField está em foco para azul
           },
         },
       },
@@ -36,28 +36,38 @@ const customTheme = createTheme({
 
 export default function SignIn() {
   const { register, handleSubmit, formState: { errors } } = useForm();
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Use useNavigate para Vite
   const { saveToken } = useAuthToken();
-
+  
   const onSubmit = async (data) => {
     try {
       const response = await axios.post('http://localhost:3000/entrar', data);
       const token = response.data.token;
       saveToken(token);
 
-      try {
-        const permissionResponse = await axios.get('http://localhost:3000/usuarios/groups', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+       try{
+      // Após o login bem-sucedido, verifique se o usuário possui permissão
+      const permissionResponse = await axios.get('http://localhost:3000/usuarios/groups', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+  
+      if (permissionResponse.status === 200) {
+        // Se o usuário tiver permissão, redirecione-o para a rota '/usuarios'
+        navigate('/usuarios');
+        window.location.reload();
 
-        if (permissionResponse.status === 200) {
-          navigate('/usuarios');
-        }
+      }
+    
       } catch (error) {
-        if (error.response && error.response.status === 401) {
+        if (error.response.status === 401) {
+          // Trate o status 401 aqui, como redirecionar para a página de alteração de senha
           console.error('Usuário não autorizado');
-          navigate('/alterarsenha');
+          navigate('/alterarsenha')
+          window.location.reload();
+
+          // Redirecionamento para a página de alteração de senha ou exibição de uma mensagem de erro
         } else {
+          // Lidar com outros erros
           console.error('Erro:', error.message);
           toast.error('Ocorreu um erro ao fazer a solicitação.');
         }
@@ -67,7 +77,8 @@ export default function SignIn() {
       toast.error('Ocorreu um erro ao fazer login.');
     }
   };
-
+  
+  
   return (
     <ThemeProvider theme={customTheme}>
       <ToastContainer />
@@ -76,6 +87,8 @@ export default function SignIn() {
         <Grid
           item
           xs={false}
+          elevation={4}
+          
           md={5}
           sx={{
             backgroundImage: `url(${Foto})`,
