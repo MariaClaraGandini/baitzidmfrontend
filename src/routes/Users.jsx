@@ -6,7 +6,7 @@ import { useAuthToken } from '../api/AuthToken'; // Importe o hook useAuthToken
 import ModalEditUser from  '../components/ModalEditUser';
 import { useNavigate } from 'react-router-dom'; // Use useNavigate para Vite
 import ModalLogonUser from '../components/ModalLogonUser';
-
+// import ModalVacationUser from '../components/ModalVacationUser';
 // import { HiOutlinePencil  } from 'react-icons/hi';
 
 export default function Users() {
@@ -124,10 +124,11 @@ export default function Users() {
                   <Table.Cell>{user.displayname}</Table.Cell>
                  
                   <Table.Cell>
-      
+       <div className="flex space-x-2 ">
       <ModalEditUser {...user} />
       <ModalLogonUser {...user} />
-   
+      {/* <ModalVacationUser {...user} /> */}
+      </div>
                   </Table.Cell>
                 </Table.Row>
               ))}

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button, Modal, Table, TextInput, Select } from 'flowbite-react';
-import { HiOutlinePencil } from "react-icons/hi";
+import { HiClock } from "react-icons/hi";
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -8,12 +8,92 @@ import { ToastContainer, toast } from 'react-toastify';
 
 function ModalLogonUser(user) {
     const [openModal, setOpenModal] = useState(false);
-
+    const [horarioiniciodomingo, setHorarioInicioDomingo] = useState('--:--')
+    const [horariofimdomingo, setHorarioFimDomingo] = useState('--:--')
+    const [horarioiniciosegunda, setHorarioInicioSegunda] = useState('--:--')
+    const [horariofimsegunda, setHorarioFimSegunda] = useState('--:--')
+    const [horarioinicioterca, setHorarioInicioTerca] = useState('--:--')
+    const [horariofimterca, setHorarioFimTerca] = useState('--:--')
+    const [horarioinicioquarta, setHorarioInicioQuarta] = useState('--:--')
+    const [horariofimquarta, setHorarioFimQuarta] = useState('--:--')
+    const [horarioinicioquinta, setHorarioInicioQuinta] = useState('--:--')
+    const [horariofimquinta, setHorarioFimQuinta] = useState('--:--')
+    const [horarioiniciosexta, setHorarioInicioSexta] = useState('--:--')
+    const [horariofimsexta, setHorarioFimSexta] = useState('--:--')
+    const [horarioiniciosabado, setHorarioInicioSabado] = useState('--:--')
+    const [horariofimsabado, setHorarioFimSabado] = useState('--:--')
 
     async function onCloseModal() {
         setOpenModal(false);
+
     }
 
+
+    useEffect(() => {
+        if (openModal && user) {
+            async function fetchUserData() {
+                try {
+                    const response = await axios.get(`http://localhost:3000/usuarios/getlogonhours/${user.samaccountname}`);
+                    const data = response.data;
+                    console.log(user.samaccountname)
+                    setHorarioInicioDomingo(data.horarioiniciodomingo);
+                    setHorarioFimDomingo(data.horariofimdomingo);
+                    setHorarioInicioSegunda(data.horarioiniciosegunda);
+                    setHorarioFimSegunda(data.horariofimsegunda);
+                    setHorarioInicioTerca(data.horarioinicioterca);
+                    setHorarioFimTerca(data.horariofimterca);
+                    setHorarioInicioQuarta(data.horarioinicioquarta);
+                    setHorarioFimQuarta(data.horariofimquarta);
+                    setHorarioInicioQuinta(data.horarioinicioquinta);
+                    setHorarioFimQuinta(data.horariofimquinta);
+                    setHorarioInicioSexta(data.horarioiniciosexta);
+                    setHorarioFimSexta(data.horariofimsexta);
+                    setHorarioInicioSabado(data.horarioiniciosabado);
+                    setHorarioFimSabado(data.horariofimsabado);
+                } catch (error) {
+                    toast.error(error.response.data.msg);
+                }
+            }
+            fetchUserData();
+
+        }
+    }, [openModal, user]);
+
+    async function onSave() {
+        try {
+            const response = await axios.post(`http://localhost:3000/usuarios/setlogonhours/${user.samaccountname}`, {
+                horarioiniciodomingo,
+                horariofimdomingo,
+                horarioiniciosegunda,
+                horariofimsegunda,
+                horarioinicioterca,
+                horariofimterca,
+                horarioinicioquarta,
+                horariofimquarta,
+                horarioinicioquinta,
+                horariofimquinta,
+                horarioiniciosexta,
+                horariofimsexta,
+                horarioiniciosabado,
+                horariofimsabado
+            });
+            setHorarioInicioDomingo('');
+            setHorarioFimDomingo('');
+            setHorarioInicioSegunda('');
+            se
+
+            console.log('Usuário editado com sucesso:', response.data);
+            setOpenModal(false);
+
+            toast.success("Usuário atualizado com sucesso!");
+
+
+        } catch (error) {
+            console.error('Erro ao editar usuário:', error);
+            toast.error(error.response.data.msg)
+
+        }
+    }
 
 
     return (
@@ -21,13 +101,13 @@ function ModalLogonUser(user) {
             <ToastContainer />
 
             <Button className='mr-2 text-blue-500 bg-gray-50 houver:bg-gray-100 focus:outline-none' onClick={() => setOpenModal(true)}>
-                <HiOutlinePencil style={{ fontSize: '1rem' }} />
+                <HiClock style={{ fontSize: '1rem' }} />
             </Button>
             <Modal show={openModal} size="2xl" onClose={onCloseModal} popup className='flex items-center justify-center'>
                 <Modal.Header />
                 <Modal.Body>
                     <div className="space-y-6 ">
-                        <h3 className="text-xl  font-semibold text-gray-900 dark:text-white">Horário de Login - maria.pereira </h3>
+                        <h3 className="text-xl  font-semibold text-gray-900 dark:text-white">Horário de Login - {user.samaccountname} </h3>
                         <form>
                             <div className="overflow-x-auto ">
                                 <Table className=' '>
@@ -43,7 +123,9 @@ function ModalLogonUser(user) {
                                             <Table.Cell className='px-1.5'>
                                                 <div className="select-wrapper">
 
-                                                    <Select id="hours" required>
+                                                    <Select value={horarioiniciodomingo} onChange={(event) => setHorarioInicioDomingo(event.target.value)} id="hours" required>
+                                                        <option>--:--</option>
+
                                                         <option>00:00</option>
                                                         <option>01:00</option>
                                                         <option>02:00</option>
@@ -81,8 +163,8 @@ function ModalLogonUser(user) {
                                             <Table.Cell className='px-1.5'>
                                                 <div className="select-wrapper">
 
-                                                    <Select id="hours" required>
-                                                        <option>00:00</option>
+                                                    <Select value={horariofimdomingo} onChange={(event) => setHorarioFimDomingo(event.target.value)} id="hours" required>
+                                                        <option>--:--</option>
                                                         <option>01:00</option>
                                                         <option>02:00</option>
                                                         <option>03:00</option>
@@ -126,7 +208,8 @@ function ModalLogonUser(user) {
 
                                                 <div className="select-wrapper">
 
-                                                    <Select id="hours" required>
+                                                    <Select value={horarioiniciosegunda} onChange={(event) => setHorarioInicioSegunda(event.target.value)} id="hours" required>
+                                                        <option>--:--</option>
                                                         <option>00:00</option>
                                                         <option>01:00</option>
                                                         <option>02:00</option>
@@ -164,8 +247,8 @@ function ModalLogonUser(user) {
                                             <Table.Cell className='px-1.5'>
                                                 <div className="select-wrapper">
 
-                                                    <Select id="hours" required>
-                                                        <option>00:00</option>
+                                                    <Select value={horariofimsegunda} onChange={(event) => setHorarioFimSegunda(event.target.value)} id="hours" required>
+                                                        <option>--:--</option>
                                                         <option>01:00</option>
                                                         <option>02:00</option>
                                                         <option>03:00</option>
@@ -208,7 +291,8 @@ function ModalLogonUser(user) {
                                             <Table.Cell className='px-1.5'>
                                                 <div className="select-wrapper">
 
-                                                    <Select id="hours" required>
+                                                    <Select value={horarioinicioterca} onChange={(event) => setHorarioInicioTerca(event.target.value)} id="hours" required>
+                                                        <option>--:--</option>
                                                         <option>00:00</option>
                                                         <option>01:00</option>
                                                         <option>02:00</option>
@@ -248,8 +332,8 @@ function ModalLogonUser(user) {
                                             <Table.Cell className='px-1.5'>
                                                 <div className="select-wrapper">
 
-                                                    <Select id="hours" required>
-                                                        <option>00:00</option>
+                                                    <Select value={horariofimterca} onChange={(event) => setHorarioFimTerca(event.target.value)} id="hours" required>
+                                                         <option>--:--</option>
                                                         <option>01:00</option>
                                                         <option>02:00</option>
                                                         <option>03:00</option>
@@ -292,7 +376,8 @@ function ModalLogonUser(user) {
                                             <Table.Cell className='px-1.5'>
                                                 <div className="select-wrapper">
 
-                                                    <Select id="hours" required>
+                                                    <Select value={horarioinicioquarta} onChange={(event) => setHorarioInicioQuarta(event.target.value)} id="hours" required>
+                                                    <option>--:--</option>
                                                         <option>00:00</option>
                                                         <option>01:00</option>
                                                         <option>02:00</option>
@@ -330,8 +415,8 @@ function ModalLogonUser(user) {
                                             <Table.Cell className='px-1.5'>
                                                 <div className="select-wrapper">
 
-                                                    <Select id="hours" required>
-                                                        <option>00:00</option>
+                                                    <Select value={horariofimquarta} onChange={(event) => setHorarioFimQuarta(event.target.value)} id="hours" required>
+                                                    <option>--:--</option>
                                                         <option>01:00</option>
                                                         <option>02:00</option>
                                                         <option>03:00</option>
@@ -374,7 +459,8 @@ function ModalLogonUser(user) {
                                             <Table.Cell className='px-1.5'>
                                                 <div className="select-wrapper">
 
-                                                    <Select id="hours" required>
+                                                    <Select value={horarioinicioquinta} onChange={(event) => setHorarioInicioQuinta(event.target.value)} id="hours" required>
+                                                    <option>--:--</option>
                                                         <option>00:00</option>
                                                         <option>01:00</option>
                                                         <option>02:00</option>
@@ -412,8 +498,8 @@ function ModalLogonUser(user) {
                                             <Table.Cell className='px-1.5'>
                                                 <div className="select-wrapper">
 
-                                                    <Select id="hours" required>
-                                                        <option>00:00</option>
+                                                    <Select value={horariofimquinta} onChange={(event) => setHorarioFimQuinta(event.target.value)} id="hours" required>
+                                                    <option>--:--</option>
                                                         <option>01:00</option>
                                                         <option>02:00</option>
                                                         <option>03:00</option>
@@ -456,7 +542,8 @@ function ModalLogonUser(user) {
                                             <Table.Cell className='px-1.5'>
                                                 <div className="select-wrapper">
 
-                                                    <Select id="hours" required>
+                                                    <Select value={horarioiniciosexta} onChange={(event) => setHorarioInicioSexta(event.target.value)} id="hours" required>
+                                                    <option>--:--</option>
                                                         <option>00:00</option>
                                                         <option>01:00</option>
                                                         <option>02:00</option>
@@ -494,8 +581,8 @@ function ModalLogonUser(user) {
                                             <Table.Cell className='px-1.5'>
                                                 <div className="select-wrapper">
 
-                                                    <Select id="hours" required>
-                                                        <option>00:00</option>
+                                                    <Select value={horariofimsexta} onChange={(event) => setHorarioFimSexta(event.target.value)} id="hours" required>
+                                                    <option>--:--</option>
                                                         <option>01:00</option>
                                                         <option>02:00</option>
                                                         <option>03:00</option>
@@ -538,7 +625,8 @@ function ModalLogonUser(user) {
                                             <Table.Cell className='px-1.5'>
                                                 <div className="select-wrapper">
 
-                                                    <Select id="hours" required>
+                                                    <Select value={horarioiniciosabado} onChange={(event) => setHorarioInicioSabado(event.target.value)} id="hours" required>
+                                                    <option>--:--</option>
                                                         <option>00:00</option>
                                                         <option>01:00</option>
                                                         <option>02:00</option>
@@ -576,8 +664,8 @@ function ModalLogonUser(user) {
                                             <Table.Cell className='px-1.5'>
                                                 <div className="select-wrapper">
 
-                                                    <Select id="hours" required>
-                                                        <option>00:00</option>
+                                                    <Select value={horariofimsabado} onChange={(event) => setHorarioFimSabado(event.target.value)} id="hours" required>
+                                                    <option>--:--</option>
                                                         <option>01:00</option>
                                                         <option>02:00</option>
                                                         <option>03:00</option>
@@ -621,12 +709,10 @@ function ModalLogonUser(user) {
 
 
                             <div className="w-full m-4 ml-2">
-                                <Button className='bg-blue-500 mb-2 rounded text-white font-semibold hover:bg-blue-600'>
+                                <Button onClick={onSave} className='bg-blue-500 mb-2 rounded text-white font-semibold hover:bg-blue-600'>
                                     Salvar
                                 </Button>
-                                {/* <Button  onClick={onSave} className='bg-blue-500 mb-2 rounded text-white font-semibold hover:bg-blue-600'>
-                                            Salvar
-                                        </Button> */}
+
                             </div>
                         </form>
                     </div>

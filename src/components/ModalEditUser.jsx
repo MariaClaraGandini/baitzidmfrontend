@@ -81,7 +81,7 @@ function ModalEditUser(user) {
                         <Modal.Header />
                         <Modal.Body>
                             <div className="space-y-6">
-                                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Editar Usuário</h3>
+                                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Editar Usuário - {user.samaccountname}</h3>
                                 <form>
                                 <div className='m-1'>
                                         <div className="flex items-center gap-2">
