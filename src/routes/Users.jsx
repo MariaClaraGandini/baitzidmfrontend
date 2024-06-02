@@ -103,9 +103,9 @@ export default function Users() {
               </div>
             </div>
           </form>
-          <div className='grid flex items-center justify-items-end'>
+          {/* <div className='grid flex items-center justify-items-end'>
             <ModalNewUser />
-          </div>
+          </div> */}
         </div>
 
         <div className="overflow-x-auto mt-5">

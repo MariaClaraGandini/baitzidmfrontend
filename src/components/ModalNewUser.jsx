@@ -45,6 +45,20 @@ function ModalNewClient() {
 
             </div>
             <div className='mx-1'>
+                                            <Label htmlFor="Sobrenome" value="Sobrenome" />
+                                            <TextInput
+                                                id="sn"
+                                                placeholder="Silva"
+                                                value={sn}
+                                                onChange={(event) => setSn(event.target.value)}
+                                                required
+                                            />
+                                        </div>
+            
+            </div>
+            <div className='grid md:grid-cols-2 sm:grid-cols-1'>
+
+            <div className='mx-1'>
             <Label htmlFor="Login" value="Login" />
               <TextInput
                 id="userlogon"
@@ -55,22 +69,22 @@ function ModalNewClient() {
               />
 
             </div>
-            </div>
-           
            
             <div className='mx-1'>
             <Label htmlFor="Período de Acesso" value="Período de Acesso" />
 
         <select   className=" border border-gray-300 bg-gray-50 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
-  <option selected>Selecione um período de acesso</option>
-  <option value="7to19">Acesso - 7:00 às 19:00 horas</option>
-  <option value="14to23">Acesso - 14:00 às 23:00</option>
-  <option value="7to23">Acesso - 7:00 às 23:00 </option>
+  <option selected>Selecione a BASEDN do usuário </option>
+  <option value="7to23">DC=gotcha,DC=local</option>
+  <option value="7to19">OU=DTI,DC=gotcha,DC=local</option>
+  <option value="14to23">OU=Datacenter,OU=DTI,DC=gotcha,DC=local</option>
+  <option value="14to23">OU=Suporte,OU=DTI,DC=gotcha,DC=local</option>
+  <option value="14to23">OU=DCM,DC=gotcha,DC=local</option>
+
 </select>
 
             </div>
-    
-
+    </div>
 
             <div className='grid md:grid-cols-2 sm:grid-cols-1'>
                 

@@ -8,11 +8,12 @@ import { ToastContainer, toast } from 'react-toastify';
 
 function ModalEditUser(user) {
     const [openModal, setOpenModal] = useState(false);
+
+    const [errors, setErrors] = useState({});
     const [displayname, setDisplayname] = useState('');
     const [givename, setGivename] = useState('');
     const [sn, setSn] = useState('');
     const [password, setPassword] = useState('');
-    // const [periodoacesso, setPeriodoacesso] = useState('');
     const [confirmpassword, setConfirmPassword] = useState('');
     const [status, setStatus] =useState()
 
@@ -54,13 +55,36 @@ function ModalEditUser(user) {
                         status
                     });
                     console.log('Usuário editado com sucesso:', response.data);
+                    const errors = {};
 
+                    if (!displayname) {
+                        errors.displayname = "O login é obrigatório.";
+                    }
+            
+                    if (!givename) {
+                        errors.givename = "O nome é obrigatório.";
+                    }
+            
+                    if (!sn) {
+                        errors.sn = "O login é obrigatório.";
+                    }
+            
+            
+                    if (Object.keys(errors).length > 0) {
+                        setErrors(errors);
+                        return;
+                    }
+            
                     setOpenModal(false);
                     // setPeriodoacesso('');
                     setPassword('');
                     setConfirmPassword('');
-                    toast.success("Usuário atualizado com sucesso!");
-                    
+                    toast.success("Usuário atualizado com sucesso!", {
+                        autoClose: 3500 // 5000 milissegundos = 5 segundos
+                    });                   
+                     setTimeout(() => {
+                        window.location.reload();
+                    }, 3800);
 
                 } catch (error) {
                     console.error('Erro ao editar usuário:', error);
@@ -94,16 +118,17 @@ function ModalEditUser(user) {
 </div>
                                     <div className='grid md:grid-cols-2 sm:grid-cols-1 py-2'>
                                    
-                                        <div className='mx-1'>
-                                            <Label htmlFor="Nome" value="Nome" />
-                                            <TextInput
-                                                id="givename"
-                                                placeholder="Fulano"
-                                                value={givename}
-                                                onChange={(event) => setGivename(event.target.value)}
-                                                required
-                                            />
-                                        </div>
+                                    <div className='mx-1'>
+                                <Label htmlFor="Nome" value="Nome" />
+                                <TextInput
+                                    id="givename"
+                                    placeholder="Fulano"
+                                    value={givename}
+                                    onChange={(event) => setGivename(event.target.value)}
+                                    error={errors.givename}
+                                />
+                                {errors.givename && <span className=" text-sm text-red-500">{errors.givename}</span>}
+                            </div>
                                         <div className='mx-1'>
                                             <Label htmlFor="Sobrenome" value="Sobrenome" />
                                             <TextInput

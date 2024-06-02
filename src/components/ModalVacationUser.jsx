@@ -51,11 +51,11 @@ function ModalVacationUser(user) {
                     console.log('Usuário editado com sucesso:', response.data);
 
                     setOpenModal(false);
-                    // setPeriodoacesso('');
-                    // setDataInicioFerias('');
-                    // setDataRetornoFerias('');
-                    // setHorarioInicioFerias('');
-                    // setHorarioRetornoFerias('');
+                    setPeriodoacesso('');
+                    setDataInicioFerias('');
+                    setDataRetornoFerias('');
+                    setHorarioInicioFerias('');
+                    setHorarioRetornoFerias('');
                     console.log(dataInicioFerias)
                     console.log(horarioInicioFerias)
                     console.log(dataRetornoFerias)

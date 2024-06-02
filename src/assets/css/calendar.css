@@ -1,74 +1,86 @@
-a{
-    color: rgb(110, 110, 110);
+a {
+  color: rgb(110, 110, 110);
+}
+
+.fc-scrollgrid-section-header{
+  background-color: #e6f2ff;
 }
 
 .fc .fc-daygrid-day.fc-day-today {
-    background-color: transparent;
- 
+  background-color: transparent;
+
 }
 
-.fc .fc-daygrid-day.fc-day-today a{
-    background-color: #c0623c;
-    border-radius: 30px;
-    color:white;
-    font-weight: 00;
-    width: 2rem;
-    text-align: center;
-    margin: 3px;
+.fc .fc-daygrid-day.fc-day-today a {
+  background-color: #1658f2;
+  border-radius: 30px;
+  color: white;
+  font-weight: 00;
+  width: 2rem;
+  text-align: center;
+  margin: 3px;
 }
 
 
-.container{
-    padding: 2rem;
-    margin-top:3rem;
-}
-.fc-event{
-    background-color: rgb(255, 240, 217);
-}
-.fc-today-button, .fc-button ,.fc-button-primary{
-    background-color: aliceblue;
+.container {
+  padding: 2rem;
+  margin-top: 3rem;
 }
 
-.fc-col-header-cell-cushion{
-    font-weight: bold;
+.fc-event {
+  background-color: rgb(255, 240, 217);
 }
 
-.fc-daygrid-event-dot{
-   border-color: #c0623c;
+.fc-today-button,
+.fc-button,
+.fc-button-primary {
+  background-color: aliceblue;
+}
+
+.fc-col-header-cell-cushion {
+  font-weight: bold;
+}
+
+.fc-daygrid-event-dot {
+  border-color: #1658f2;
 }
 
 
 /* Estilos padrão para o cabeçalho */
 .fc-header-toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  /* Adapte para dispositivos menores */
-  @media (max-width: 600px) {
-    .fc-header-toolbar {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  
-    .fc-header-toolbar .fc-center {
-      order: 2; /* Mude a ordem para movê-lo para baixo na coluna */
-      margin-bottom: 5px; /* Adapte a margem conforme necessário */
-    }
-  
-    .fc-header-toolbar .fc-end {
-      order: 1; /* Mude a ordem para movê-lo para cima na coluna */
-    }
-  
-    .fc-header-toolbar button {
-      margin-bottom: 5px; /* Adapte a margem conforme necessário */
-    }
-  }
-  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-.fc-button-group button{
-    background-color: #c0623c;
+/* Adapte para dispositivos menores */
+@media (max-width: 600px) {
+  .fc-header-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .fc-header-toolbar .fc-center {
+    order: 2;
+    /* Mude a ordem para movê-lo para baixo na coluna */
+    margin-bottom: 5px;
+    /* Adapte a margem conforme necessário */
+  }
+
+  .fc-header-toolbar .fc-end {
+    order: 1;
+    /* Mude a ordem para movê-lo para cima na coluna */
+  }
+
+  .fc-header-toolbar button {
+    margin-bottom: 5px;
+    /* Adapte a margem conforme necessário */
+  }
+}
+
+
+.fc-button-group button {
+  background-color: #1658f2;
 }
 
 /* .fc .fc-button-primary{
@@ -88,49 +100,55 @@ a{
 } */
 
 
-.fc .fc-button-primary, .fc-today-button{
-    background-color: transparent;
-    border-color: transparent;
-    color:rgb(55, 55, 55);
-    padding-left:0.4rem;
-    padding-right:0.4rem;
-    padding-bottom: 0.2rem;
+.fc .fc-button-primary,
+.fc-today-button {
+  background-color: transparent;
+  border-color: transparent;
+  color: rgb(55, 55, 55);
+  padding-left: 0.4rem;
+  padding-right: 0.4rem;
+  padding-bottom: 0.2rem;
 
 
 }
 
-.fc .fc-button-primary:disabled{
-    color: #000;
-    background-color: transparent;
-    border: transparent;
+.fc .fc-button-primary:disabled {
+  color: #000;
+  background-color: transparent;
+  border: transparent;
 }
 
-.fc .fc-button-primary:hover{
-    background-color: transparent;
-    border:0 solid transparent;
-    border-bottom: 2px solid #c0623c; /* Substitua #000 pela cor desejada */
-    color:#c0623c}
+.fc .fc-button-primary:hover {
+  background-color: transparent;
+  border: 0 solid transparent;
+  border-bottom: 2px solid #1658f2;
+  /* Substitua #000 pela cor desejada */
+  color: #1658f2
+}
 
 
-    
+
 .fc .fc-button-primary:not(:disabled).fc-button-active,
-.fc .fc-today-button .fc-button-primary:disabled{
-    background-color: transparent;
-    border: 0 solid transparent;
-    -webkit-outline: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-    border-bottom: 2px solid #c0623c; /* Substitua #000 pela cor desejada */
-    color: #c0623c;
+.fc .fc-today-button .fc-button-primary:disabled {
+  background-color: transparent;
+  border: 0 solid transparent;
+  -webkit-outline: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  border-bottom: 2px solid #1658f2;
+  /* Substitua #000 pela cor desejada */
+  color: #1658f2;
 }
-.fc-button-primary:focus{
-    background-color: transparent;
-    border: 0 solid transparent;
-    -webkit-outline: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-    border-bottom: 2px solid #c0623c; /* Substitua #000 pela cor desejada */
-    color:#c0623c
+
+.fc-button-primary:focus {
+  background-color: transparent;
+  border: 0 solid transparent;
+  -webkit-outline: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  border-bottom: 2px solid #1658f2;
+  /* Substitua #000 pela cor desejada */
+  color: #1658f2
 }
 
 
@@ -139,11 +157,10 @@ a{
 .fc-next-button:hover,
 .fc-prev-button:hover,
 .fc-next-button:focus,
-.fc-prev-button:focus
-{
-    border: 0 solid transparent !important;
-    color: #000;
-    background-color: transparent;
+.fc-prev-button:focus {
+  border: 0 solid transparent !important;
+  color: #000;
+  background-color: transparent;
 
 }
 
@@ -154,56 +171,61 @@ a{
 
 /* Adicione ou ajuste essas regras CSS conforme necessário */
 .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  
-  .modal {
-    position: relative;
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    max-width: 600px;
-    width: 100%;
-    z-index: 1001;
-    margin-top: 3rem;
-  }
-  
-  .modal-close-button {
-    position: absolute;
-    top: 10px; /* Ajustado para o canto superior direito */
-    right: 10px; /* Ajustado para o canto direito */
-    background-color: #ffff;
-    color: #cacaca; /* Adiciona cor ao ícone "x" */
-    border: none;
-    padding: 8px 16px;
-    cursor: pointer;
-    font-size: 18px; /* Tamanho do ícone "x" */
-    line-height: 1; /* Alinha o ícone verticalmente no meio do círculo */
-  }
-  
-  @font-face {
-    font-family: 'Notera';
-    src: url('../../fonts/Notera.ttf') format('truetype');
-  }
-  
-  .titulo-customizado {
-    font-family: 'Notera', sans-serif;
-    color:#c0623c;
-    font-size: 3rem;
-    padding:0
-      }
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
 
-.fc-toolbar-title{
-  color:#c0623c;
+.modal {
+  position: relative;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 600px;
+  width: 100%;
+  z-index: 1001;
+  margin-top: 3rem;
+}
+
+.modal-close-button {
+  position: absolute;
+  top: 10px;
+  /* Ajustado para o canto superior direito */
+  right: 10px;
+  /* Ajustado para o canto direito */
+  background-color: #ffff;
+  color: #cacaca;
+  /* Adiciona cor ao ícone "x" */
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 18px;
+  /* Tamanho do ícone "x" */
+  line-height: 1;
+  /* Alinha o ícone verticalmente no meio do círculo */
+}
+
+@font-face {
+  font-family: 'Notera';
+  src: url('../../fonts/Notera.ttf') format('truetype');
+}
+
+.titulo-customizado {
+  font-family: 'Notera', sans-serif;
+  color: #1658f2;
+  font-size: 3rem;
+  padding: 0
+}
+
+.fc-toolbar-title {
+  color: #1658f2;
   font-weight: 300;
 
 }
