@@ -50,11 +50,11 @@ export default function SignIn() {
       reset()
       console.log(errors)
 
-      const response = await axios.post('http://localhost:3000/entrar', data);
+      const response = await axios.post('http://192.168.123.91:3000/entrar', data);
       const token = response.data.token;
       saveToken(token);
   
-      const permissionResponse = await axios.get('http://localhost:3000/usuarios/groups', {
+      const permissionResponse = await axios.get('http://192.168.123.91:3000/usuarios/groups', {
         headers: { Authorization: `Bearer ${token}` }
       });
   

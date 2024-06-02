@@ -33,7 +33,7 @@ function ModalLogonUser(user) {
         if (openModal && user) {
             async function fetchUserData() {
                 try {
-                    const response = await axios.get(`http://localhost:3000/usuarios/getlogonhours/${user.samaccountname}`);
+                    const response = await axios.get(`http://192.168.123.91:3000/usuarios/getlogonhours/${user.samaccountname}`);
                     const data = response.data;
                     console.log(user.samaccountname)
                     setHorarioInicioDomingo(data.horarioiniciodomingo);
@@ -61,7 +61,7 @@ function ModalLogonUser(user) {
 
     async function onSave() {
         try {
-            const response = await axios.post(`http://localhost:3000/usuarios/setlogonhours/${user.samaccountname}`, {
+            const response = await axios.post(`http://192.168.123.91:3000/usuarios/setlogonhours/${user.samaccountname}`, {
                 horarioiniciodomingo,
                 horariofimdomingo,
                 horarioiniciosegunda,

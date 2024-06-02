@@ -20,7 +20,7 @@ function ModalEditUser(user) {
     useEffect(() => {
         async function fetchUserData() {
             try {
-                const response = await axios.get(`http://localhost:3000/usuarios/exibir/${user.samaccountname}`);
+                const response = await axios.get(`http://192.168.123.91:3000/usuarios/exibir/${user.samaccountname}`);
                 setDisplayname(response.data.displayname);
                 setGivename(response.data.givename);
                 setSn(response.data.sn);
@@ -45,7 +45,7 @@ function ModalEditUser(user) {
 
             async function onSave() {
                 try {
-                    const response = await axios.post(`http://localhost:3000/usuarios/editar/${user.samaccountname}`, {
+                    const response = await axios.post(`http://192.168.123.91:3000/usuarios/editar/${user.samaccountname}`, {
                         displayname,
                         givename,
                         sn,
