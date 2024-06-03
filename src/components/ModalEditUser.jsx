@@ -15,7 +15,7 @@ function ModalEditUser(user) {
     const [sn, setSn] = useState('');
     const [password, setPassword] = useState('');
     const [confirmpassword, setConfirmPassword] = useState('');
-    const [status, setStatus] =useState()
+    const [status, setStatus] =useState('')
 
     useEffect(() => {
         async function fetchUserData() {

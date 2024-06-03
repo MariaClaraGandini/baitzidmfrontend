@@ -54,11 +54,8 @@ export default function Users() {
               Authorization: `Bearer ${token}`
             }
           });
-          if (Array.isArray(response.data)) {
             setSearchResults(response.data);
-          } else {
-            console.error('A resposta da API não é uma array:', response.data);
-          }        }
+          }        
       } catch (error) {
         console.error('Erro ao buscar usuários:', error);
       }

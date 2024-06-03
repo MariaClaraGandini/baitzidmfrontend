@@ -37,7 +37,9 @@ export default function ChangePass() {
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
     const { token } = useAuthToken();
     const [user, setUser] = useState(null);
-  
+    const [invalidCredentials, setInvalidCredentials] = useState(false); // Estado para controlar a exibição do erro
+    const [invalidCredentials1, setInvalidCredentials1] = useState(false); // Estado para controlar a exibição do erro
+
     useEffect(() => {
       if (token) {
         const decodedToken = decodeToken(token);
@@ -66,8 +68,16 @@ export default function ChangePass() {
         toast.success(response.data.message);
         reset();
       } catch (error) {
-        console.error('Error:', error.message);
-        toast.error('Erro ao alterar a senha do usuário');
+        
+      if (error.response && error.response.status === 500) {
+        toast.error('Ocorreu uma falha na redefinição de senha.');
+        setInvalidCredentials(true); // Define o estado para exibir o erro
+
+      } else {
+        console.error('Erro:', error.message);
+        toast.error('Ocorreu uma falha na redefinição de senha.');
+        setInvalidCredentials1(true)
+      }
       }
     };
 
@@ -99,6 +109,22 @@ export default function ChangePass() {
                 </Typography>
               )}
             <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
+            <div id="error-message " className='my-2'>
+                {/* Exibe a mensagem de erro apenas se o estado for verdadeiro */}
+                {invalidCredentials && (
+                  <Typography component="p" variant="body2" color="error">
+                    *Senha atual incorreta
+                  </Typography>
+                )}
+              </div>
+              <div id="error-message " className='my-2'>
+                {/* Exibe a mensagem de erro apenas se o estado for verdadeiro */}
+                {invalidCredentials1 && (
+                  <Typography component="p" variant="body2" color="error">
+                    *Senhas novas não coincidem
+                  </Typography>
+                )}
+              </div>
               <TextField
                 margin="normal"
                 required
@@ -113,6 +139,7 @@ export default function ChangePass() {
                 error={!!errors.currentPassword}
                 helperText={errors.currentPassword?.message}
               />
+              
               <div className='mt-2'>
               <TextField
                 margin="normal"
