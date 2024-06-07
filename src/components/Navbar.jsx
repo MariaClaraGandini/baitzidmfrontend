@@ -8,6 +8,8 @@ import { useAuthToken } from '../api/AuthToken'; // Importe o hook useAuthToken
 import { Logout } from '../api/login.js';
 import axios from 'axios'; // Importe o axios
 import { Avatar } from 'flowbite-react';
+import { useNavigate } from 'react-router-dom'; // Use useNavigate para Vite
+
 
 function Navbar() {
   const { token } = useAuthToken();
@@ -17,7 +19,7 @@ function Navbar() {
   const [hasPermission, setHasPermission] = useState(false); // Adicione o estado para indicar se o usuário tem permissão
   const location = useLocation();
   const isUsuariosActive = location.pathname === '/usuarios';
-
+  const navigate = useNavigate();
   useEffect(() => {
     if (token) {
       const decodedToken = decodeToken(token); // Decodificar o token JWT manualmente
@@ -50,17 +52,24 @@ function Navbar() {
           setHasPermission(true); 
         } 
       } catch (error) {
-        console.error('Erro ao verificar permissão:', error);
-        if (error.response && error.response.status === 401) {
+        if (error.response && error.response.status === 402) {
+          navigate('/alterarsenha');
+          setHasPermission(false);
+        }
+        if (error.response && error.response.status === 403) {
+          navigate('/');
           setHasPermission(false);
         }
       }
     }
-
-    if (user) {
+    if (token) {
       checkPermission();
-    }
-  }, [token, user]);
+      const intervalId = setInterval(checkPermission, 60000); // Verifica a autenticação a cada minuto
+
+      // Limpar intervalo ao desmontar o componente
+      return () => clearInterval(intervalId);
+    } 
+  }, [token, user, navigate]);
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);

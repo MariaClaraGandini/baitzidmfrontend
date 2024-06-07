@@ -33,7 +33,10 @@ export default function Users() {
         setPermissionChecked(true); // Define como verdadeiro quando a verificação da permissão for bem-sucedida
       } catch (error) {
         console.error('Erro ao buscar usuários:', error);
-        if (error.response && error.response.status === 401) {
+        if (error.response && error.response.status === 440) {
+          navigate('/');
+      }
+        if (error.response && error.response.status === 402) {
           navigate('/alterarsenha');
       }
     }
