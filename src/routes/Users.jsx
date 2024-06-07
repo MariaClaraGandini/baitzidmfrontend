@@ -21,6 +21,25 @@ export default function Users() {
   const navigate = useNavigate(); // Use useNavigate para Vite
 
   useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await axios.get('http://192.168.123.91:3000/usuarios/groups', {
+          headers: {
+            Authorization: `Bearer ${token}` // Passa o token no cabeçalho Authorization
+          }
+        });
+        setUsers(response.data);
+        setSearchResults(response.data);
+        setPermissionChecked(true); // Define como verdadeiro quando a verificação da permissão for bem-sucedida
+      } catch (error) {
+        console.error('Erro ao buscar usuários:', error);
+        toast.error("Ocorreu alguma falha")
+    };
+    checkAuth()
+    
+  }}, [token, navigate]);
+
+  useEffect(() => {
     async function fetchUsers() {
       try {
         const response = await axios.get('http://192.168.123.91:3000/usuarios/groups', {

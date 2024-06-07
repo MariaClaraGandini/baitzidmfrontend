@@ -13,6 +13,7 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import { useAuthToken } from '../api/AuthToken'; // Importe o hook useAuthToken
 import  {useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Use useNavigate para Vite
 
 import 'react-toastify/dist/ReactToastify.css'; // Importe os estilos CSS do react-toastify
 
@@ -39,11 +40,16 @@ export default function ChangePass() {
     const [user, setUser] = useState(null);
     const [invalidCredentials, setInvalidCredentials] = useState(false); // Estado para controlar a exibição do erro
     const [invalidCredentials1, setInvalidCredentials1] = useState(false); // Estado para controlar a exibição do erro
+    const navigate = useNavigate();
 
     useEffect(() => {
       if (token) {
         const decodedToken = decodeToken(token);
         setUser(decodedToken);
+      } else{
+        navigate('/');
+        localStorage.removeItem('token');
+        window.location.reload();
       }
     }, [token]);
   

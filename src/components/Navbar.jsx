@@ -10,7 +10,6 @@ import axios from 'axios'; // Importe o axios
 import { Avatar } from 'flowbite-react';
 import { useNavigate } from 'react-router-dom'; // Use useNavigate para Vite
 
-
 function Navbar() {
   const { token } = useAuthToken();
   const { deleteToken } = useAuthToken();
@@ -20,6 +19,7 @@ function Navbar() {
   const location = useLocation();
   const isUsuariosActive = location.pathname === '/usuarios';
   const navigate = useNavigate();
+
   useEffect(() => {
     if (token) {
       const decodedToken = decodeToken(token); // Decodificar o token JWT manualmente
@@ -52,29 +52,50 @@ function Navbar() {
           setHasPermission(true); 
         } 
       } catch (error) {
-        if (error.response && error.response.status === 402) {
-          navigate('/alterarsenha');
-          setHasPermission(false);
-        }
-        if (error.response && error.response.status === 403) {
-          navigate('/');
-          localStorage.removeItem('token');
-          window.location.reload();
-          setHasPermission(false);
-        }
-        else{
-          console.error('Erro ao verificar permissão:', error);
-        }
+          setHasPermission(false);   
       }
     }
-    if (token) {
+
+    if (user) {
+      checkPermission();
+    }
+
+  }, [token, user]);
+
+
+
+  useEffect(() => {
+    if (user){
+    async function checkPermission() {
+      try {
+        const response = await axios.get('http://localhost:3000/usuarios/token', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+   
+      if (response.status === 200) {
+          setHasPermission(true); 
+        } 
+      } catch (error) {
+        navigate('/');
+        localStorage.removeItem('token');
+        window.location.reload();
+        setHasPermission(false);
+      }
+    }
       checkPermission();
       const intervalId = setInterval(checkPermission, 120000); // Verifica a autenticação a cada minuto
 
       // Limpar intervalo ao desmontar o componente
       return () => clearInterval(intervalId);
-    } 
-  }, [token, user, navigate]);
+    
+  } 
+
+}, [token, user, navigate]);
+
+
+
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -105,6 +126,7 @@ function Navbar() {
                 alt="Logo Baitz"
                 style={{
                   width: '9rem',
+                  height: '3rem',
                   marginRight: '10px',
                 }}
               />

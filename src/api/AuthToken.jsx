@@ -16,7 +16,9 @@ export const useAuthToken = () => {
   const deleteToken = () => {
     localStorage.removeItem('token');
     navigate('/');
+    window.location.reload();
     setToken(null);
+    console.log("logout")
 
   };
 
