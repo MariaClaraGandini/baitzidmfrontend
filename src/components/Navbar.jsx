@@ -58,13 +58,18 @@ function Navbar() {
         }
         if (error.response && error.response.status === 403) {
           navigate('/');
+          localStorage.removeItem('token');
+          window.location.reload();
           setHasPermission(false);
+        }
+        else{
+          console.error('Erro ao verificar permissão:', error);
         }
       }
     }
     if (token) {
       checkPermission();
-      const intervalId = setInterval(checkPermission, 60000); // Verifica a autenticação a cada minuto
+      const intervalId = setInterval(checkPermission, 120000); // Verifica a autenticação a cada minuto
 
       // Limpar intervalo ao desmontar o componente
       return () => clearInterval(intervalId);

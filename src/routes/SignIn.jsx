@@ -52,7 +52,8 @@ export default function SignIn() {
       const permissionResponse = await axios.get('http://localhost:3000/usuarios/groups', {
         headers: { Authorization: `Bearer ${token}` }
       });
-  
+      
+      
       if (permissionResponse.status === 200) {
         // Se o usuário tiver permissão, redirecione-o para a rota '/usuarios'
         navigate('/usuarios');
