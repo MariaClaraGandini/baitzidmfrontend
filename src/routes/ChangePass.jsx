@@ -46,11 +46,7 @@ export default function ChangePass() {
       if (token) {
         const decodedToken = decodeToken(token);
         setUser(decodedToken);
-      } else{
-        navigate('/');
-        localStorage.removeItem('token');
-        window.location.reload();
-      }
+      } 
     }, [token]);
   
     const decodeToken = (token) => {

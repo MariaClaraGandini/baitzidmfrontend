@@ -11,17 +11,36 @@ a {
 
 }
 
-.fc .fc-daygrid-day.fc-day-today a {
+/* Estilizando o número do dia atual */
+.fc .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
   background-color: #1658f2;
   border-radius: 30px;
   color: white;
-  font-weight: 00;
-  width: 2rem;
+  font-weight: 600;
+  min-width: 2rem;
   text-align: center;
   margin: 3px;
 }
 
+/* Estilos para os eventos */
+.fc-event, 
+.fc-event-main, 
+.fc-event-title, 
+.fc-event-time {
+  background-color: rgb(167, 210, 250)!important;
+  color: black !important; /* Ajuste conforme necessário */
+}
 
+/* Garantindo que o evento não herda estilos indesejados do dia */
+.fc .fc-daygrid-day.fc-day-today .fc-daygrid-day-events .fc-event {
+  background-color:rgb(167, 210, 250) !important;
+
+  color: black !important;
+}
+.fc-event .fc-event-start .fc-event-end .fc-event-today .fc-daygrid-event .fc-daygrid-block-event .fc-h-event{
+  background-color: rgb(167, 210, 250)
+
+}
 .container {
   padding: 2rem;
   margin-top: 3rem;
@@ -164,12 +183,15 @@ a {
 
 }
 
+.fc-event,.fc-event-start, .fc-event-future, .fc-daygrid-event, .fc-daygrid-block-event, .fc-h-event,.fc-event-title-container{
+  background-color: rgb(167, 210, 250);
 
-
-
+}
 /* MODAL */
 
 /* Adicione ou ajuste essas regras CSS conforme necessário */
+
+
 .modal-overlay {
   position: fixed;
   top: 0;

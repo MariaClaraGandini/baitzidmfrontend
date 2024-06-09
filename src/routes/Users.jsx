@@ -6,7 +6,7 @@ import { useAuthToken } from '../api/AuthToken'; // Importe o hook useAuthToken
 import ModalEditUser from  '../components/ModalEditUser';
 import { useNavigate } from 'react-router-dom'; // Use useNavigate para Vite
 import ModalLogonUser from  '../components/ModalLogonUser';
-// import ModalVacationUser from '../components/ModalVacationUser';
+import ModalVacationUser from '../components/ModalVacationUser';
 // import { HiOutlinePencil  } from 'react-icons/hi';
 
 export default function Users() {
@@ -20,24 +20,24 @@ export default function Users() {
 
   const navigate = useNavigate(); // Use useNavigate para Vite
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const response = await axios.get('http://192.168.123.91:3000/usuarios/groups', {
-          headers: {
-            Authorization: `Bearer ${token}` // Passa o token no cabeçalho Authorization
-          }
-        });
-        setUsers(response.data);
-        setSearchResults(response.data);
-        setPermissionChecked(true); // Define como verdadeiro quando a verificação da permissão for bem-sucedida
-      } catch (error) {
-        console.error('Erro ao buscar usuários:', error);
-        toast.error("Ocorreu alguma falha")
-    };
-    checkAuth()
+  // useEffect(() => {
+  //   const checkAuth = async () => {
+  //     try {
+  //       const response = await axios.get('http://192.168.123.91:3000/usuarios/groups', {
+  //         headers: {
+  //           Authorization: `Bearer ${token}` // Passa o token no cabeçalho Authorization
+  //         }
+  //       });
+  //       setUsers(response.data);
+  //       setSearchResults(response.data);
+  //       setPermissionChecked(true); // Define como verdadeiro quando a verificação da permissão for bem-sucedida
+  //     } catch (error) {
+  //       console.error('Erro ao buscar usuários:', error);
+  //       toast.error("Ocorreu alguma falha")
+  //   };
+  //   checkAuth()
     
-  }}, [token, navigate]);
+  // }}, [token, navigate]);
 
   useEffect(() => {
     async function fetchUsers() {
@@ -52,12 +52,14 @@ export default function Users() {
         setPermissionChecked(true); // Define como verdadeiro quando a verificação da permissão for bem-sucedida
       } catch (error) {
         console.error('Erro ao buscar usuários:', error);
-        if (error.response && error.response.status === 440) {
-          navigate('/');
-      }
-        if (error.response && error.response.status === 402) {
-          navigate('/alterarsenha');
-      }
+        setPermissionChecked(false); // Define como verdadeiro quando a verificação da permissão for bem-sucedida
+
+      //   if (error.response && error.response.status === 440) {
+      //     navigate('/');
+      // }
+      //   if (error.response && error.response.status === 402) {
+      //     navigate('/alterarsenha');
+      // }
     }
     }
 
@@ -150,7 +152,7 @@ export default function Users() {
                   <div className="flex space-x-2 ">
       <ModalEditUser {...user} />
       <ModalLogonUser {...user} />
-      {/* <ModalVacationUser {...user} /> */}
+      <ModalVacationUser {...user} />
       </div>
                   </Table.Cell>
                 </Table.Row>
