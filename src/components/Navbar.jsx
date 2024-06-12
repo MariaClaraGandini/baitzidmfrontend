@@ -10,30 +10,34 @@ import axios from 'axios'; // Importe o axios
 import { Avatar } from 'flowbite-react';
 import { useNavigate } from 'react-router-dom'; // Use useNavigate para Vite
 
+
 function Navbar() {
-  const { token, setToken, deleteToken } = useAuthToken(); // Adicione setToken para atualizar o token
+  const { token } = useAuthToken();
+  const { deleteToken } = useAuthToken();
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [user, setUser] = useState(null);
-  const [hasPermission, setHasPermission] = useState(false);
-  const navigate = useNavigate();
+  const [hasPermission, setHasPermission] = useState(false); // Adicione o estado para indicar se o usuário tem permissão
+  const location = useLocation();
   const isUsuariosActive = location.pathname === '/usuarios';
-
-  const decodeToken = (token) => {
-    if (token) {
-      const tokenParts = token.split('.');
-      const payload = JSON.parse(atob(tokenParts[1]));
-      return payload; // Retornar o payload completo para obter todos os dados
-    } else {
-      return null;
-    }
-  };
-
+  const navigate = useNavigate();
   useEffect(() => {
     if (token) {
       const decodedToken = decodeToken(token); // Decodificar o token JWT manualmente
       setUser(decodedToken);
     }
   }, [token]);
+
+  const decodeToken = (token) => {
+    if (token) {
+      const tokenParts = token.split('.');
+      const payload = JSON.parse(atob(tokenParts[1]));
+      const username = payload.username;
+      // Retorne os dados decodificados
+      return { username };
+    } else {
+      return null;
+    }
+  };
 
   useEffect(() => {
     async function checkPermission() {
@@ -43,55 +47,37 @@ function Navbar() {
             Authorization: `Bearer ${token}`
           }
         });
-
+        
         if (response.status === 200) {
-          setHasPermission(true);
-        }
+          setHasPermission(true); 
+        } 
       } catch (error) {
-        console.error('Erro ao verificar permissão:', error);
+        if (error.response && error.response.status === 402) {
+          navigate('/alterarsenha');
+          setHasPermission(false);
+        }
+        if (error.response && error.response.status === 403) {
+          navigate('/');
+          localStorage.removeItem('token');
+          window.location.reload();
+          setHasPermission(false);
+        }
+        else{
+          console.error('Erro ao verificar permissão:', error);
+          navigate('/');
+      
 
-        setHasPermission(false);
+        }
       }
     }
-
-    if (user) {
+    if (token) {
       checkPermission();
-    }
-  }, [token, user]);
-
-  useEffect(() => {
-    async function checkAndRenewToken() {
-      try {
-        const response = await axios.get('http://localhost:3000/usuarios/token', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-
-        const newToken = response.headers['x-access-token'];
-        if (newToken) {
-          setToken(newToken); // Update the token in frontend state
-          const decodedToken = decodeToken(newToken);
-          setUser(decodedToken);
-          console.log(newToken)
-        }
-  
-      } catch (error) {
-        navigate('/');
-        deleteToken();
-        window.location.reload();
-        setHasPermission(false);
-      }
-    }
-
-    if (user) {
-      checkAndRenewToken();
-      const intervalId = setInterval(checkAndRenewToken, 1200000); // Verifica a autenticação a cada minuto
+      const intervalId = setInterval(checkPermission, 120000); // Verifica a autenticação a cada minuto
 
       // Limpar intervalo ao desmontar o componente
       return () => clearInterval(intervalId);
-    }
-  }, [token, user, navigate, setToken, deleteToken]);
+    } 
+  }, [token, user, navigate]);
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -102,9 +88,8 @@ function Navbar() {
   };
 
   const handleLogout = async () => {
-    await deleteToken();
+    await Logout(deleteToken);
     setUser(null);
-    navigate('/');
   };
 
   return (
@@ -123,7 +108,6 @@ function Navbar() {
                 alt="Logo Baitz"
                 style={{
                   width: '9rem',
-                  height: '3rem',
                   marginRight: '10px',
                 }}
               />

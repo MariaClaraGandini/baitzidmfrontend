@@ -41,6 +41,48 @@ export default function SignIn() {
   const { saveToken } = useAuthToken();
   const [invalidCredentials, setInvalidCredentials] = useState(false); // Estado para controlar a exibição do erro
 
+  // const onSubmit = async (data) => {
+  //   try {
+  //     const response = await axios.post('http://localhost:3000/entrar', data);
+  //     const token = response.data.token;
+  //     saveToken(token);
+
+  //      try{
+  //     // Após o login bem-sucedido, verifique se o usuário possui permissão
+  //     const permissionResponse = await axios.get('http://localhost:3000/usuarios/groups', {
+  //       headers: { Authorization: `Bearer ${token}` }
+  //     });
+      
+      
+  //     if (permissionResponse.status === 200) {
+  //       // Se o usuário tiver permissão, redirecione-o para a rota '/usuarios'
+  //       navigate('/usuarios');
+  //       window.location.reload();
+
+  //     }
+    
+  //     } catch (error) {
+  //       if (error.response.status === 402) {
+  //         // Trate o status 401 aqui, como redirecionar para a página de alteração de senha
+  //         console.error('Usuário não autorizado');
+  //         navigate('/alterarsenha')
+  //         window.location.reload();
+
+  //         // Redirecionamento para a página de alteração de senha ou exibição de uma mensagem de erro
+  //       } 
+  //       else {
+  //         // Lidar com outros erros
+  //         console.error('Erro:', error.message);
+  //         toast.error('Ocorreu um erro ao fazer a solicitação.');
+  //       }
+  //     }
+  //   } catch (error) {
+  //      toast.error('Usuário e/ou senha incorreto.');
+  //       setInvalidCredentials(true); // Define o estado para exibir o erro
+
+  //   }
+  // };
+
   const onSubmit = async (data) => {
     try {
       const response = await axios.post('http://localhost:3000/entrar', data);
@@ -52,8 +94,7 @@ export default function SignIn() {
       const permissionResponse = await axios.get('http://localhost:3000/usuarios/groups', {
         headers: { Authorization: `Bearer ${token}` }
       });
-      
-      
+  
       if (permissionResponse.status === 200) {
         // Se o usuário tiver permissão, redirecione-o para a rota '/usuarios'
         navigate('/usuarios');
@@ -62,24 +103,23 @@ export default function SignIn() {
       }
     
       } catch (error) {
-        if (error.response.status === 402) {
+        if (error.response.status === 401) {
           // Trate o status 401 aqui, como redirecionar para a página de alteração de senha
           console.error('Usuário não autorizado');
           navigate('/alterarsenha')
           window.location.reload();
 
           // Redirecionamento para a página de alteração de senha ou exibição de uma mensagem de erro
-        } 
-        else {
+        } else {
           // Lidar com outros erros
           console.error('Erro:', error.message);
           toast.error('Ocorreu um erro ao fazer a solicitação.');
         }
       }
     } catch (error) {
-       toast.error('Usuário e/ou senha incorreto.');
-        setInvalidCredentials(true); // Define o estado para exibir o erro
-
+      setInvalidCredentials(true)
+      console.error('Error:', error.message);
+      toast.error('Ocorreu um erro ao fazer login.');
     }
   };
   
