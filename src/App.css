@@ -50,27 +50,6 @@
 }
 
 
-/* HOME */
-.homehero {
-  background-size: contain;  background-position: center;
-  width: 100%;
-  height: auto;
-  max-height: 60vh
-}
-
-.users-list {
-  padding: 20px;
-}
-
-.list-item {
-  border: 1px solid #ccc;
-  margin-bottom: 10px;
-}
-
-.menu-item {
-  border: 1px solid #ccc;
-  margin: 2px 0;
-} */
 
 
 

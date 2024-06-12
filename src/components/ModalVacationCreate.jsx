@@ -1,11 +1,11 @@
 // ModalVacationCreate.jsx
-
 import React, { useState, useEffect } from 'react';
 import { Button, Label, Modal, TextInput, Select } from 'flowbite-react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuthToken } from '../api/AuthToken';
+import { Oval } from 'react-loader-spinner'; // Importando o componente de carregamento
 
 function ModalVacationCreate({ openModal, onClose, user }) {
   const { token } = useAuthToken(); 
@@ -15,6 +15,7 @@ function ModalVacationCreate({ openModal, onClose, user }) {
   const [dataRetornoFerias, setDataRetornoFerias] = useState('');
   const [horarioInicioFerias, setHorarioInicioFerias] = useState('');
   const [horarioRetornoFerias, setHorarioRetornoFerias] = useState('');
+  const [loading, setLoading] = useState(false); // Novo estado para controle de carregamento
 
   useEffect(() => {
     if (openModal) {
@@ -23,6 +24,8 @@ function ModalVacationCreate({ openModal, onClose, user }) {
   }, [openModal]);
 
   async function getAllUsername() {
+    setLoading(true);
+
     try {
       const response = await axios.get('http://192.168.123.91:3000/usuarios/username', {
         headers: {
@@ -32,10 +35,14 @@ function ModalVacationCreate({ openModal, onClose, user }) {
       setUsernames(response.data);
     } catch (error) {
       toast.error(error.response.data.msg);
+    }finally {
+      setLoading(false);
     }
   }
 
   async function onSave() {
+    setLoading(true);
+
     try {
       const dataInicioFormatted = dataInicioFerias ? formatData(dataInicioFerias) : '';
       const dataRetornoFormatted = dataRetornoFerias ? formatData(dataRetornoFerias) : '';
@@ -55,12 +62,19 @@ function ModalVacationCreate({ openModal, onClose, user }) {
 
       onClose();
       resetForm();
-      toast.success('Usuário atualizado com sucesso!');
-      window.location.reload();
+
+      toast.success('Usuário atualizado com sucesso!', {
+        onClose: () => {
+          setTimeout(() => {
+          }, 9000);
+        }
+      });
 
     } catch (error) {
       console.error('Erro ao editar usuário:', error);
       toast.error(error.response.data.msg);
+    }finally {
+      setLoading(false);
     }
   }
 
@@ -93,7 +107,11 @@ function ModalVacationCreate({ openModal, onClose, user }) {
           <div className="space-y-6">
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
               Agendar Férias - {user?.samaccountname}
-            </h3>
+            </h3> {loading ? (
+              <div className="flex justify-center">
+                <Oval color="#1658f2" height={50} width={50} />
+                </div>
+            ) : (
             <form>
               <Select
                 id="usuario"
@@ -158,6 +176,7 @@ function ModalVacationCreate({ openModal, onClose, user }) {
                 </Button>
               </div>
             </form>
+            )}
           </div>
         </Modal.Body>
       </Modal>

@@ -12,46 +12,53 @@ import 'react-toastify/dist/ReactToastify.css';
 import '../index.css';
 import "../assets/css/calendar.css";
 import { useAuthToken } from '../api/AuthToken';
+import { Oval } from 'react-loader-spinner';
 
 function Vacation() {
   const [openModalEdit, setOpenModalEdit] = useState(false);
   const [openModalCreate, setOpenModalCreate] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
-  const [Teste, setTeste] = useState([]);
-
   const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(false); // Novo estado de carregamento
   const { token } = useAuthToken(); 
 
-  useEffect(() => {
-    async function fetchVacationEvents() {
-      try {
+  async function fetchVacationEvents() {
+    setLoading(true);
+    try {
         const response = await axios.get('http://localhost:3000/usuarios/ferias', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
         });
-        setTeste(response.data);
-        console.log(Teste)
-        const vacationEvents = response.data.map(event => {
-            return {
-              start: `${event.vacationInfo.dataInicioFerias}T${event.vacationInfo.horarioInicioFerias}`,
-              end: `${event.vacationInfo.dataRetornoFerias}T${event.vacationInfo.horarioRetornoFerias}`,
-              title: `${event.vacationInfo.taskNameDesativar}`, // Adicionei a propriedade title
-              extendedProps: {
-                username: event.username
-              }
-            };
-          })
-        
-        setEvents(vacationEvents);
-        console.log(events)
-      } catch (error) {
-        console.error('Erro ao buscar eventos de férias:', error);
-      }
-    }
 
+        if (Array.isArray(response.data)) {
+            const vacationEvents = response.data
+                .filter(event => event && event.vacationInfo)
+                .map(event => {
+                    return {
+                        start: `${event.vacationInfo.dataInicioFerias}T${event.vacationInfo.horarioInicioFerias}`,
+                        end: `${event.vacationInfo.dataRetornoFerias}T${event.vacationInfo.horarioRetornoFerias}`,
+                        title: `${event.vacationInfo.taskNameDesativar}`,
+                        extendedProps: {
+                            username: event.username
+                        }
+                    };
+                });
+            setEvents(vacationEvents);
+        } else {
+            console.error('Resposta inesperada:', response.data);
+        }
+        console.log(response.data);
+    } catch (error) {
+        console.error('Erro ao buscar eventos de férias:', error);
+    } finally {
+        setLoading(false);
+    }
+}
+
+useEffect(() => {
     fetchVacationEvents();
-  }, [token]);
+}, [token]);
 
   const handleDateClick = () => {
     setSelectedEvent(null);
@@ -69,45 +76,52 @@ function Vacation() {
 
   const handleCloseCreateModal = () => {
     setOpenModalCreate(false);
+    fetchVacationEvents(); // Re-fetch events after creating a new vacation
   };
 
   return (
     <>
       <div className="h-95vh p-2 mt-8 bg-gray-100">
-      <div className="p-8 bg-white rounded-lg dark:border-gray-700 mt-14">
-        {/* <h1 className="text-3xl font-medium mb-2">Férias</h1> */}
-
-        <FullCalendar
-          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-          initialView="dayGridMonth"
-          headerToolbar={{
-            left: "prev,next today",
-            center: "title",
-            right: "dayGridMonth,timeGridWeek,timeGridDay,agendarFeriasButton"
-          }}
-          locale={ptBrLocale}
-          customButtons={{
-            agendarFeriasButton: {
-              text: 'Agendar Férias',
-              click: () => setOpenModalCreate(true)
-            }
-          }}
-          events={events}
-          dateClick={handleDateClick}
-          eventClick={handleEventClick}
+        <div className="p-8 bg-white rounded-lg dark:border-gray-700 mt-14">
+          {loading ? (
+            <div className="flex justify-center items-center">
+              <Oval color="#1658f2" height={50} width={50} />
+            </div>
+          ) : (
+            <FullCalendar
+              plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+              initialView="dayGridMonth"
+              headerToolbar={{
+                left: "prev,next today",
+                center: "title",
+                right: "dayGridMonth,timeGridWeek,timeGridDay,agendarFeriasButton"
+              }}
+              locale={ptBrLocale}
+              customButtons={{
+                agendarFeriasButton: {
+                  text: 'Agendar Férias',
+                  click: () => setOpenModalCreate(true)
+                }
+              }}
+              events={events}
+              dateClick={handleDateClick}
+              eventClick={handleEventClick}
+            />
+          )}
+        </div>
+        <ModalVacationEdit
+          openModal={openModalEdit}
+          onClose={handleCloseEditModal}
+          event={selectedEvent}
+        />
+        <ModalVacationCreate
+          openModal={openModalCreate}
+          onClose={handleCloseCreateModal}
+          user={null}
         />
       </div>
-      <ModalVacationEdit
-        openModal={openModalEdit}
-        onClose={handleCloseEditModal}
-        event={selectedEvent}
-      />
-      <ModalVacationCreate
-        openModal={openModalCreate}
-        onClose={handleCloseCreateModal}
-      />
-</div>
-</> );
+    </>
+  );
 }
 
 export default Vacation;

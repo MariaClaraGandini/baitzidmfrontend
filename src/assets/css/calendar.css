@@ -178,7 +178,7 @@ a {
 .fc-next-button:focus,
 .fc-prev-button:focus {
   border: 0 solid transparent !important;
-  color: #000;
+  color: #1658f2;
   background-color: transparent;
 
 }
@@ -248,6 +248,10 @@ a {
 
 .fc-toolbar-title {
   color: #1658f2;
-  font-weight: 300;
+  font-weight: 500;
 
 }
+
+.removebutton:hover{
+  background-color: #961f1f;
+  }

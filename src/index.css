@@ -48,9 +48,9 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
-button:hover {
+/* button:hover {
   border-color: #646cff;
-}
+} */
 /* button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
@@ -69,79 +69,7 @@ button:focus-visible {
   }
 }
 
-@font-face {
-  font-family: 'Notera';
-  src: url('./fonts/Notera.ttf') format('truetype');
-}
 
-.titulo-customizado {
-  font-family: 'Notera', sans-serif;
-  color:#c0623c;
-  
-  /* Outros estilos do título, se necessário */
-}
-
-/*///////////////////////////////// HOME/////////////////////////////////////// */
-
-.herotext {
-  color: white;
-  font-size: 5vw; /* Usando 'vw' (viewport width) para um tamanho de fonte responsivo */
-  font-family: 'Roboto', sans-serif;
-  margin: 0;
-  padding: 0;
-  line-height: 0.5; /* Ajustando o line-height conforme necessário */
-}
-
-.herotext2 {
-  color: white;
-  font-size: 15vw; /* Tamanho de fonte responsivo usando 'vw' */
-  font-family: 'Notera', sans-serif;
-  margin: 0;
-  padding: 0;
-  line-height: 0.5; /* Ajustando o line-height conforme necessário */
-}
-
-.herotextcontainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-}
-
-@media(max-width:599px){
-
-.herotext, .herotext2{
-  text-align: center;
-  
-}
-.responsivebutton{
-display: flex;
-justify-content: center; 
-align-items: center; 
-}
-
-.herotext {
-  font-size: 10vw; /* Usando 'vw' (viewport width) para um tamanho de fonte responsivo */
- 
-}
-
-.herotext2 {
-  font-size: 25vw; /* Tamanho de fonte responsivo usando 'vw' */
-  
-}
-}
-
-
-.titulo1{
-    color: #c0623c;
-    font-size: 70px;
-    font-family: 'Notera', sans-serif;
-    text-align: center;
-    margin:0
-
-  
-}
 
 
 /* HOME - NAVEGAR */
@@ -184,57 +112,7 @@ align-items: center;
 .imagembackground4{
   background-image: url('./assets/belamur.jpg');
 }
-/* VIDEOS */
 
-.videocontainer{
-  background-color: gray;
-  border-radius: 1rem;
-  width: 100%;
-height: 50vh;}
-
-.titulovideo{
-  font-size: 1rem;
-  font-weight: bold;
-  /* padding-left: 0.5rem;
-  padding-right: 0.5rem; */
-  margin-top: 0.3rem;
-  margin-bottom: 1rem;
-}
-
-.maisvideos{
-  background-color: #efefef;
-}
-
-.videostitulo{
-  font-family: 'Notera', sans-serif;
-  color:#c0623c;
-  padding-left:1.5rem;
-  height: 2.3rem;
-  padding-right:0.5rem;
-  font-size: 1.8rem;
-  background-color: 'white'; 
-
-
-}
-.maisvideoitem{
-  display: flex;
-  padding:0.5rem;
-}
-
-.maisvideovideo{
-  width: 18vh;
-  height: 10vh;
-  background-color: gray;
-  margin-right: 0.5rem;
-  border-radius: 0.5rem;
-  padding: 0;
-}
-.containervideo{
-  height: '250px'; 
-  overflow: 'auto' ;
-  border-radius: 1rem;
-
-}
 
 /* ///////////////////////////////////FOOTER////////////////////////// */
 
@@ -309,8 +187,8 @@ height: 50vh;}
   overflow:scroll;
 }
 
-.fc-event-main-frame{
- 
-  color:rgb(110, 110, 110);
-  font-weight: 700;
+
+
+.removebutton:hover{
+background-color: #961f1f;
 }
