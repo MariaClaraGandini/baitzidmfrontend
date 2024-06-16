@@ -4,18 +4,18 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuthToken } from '../api/AuthToken';
-import { Oval } from 'react-loader-spinner'; // Importando o componente de carregamento
+import { Oval } from 'react-loader-spinner'; 
 
 function ModalVacationEdit({ openModal, onClose, user, event }) {
   const { token } = useAuthToken(); 
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState(event ? event.extendedProps.username : ''); // Definindo o valor inicial de username
   const [usernames, setUsernames] = useState([]);
   const [dataInicioFerias, setDataInicioFerias] = useState('');
   const [dataRetornoFerias, setDataRetornoFerias] = useState('');
   const [horarioInicioFerias, setHorarioInicioFerias] = useState('');
   const [horarioRetornoFerias, setHorarioRetornoFerias] = useState('');
   const [isEditing, setIsEditing] = useState(false);
-  const [loading, setLoading] = useState(false); // Novo estado para controle de carregamento
+  const [loading, setLoading] = useState(false);
 
   function resetForm() {
     setUsername('');
@@ -161,7 +161,7 @@ function ModalVacationEdit({ openModal, onClose, user, event }) {
             {loading ? (
               <div className="flex justify-center">
                 <Oval color="#1658f2" height={50} width={50} />
-                </div>
+              </div>
             ) : (
               <form>
                 <Select

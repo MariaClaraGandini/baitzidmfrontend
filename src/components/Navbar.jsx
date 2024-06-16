@@ -19,6 +19,8 @@ function Navbar() {
   const [hasPermission, setHasPermission] = useState(false); // Adicione o estado para indicar se o usuário tem permissão
   const location = useLocation();
   const isUsuariosActive = location.pathname === '/usuarios';
+  const isFeriasActive = location.pathname === '/ferias';
+
   const navigate = useNavigate();
   useEffect(() => {
     if (token) {
@@ -48,15 +50,14 @@ function Navbar() {
           }
         });
         
-        if (response.status === 200) {
           setHasPermission(true); 
-        } 
+        
       } catch (error) {
         if (error.response && error.response.status === 402) {
           navigate('/alterarsenha');
           setHasPermission(false);
         }
-        if (error.response && error.response.status === 403) {
+        if (error.response && error.response.status === 403 || error.response && error.response.status === 440) {
           navigate('/');
           localStorage.removeItem('token');
           window.location.reload();
@@ -64,15 +65,13 @@ function Navbar() {
         }
         else{
           console.error('Erro ao verificar permissão:', error);
-          navigate('/');
-      
-
+        
         }
       }
     }
     if (token) {
       checkPermission();
-      const intervalId = setInterval(checkPermission, 120000); // Verifica a autenticação a cada minuto
+      const intervalId = setInterval(checkPermission, 60000); // Verifica a autenticação a cada minuto
 
       // Limpar intervalo ao desmontar o componente
       return () => clearInterval(intervalId);
@@ -115,37 +114,72 @@ function Navbar() {
           </Typography>
 
           <div className='flex items-center justify-between'>
-            {(hasPermission && user) && (
-              <NavLink
-                to="/usuarios"
-                style={{
-                  textDecoration: 'none',
-                  marginRight: '10px',
-                  width: '5rem',
-                  px: 2,
-                  textAlign: 'center',
-                }}
-              >
-                <Typography
-                  sx={{
-                    mt: 0.5,
-                    py: 0.5,
-                    textAlign: 'center',
-                    color: 'gray',
-                    textTransform: 'none',
-                    display: 'block',
-                    '&:hover': {
-                      borderBottom: '3px solid #1658f2',
-                      color: '#1658f2'
-                    },
-                    ...(isUsuariosActive && { borderBottom: '3px solid #1658f2', color: '#1658f2' })
-                  }}
-                >
-                  Usuários
-                </Typography>
-              </NavLink>
-            )}
-
+  <div>
+    {hasPermission && ( 
+      <div className='flex'>// Verifica se o usuário tem permissão
+     <NavLink
+     to="/usuarios"
+     style={{
+       textDecoration: 'none',
+       marginRight: '10px',
+       width: '5rem',
+       px: 2,
+       textAlign: 'center',
+       display: 'flex', // Adiciona display: flex
+       alignItems: 'center', // Centraliza verticalmente
+     }}
+   >
+     <Typography
+       sx={{
+         mt: 0.5,
+         py: 0.5,
+         textAlign: 'center',
+         color: 'gray',
+         textTransform: 'none',
+         display: 'block',
+         '&:hover': {
+           borderBottom: '3px solid #1658f2',
+           color: '#1658f2'
+         },
+         ...(isUsuariosActive && { borderBottom: '3px solid #1658f2', color: '#1658f2' })
+       }}
+     >
+       Usuários
+     </Typography>
+   </NavLink>
+     <NavLink
+     to="/ferias"
+     style={{
+       textDecoration: 'none',
+       marginRight: '10px',
+       width: '5rem',
+       px: 2,
+       textAlign: 'center',
+       display: 'flex', // Adiciona display: flex
+       alignItems: 'center', // Centraliza verticalmente
+     }}
+   >
+     <Typography
+       sx={{
+         mt: 0.5,
+         py: 0.5,
+         textAlign: 'center',
+         color: 'gray',
+         textTransform: 'none',
+         display: 'block',
+         '&:hover': {
+           borderBottom: '3px solid #1658f2',
+           color: '#1658f2'
+         },
+         ...(isFeriasActive && { borderBottom: '3px solid #1658f2', color: '#1658f2' })
+       }}
+     >
+       Férias
+     </Typography>
+   </NavLink>
+   </div>
+    )}
+  </div>
             {user && (
               <Box sx={{ flexGrow: 0, px: 2 }}>
                 <Tooltip title="Open settings">
