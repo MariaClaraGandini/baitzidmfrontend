@@ -19,20 +19,11 @@ function Vacation() {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { token } = useAuthToken(); 
+  const { token } = useAuthToken();
 
   const fetchVacationEvents = useCallback(async () => {
     setLoading(true);
     try {
-      let vacationEvents = JSON.parse(localStorage.getItem('vacationEvents'));
-
-      // Se os eventos estiverem no cache, definimos-os diretamente
-      if (vacationEvents) {
-        setEvents(vacationEvents);
-        setLoading(false);
-        return;
-      }
-
       const response = await axios.get('http://localhost:3000/usuarios/ferias', {
         headers: {
           Authorization: `Bearer ${token}`
@@ -40,7 +31,7 @@ function Vacation() {
       });
 
       if (Array.isArray(response.data)) {
-        vacationEvents = response.data
+        const vacationEvents = response.data
           .filter(event => event && event.vacationInfo)
           .map(event => {
             return {
@@ -52,8 +43,8 @@ function Vacation() {
               }
             };
           });
-        
-        // Salva os eventos no cache local
+
+        // Atualiza o cache local com os novos eventos
         localStorage.setItem('vacationEvents', JSON.stringify(vacationEvents));
         setEvents(vacationEvents);
       } else {
@@ -83,6 +74,7 @@ function Vacation() {
 
   const handleCloseEditModal = () => {
     setOpenModalEdit(false);
+    fetchVacationEvents(); 
   };
 
   const handleCloseCreateModal = () => {

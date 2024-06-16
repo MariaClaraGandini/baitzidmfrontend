@@ -4,11 +4,11 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuthToken } from '../api/AuthToken';
-import { Oval } from 'react-loader-spinner'; 
+import { Oval } from 'react-loader-spinner';
 
 function ModalVacationEdit({ openModal, onClose, user, event }) {
-  const { token } = useAuthToken(); 
-  const [username, setUsername] = useState(event ? event.extendedProps.username : ''); // Definindo o valor inicial de username
+  const { token } = useAuthToken();
+  const [username, setUsername] = useState(event ? event.extendedProps.username : '');
   const [usernames, setUsernames] = useState([]);
   const [dataInicioFerias, setDataInicioFerias] = useState('');
   const [dataRetornoFerias, setDataRetornoFerias] = useState('');
@@ -96,6 +96,7 @@ function ModalVacationEdit({ openModal, onClose, user, event }) {
         }
       });
 
+      localStorage.removeItem('vacationEvents'); // Clear cache
       onClose();
       resetForm();
       toast.success('Usuário atualizado com sucesso!', {
@@ -121,6 +122,7 @@ function ModalVacationEdit({ openModal, onClose, user, event }) {
         }
       });
 
+      localStorage.removeItem('vacationEvents'); // Clear cache
       onClose();
       toast.success('Agendamento excluído com sucesso!', {
         onClose: () => {

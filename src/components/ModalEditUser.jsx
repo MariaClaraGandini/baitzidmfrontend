@@ -53,7 +53,7 @@ function ModalEditUser({ user, fetchUsers }) {
             setOpenModal(false);
             setPassword('');
             setConfirmPassword('');
-            toast.success("Usuário atualizado com sucesso!", {
+            toast.success("Usuário atualizado com sucesso! Replicação em andamento..", {
                 autoClose: 13000 // 5000 milissegundos = 5 segundos
             });
             setTimeout(() => {
