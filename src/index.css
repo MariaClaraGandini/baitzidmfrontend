@@ -195,3 +195,10 @@ background-color: #961f1f;
 .Toastify__toast{
   box-shadow:0 1px 1px 0 rgba(64, 64, 64, 0.1), 0 0px 11px 0 rgba(0, 0, 0, 0.03)
 }
+
+.input-error {
+  border: 0.9px solid rgb(175, 3, 3);
+  border-radius: 0.5rem;
+  outline: none; 
+
+}

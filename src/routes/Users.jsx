@@ -17,25 +17,7 @@ export default function Users() {
     const [isLoadingUsers, setIsLoadingUsers] = useState(false); // State for loading users
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const checkAuth = async () => {
-            try {
-                const response = await axios.get('http://192.168.123.91:3000/usuarios/groups', {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-                setUsers(response.data);
-                setSearchResults(response.data);
-                setPermissionChecked(true);
-            } catch (error) {
-                console.error('Erro ao buscar usuários:', error);
-                toast.error("Ocorreu alguma falha");
-            }
-        };
-
-        checkAuth();
-    }, [token]);
+ 
     const fetchUsers = async () => {
       setIsLoadingUsers(true); // Set loading state to true
       try {
@@ -47,6 +29,7 @@ export default function Users() {
           setUsers(response.data);
           setSearchResults(response.data);
           setPermissionChecked(true);
+          console.log(users)
       } catch (error) {
           console.error('Erro ao buscar usuários:', error);
           if (error.response && error.response.status === 440) {
@@ -156,7 +139,7 @@ export default function Users() {
 
                                         <Table.Cell>
                                             <div className="flex space-x-2 ">
-                                            <ModalEditUser user={user} fetchUsers={fetchUsers} />
+                                            <ModalEditUser user={user} />
                                                 <ModalLogonUser {...user} />
                                                 {/* <ModalVacationUser {...user} /> */}
                                             </div>

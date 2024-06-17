@@ -5,7 +5,7 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import { Oval } from 'react-loader-spinner';
 
-function ModalEditUser({ user, fetchUsers }) {
+function ModalEditUser({ user }) {
     const [openModal, setOpenModal] = useState(false);
     const [displayname, setDisplayname] = useState('');
     const [givename, setGivename] = useState('');
@@ -14,6 +14,7 @@ function ModalEditUser({ user, fetchUsers }) {
     const [confirmpassword, setConfirmPassword] = useState('');
     const [status, setStatus] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [errors, setErrors] = useState({});
 
     useEffect(() => {
         async function fetchUserData() {
@@ -38,6 +39,19 @@ function ModalEditUser({ user, fetchUsers }) {
     }
 
     async function onSave() {
+        const newErrors = {};
+        if (!givename) newErrors.givename = '*Preencha esse campo';
+        if (!sn) newErrors.sn = '*Preencha esse campo';
+        if (!displayname) newErrors.displayname = '*Preencha esse campo';
+        if (password && !confirmpassword) newErrors.confirmpassword = '*Preencha esse campo';
+        if (!password && confirmpassword) newErrors.password = '*Preencha esse campo';
+        if (password !== confirmpassword) newErrors.senhasdiferentes = 'As senhas não coincidem!';
+
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+        }
+
         setIsLoading(true);
         try {
             const response = await axios.post(`http://localhost:3000/usuarios/editar/${user.samaccountname}`, {
@@ -57,18 +71,14 @@ function ModalEditUser({ user, fetchUsers }) {
                 autoClose: 13000 // 5000 milissegundos = 5 segundos
             });
             setTimeout(() => {
-
                 window.location.reload();
             }, 13000);
 
-            // Chama a função fetchUsers passada por propriedade para atualizar a lista de usuários
-
         } catch (error) {
             console.error('Erro ao editar usuário:', error);
-            toast.error(error.response.data.msg);
+            toast.error("Erro ao editar o usuário!");
         } finally {
             setIsLoading(false);
-
         }
     }
 
@@ -99,6 +109,7 @@ function ModalEditUser({ user, fetchUsers }) {
                                 </div>
                                 <div className='grid md:grid-cols-2 sm:grid-cols-1 py-2'>
                                     <div className='mx-1'>
+
                                         <Label htmlFor="Nome" value="Nome" />
                                         <TextInput
                                             id="givename"
@@ -106,7 +117,10 @@ function ModalEditUser({ user, fetchUsers }) {
                                             value={givename}
                                             onChange={(event) => setGivename(event.target.value)}
                                             required
+                                            className={errors.givename ? 'input-error' : ''}
                                         />
+                                       {errors.givename && <p className="text-red-600 text-xs font-medium">{errors.givename}</p>}
+
                                     </div>
                                     <div className='mx-1'>
                                         <Label htmlFor="Sobrenome" value="Sobrenome" />
@@ -116,7 +130,9 @@ function ModalEditUser({ user, fetchUsers }) {
                                             value={sn}
                                             onChange={(event) => setSn(event.target.value)}
                                             required
+                                            className={errors.sn ? 'input-error' : ''}
                                         />
+                                        {errors.sn && <p className="text-red-600 text-xs font-medium">{errors.sn}</p>}
                                     </div>
                                 </div>
                                 <div className='mx-1'>
@@ -127,7 +143,9 @@ function ModalEditUser({ user, fetchUsers }) {
                                         value={displayname}
                                         onChange={(event) => setDisplayname(event.target.value)}
                                         required
+                                        className={errors.displayname ? 'input-error' : ''}
                                     />
+                                    {errors.displayname && <p className="text-red-600 text-xs font-medium">{errors.displayname}</p>}
                                 </div>
                                 <div className='grid md:grid-cols-2 sm:grid-cols-1 py-2'>
                                     <div className='mx-1'>
@@ -139,7 +157,9 @@ function ModalEditUser({ user, fetchUsers }) {
                                             value={password}
                                             onChange={(event) => setPassword(event.target.value)}
                                             required
+                                            className={errors.password ? 'input-error' : ''}
                                         />
+                                        {errors.password && <p className="text-red-600 text-xs font-medium">{errors.password}</p>}
                                     </div>
                                     <div className='mx-1'>
                                         <Label htmlFor="Confirme a Senha" value="Confirme a senha" />
@@ -150,9 +170,13 @@ function ModalEditUser({ user, fetchUsers }) {
                                             value={confirmpassword}
                                             onChange={(event) => setConfirmPassword(event.target.value)}
                                             required
+                                            className={errors.confirmpassword ? 'input-error' : ''}
                                         />
+                                        {errors.confirmpassword && <p className="text-red-600 text-xs font-medium">{errors.confirmpassword}</p>}
                                     </div>
                                 </div>
+                                {errors.senhasdiferentes && <p className="text-red-600 text-xs font-medium mt-3">{errors.senhasdiferentes}</p>}
+
                                 <div className="w-full mt-4">
                                     <Button onClick={onSave} className='bg-blue-500 mb-2 rounded text-white font-semibold hover:bg-blue-600'>
                                         Salvar

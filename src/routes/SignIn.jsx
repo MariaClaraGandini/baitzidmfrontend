@@ -103,7 +103,7 @@ export default function SignIn() {
       }
     
       } catch (error) {
-        if (error.response.status === 401) {
+        if (error.response.status === 402) {
           // Trate o status 401 aqui, como redirecionar para a página de alteração de senha
           console.error('Usuário não autorizado');
           navigate('/alterarsenha')

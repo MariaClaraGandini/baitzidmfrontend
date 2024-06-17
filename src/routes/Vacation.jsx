@@ -33,24 +33,22 @@ function Vacation() {
       if (Array.isArray(response.data)) {
         const vacationEvents = response.data
           .filter(event => event && event.vacationInfo)
-          .map(event => {
-            return {
-              start: `${event.vacationInfo.dataInicioFerias}T${event.vacationInfo.horarioInicioFerias}`,
-              end: `${event.vacationInfo.dataRetornoFerias}T${event.vacationInfo.horarioRetornoFerias}`,
-              title: `${event.vacationInfo.taskNameDesativar}`,
-              extendedProps: {
-                username: event.username
-              }
-            };
-          });
+          .map(event => ({
+            start: `${event.vacationInfo.dataInicioFerias}T${event.vacationInfo.horarioInicioFerias}`,
+            end: `${event.vacationInfo.dataRetornoFerias}T${event.vacationInfo.horarioRetornoFerias}`,
+            title: event.vacationInfo.taskNameDesativar,
+            extendedProps: {
+              username: event.username
+            }
+          }));
 
-        // Atualiza o cache local com os novos eventos
-        localStorage.setItem('vacationEvents', JSON.stringify(vacationEvents));
         setEvents(vacationEvents);
+        console.log(response.data)
+        console.log(`eventos: ${vacationEvents}`)
+
       } else {
         console.error('Resposta inesperada:', response.data);
       }
-      console.log(response.data);
     } catch (error) {
       console.error('Erro ao buscar eventos de férias:', error);
     } finally {
@@ -74,12 +72,10 @@ function Vacation() {
 
   const handleCloseEditModal = () => {
     setOpenModalEdit(false);
-    fetchVacationEvents(); 
   };
 
   const handleCloseCreateModal = () => {
     setOpenModalCreate(false);
-    fetchVacationEvents(); // Re-fetch events after creating a new vacation
   };
 
   return (

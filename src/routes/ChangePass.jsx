@@ -67,17 +67,25 @@ export default function ChangePass() {
             Authorization: `Bearer ${token}`, // Adicionando o token JWT ao cabeçalho Authorization
           },
         });
-        toast.success(response.data.message);
+        toast.success("Senha alterada com sucesso!", {
+          autoClose: 5000 // 5000 milissegundos = 5 segundos
+      });
+      setTimeout(() => {
+          window.location.reload();
+      }, 5000);
+      
         reset();
       } catch (error) {
         
       if (error.response && error.response.status === 500) {
         toast.error('Ocorreu uma falha na redefinição de senha.');
+        reset()
         setInvalidCredentials(true); // Define o estado para exibir o erro
 
       } else {
         console.error('Erro:', error.message);
         toast.error('Ocorreu uma falha na redefinição de senha.');
+        reset()
         setInvalidCredentials1(true)
       }
       }
