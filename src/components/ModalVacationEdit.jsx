@@ -50,6 +50,7 @@ function ModalVacationEdit({ openModal, onClose, user, event }) {
         }
       });
       setUsernames(response.data);
+      console.log(response.data)
     } catch (error) {
       toast.error(error.response.data.msg);
     } finally {
@@ -85,7 +86,10 @@ function ModalVacationEdit({ openModal, onClose, user, event }) {
       const horarioInicioFormatted = horarioInicioFerias ? formatHorario(horarioInicioFerias) : '';
       const horarioRetornoFormatted = horarioRetornoFerias ? formatHorario(horarioRetornoFerias) : '';
 
-      await axios.post(`http://localhost:3000/usuarios/agendarferias/${username}`, {
+
+      const selectedUser = usernames.find(user => user.cn === username);
+      const samaccountnameToSend = selectedUser ? selectedUser.samaccountname : '';
+      await axios.post(`http://localhost:3000/usuarios/agendarferias/${samaccountnameToSend}`, {
         dataInicioFerias: dataInicioFormatted,
         horarioInicioFerias: horarioInicioFormatted,
         dataRetornoFerias: dataRetornoFormatted,
@@ -107,6 +111,7 @@ function ModalVacationEdit({ openModal, onClose, user, event }) {
         }
       });
     } catch (error) {
+      console.log(username)
       toast.error(error.response.data.msg);
     } finally {
       setLoading(false);
@@ -121,6 +126,7 @@ function ModalVacationEdit({ openModal, onClose, user, event }) {
           Authorization: `Bearer ${token}`
         }
       });
+      
 
       localStorage.removeItem('vacationEvents'); // Clear cache
       onClose();
@@ -174,7 +180,7 @@ function ModalVacationEdit({ openModal, onClose, user, event }) {
                 >
                   <option value="">Selecione um usuário</option>
                   {usernames.map((user) => (
-                    <option key={user.samaccountname} value={user.samaccountname}>
+                    <option key={user.cn} value={user.cn}>
                       {user.samaccountname}
                     </option>
                   ))}

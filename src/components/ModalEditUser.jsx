@@ -55,9 +55,9 @@ function ModalEditUser({ user }) {
         setIsLoading(true);
         try {
             const response = await axios.post(`http://localhost:3000/usuarios/editar/${user.samaccountname}`, {
-                displayname,
                 givename,
                 sn,
+                displayname,
                 password,
                 confirmpassword,
                 status
