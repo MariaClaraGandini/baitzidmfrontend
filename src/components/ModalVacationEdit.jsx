@@ -89,7 +89,7 @@ function ModalVacationEdit({ openModal, onClose, user, event }) {
 
       const selectedUser = usernames.find(user => user.cn === username);
       const samaccountnameToSend = selectedUser ? selectedUser.samaccountname : '';
-      await axios.post(`http://localhost:3000/usuarios/agendarferias/${samaccountnameToSend}`, {
+      await axios.post(`http://localhost:3000/usuarios/agendarferias/${username}`, {
         dataInicioFerias: dataInicioFormatted,
         horarioInicioFerias: horarioInicioFormatted,
         dataRetornoFerias: dataRetornoFormatted,
@@ -121,6 +121,8 @@ function ModalVacationEdit({ openModal, onClose, user, event }) {
   async function onRemove() {
     setLoading(true);
     try {
+      const selectedUser = usernames.find(user => user.cn === username);
+      const samaccountnameToSend = selectedUser ? selectedUser.samaccountname : '';
       await axios.delete(`http://localhost:3000/usuarios/removerferias/${username}`, {
         headers: {
           Authorization: `Bearer ${token}`

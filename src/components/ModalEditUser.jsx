@@ -7,7 +7,7 @@ import { Oval } from 'react-loader-spinner';
 
 function ModalEditUser({ user }) {
     const [openModal, setOpenModal] = useState(false);
-    const [displayname, setDisplayname] = useState('');
+    // const [displayname, setDisplayname] = useState('');
     const [givename, setGivename] = useState('');
     const [sn, setSn] = useState('');
     const [password, setPassword] = useState('');
@@ -20,7 +20,7 @@ function ModalEditUser({ user }) {
         async function fetchUserData() {
             try {
                 const response = await axios.get(`http://localhost:3000/usuarios/exibir/${user.samaccountname}`);
-                setDisplayname(response.data.displayname);
+                // setDisplayname(response.data.displayname);
                 setGivename(response.data.givename);
                 setSn(response.data.sn);
                 setStatus(response.data.status);
@@ -42,7 +42,7 @@ function ModalEditUser({ user }) {
         const newErrors = {};
         if (!givename) newErrors.givename = '*Preencha esse campo';
         if (!sn) newErrors.sn = '*Preencha esse campo';
-        if (!displayname) newErrors.displayname = '*Preencha esse campo';
+        // if (!displayname) newErrors.displayname = '*Preencha esse campo';
         if (password && !confirmpassword) newErrors.confirmpassword = '*Preencha esse campo';
         if (!password && confirmpassword) newErrors.password = '*Preencha esse campo';
         if (password !== confirmpassword) newErrors.senhasdiferentes = 'As senhas não coincidem!';
@@ -57,7 +57,7 @@ function ModalEditUser({ user }) {
             const response = await axios.post(`http://localhost:3000/usuarios/editar/${user.samaccountname}`, {
                 givename,
                 sn,
-                displayname,
+                // displayname,
                 password,
                 confirmpassword,
                 status
@@ -135,7 +135,7 @@ function ModalEditUser({ user }) {
                                         {errors.sn && <p className="text-red-600 text-xs font-medium">{errors.sn}</p>}
                                     </div>
                                 </div>
-                                <div className='mx-1'>
+                                {/* <div className='mx-1'>
                                     <Label htmlFor="Login" value="Login" />
                                     <TextInput
                                         id="userlogon"
@@ -146,7 +146,7 @@ function ModalEditUser({ user }) {
                                         className={errors.displayname ? 'input-error' : ''}
                                     />
                                     {errors.displayname && <p className="text-red-600 text-xs font-medium">{errors.displayname}</p>}
-                                </div>
+                                </div> */}
                                 <div className='grid md:grid-cols-2 sm:grid-cols-1 py-2'>
                                     <div className='mx-1'>
                                         <Label htmlFor="Senha" value="Senha" />
