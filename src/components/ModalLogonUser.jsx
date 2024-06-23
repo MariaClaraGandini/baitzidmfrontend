@@ -95,8 +95,12 @@ function ModalLogonUser(user) {
             console.log('Usuário editado com sucesso:', response.data);
             setOpenModal(false);
 
-            toast.success("Usuário atualizado com sucesso!");
-
+            toast.success("Usuário atualizado com sucesso! Replicação em andamento..", {
+                autoClose: 13000 // 5000 milissegundos = 5 segundos
+            });
+            setTimeout(() => {
+                window.location.reload();
+            }, 13000);
 
         } catch (error) {
             console.error('Erro ao editar usuário:', error);

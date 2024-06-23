@@ -103,7 +103,7 @@ function ModalVacationEdit({ openModal, onClose, user, event }) {
       localStorage.removeItem('vacationEvents'); // Clear cache
       onClose();
       resetForm();
-      toast.success('Usuário atualizado com sucesso!', {
+      toast.success('Férias reagendada com sucesso!', {
         onClose: () => {
           setTimeout(() => {
             window.location.reload();
@@ -182,7 +182,7 @@ function ModalVacationEdit({ openModal, onClose, user, event }) {
                 >
                   <option value="">Selecione um usuário</option>
                   {usernames.map((user) => (
-                    <option key={user.cn} value={user.cn}>
+                    <option  key={user.cn} value={user.cn}>
                       {user.samaccountname}
                     </option>
                   ))}

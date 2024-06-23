@@ -63,10 +63,12 @@ function ModalVacationCreate({ openModal, onClose, user }) {
       onClose();
       resetForm();
 
-      toast.success('Usuário atualizado com sucesso!', {
+      toast.warning('Agendamento em andamento...Aguarde.', {
         onClose: () => {
           setTimeout(() => {
-          }, 9000);
+            window.location.reload();
+            toast.success("Férias agendadas com sucesso.")
+          }, 20000);
         }
       });
 

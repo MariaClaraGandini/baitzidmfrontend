@@ -14,38 +14,40 @@ export default function Users() {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [permissionChecked, setPermissionChecked] = useState(false);
-    const [isLoadingUsers, setIsLoadingUsers] = useState(false); // State for loading users
+    const [isLoadingUsers, setIsLoadingUsers] = useState(false);
     const navigate = useNavigate();
 
- 
     const fetchUsers = async () => {
-      setIsLoadingUsers(true); // Set loading state to true
-      try {
-          const response = await axios.get('http://192.168.123.91:3000/usuarios/groups', {
-              headers: {
-                  Authorization: `Bearer ${token}`
-              }
-          });
-          setUsers(response.data);
-          setSearchResults(response.data);
-          setPermissionChecked(true);
-          console.log(users)
-      } catch (error) {
-          console.error('Erro ao buscar usuários:', error);
-          if (error.response && error.response.status === 440) {
-              navigate('/');
-          }
-          if (error.response && error.response.status === 402) {
-              navigate('/alterarsenha');
-          }
-      } finally {
-          setIsLoadingUsers(false); // Set loading state to false
-      }
-  };
+        setIsLoadingUsers(true);
+        try {
+            const response = await axios.get('http://192.168.123.91:3000/usuarios/groups', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if (Array.isArray(response.data)) {
+                setUsers(response.data);
+                setSearchResults(response.data);
+                setPermissionChecked(true);
+            } else {
+                console.error('A resposta não é um array:', response.data);
+                toast.error('Erro ao buscar usuários: resposta inválida da API');
+            }
+        } catch (error) {
+            console.error('Erro ao buscar usuários:', error);
+            toast.error('Erro ao buscar usuários: ' + error.message);
+            if (error.response && error.response.status === 440) {
+                navigate('/');
+            }
+            if (error.response && error.response.status === 402) {
+                navigate('/alterarsenha');
+            }
+        } finally {
+            setIsLoadingUsers(false);
+        }
+    };
 
     useEffect(() => {
-       
-
         fetchUsers();
     }, [token, navigate]);
 
@@ -60,10 +62,16 @@ export default function Users() {
                             Authorization: `Bearer ${token}`
                         }
                     });
-                    setSearchResults(response.data);
+                    if (Array.isArray(response.data)) {
+                        setSearchResults(response.data);
+                    } else {
+                        console.error('A resposta não é um array:', response.data);
+                        toast.error('Erro ao buscar usuários: resposta inválida da API');
+                    }
                 }
             } catch (error) {
                 console.error('Erro ao buscar usuários:', error);
+                toast.error('Erro ao buscar usuários: ' + error.message);
             }
         };
 
@@ -118,9 +126,7 @@ export default function Users() {
                 <div className="overflow-x-auto mt-5">
                     {isLoadingUsers ? (
                         <div className="flex justify-center items-center h-64">
-                          <div className="flex justify-center">
-                <Oval color="#1658f2" height={50} width={50} />
-                </div>
+                            <Oval color="#1658f2" height={50} width={50} />
                         </div>
                     ) : (
                         <Table hoverable>
@@ -130,18 +136,16 @@ export default function Users() {
                                 <Table.HeadCell className="bg-blue-50">Ações</Table.HeadCell>
                             </Table.Head>
                             <Table.Body className="divide-y">
-                                {searchResults.map((user) => (
+                                {Array.isArray(searchResults) && searchResults.map((user) => (
                                     <Table.Row key={user.samaccountname} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                                         <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                                             {user.givename} {user.sn}
                                         </Table.Cell>
                                         <Table.Cell>{user.displayname}</Table.Cell>
-
                                         <Table.Cell>
-                                            <div className="flex space-x-2 ">
-                                            <ModalEditUser user={user} />
+                                            <div className="flex space-x-2">
+                                                <ModalEditUser user={user} />
                                                 <ModalLogonUser {...user} />
-                                                {/* <ModalVacationUser {...user} /> */}
                                             </div>
                                         </Table.Cell>
                                     </Table.Row>
