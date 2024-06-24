@@ -16,6 +16,7 @@ function ModalVacationEdit({ openModal, onClose, user, event }) {
   const [horarioRetornoFerias, setHorarioRetornoFerias] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({}); // Estado para armazenar erros
 
   function resetForm() {
     setUsername('');
@@ -80,6 +81,31 @@ function ModalVacationEdit({ openModal, onClose, user, event }) {
 
   async function onSave() {
     setLoading(true);
+    const newErrors = {};
+
+    if (!username) newErrors.username = '*Preencha esse campo';
+    if (!dataInicioFerias) newErrors.dataInicioFerias = '*Preencha esse campo';
+    if (!dataRetornoFerias) newErrors.dataRetornoFerias = '*Preencha esse campo';
+    if (!horarioInicioFerias) newErrors.horarioInicioFerias = '*Preencha esse campo';
+    if (!horarioRetornoFerias) newErrors.horarioRetornoFerias = '*Preencha esse campo';
+
+    const inicioFerias = new Date(`${dataInicioFerias}T${horarioInicioFerias}`);
+    const retornoFerias = new Date(`${dataRetornoFerias}T${horarioRetornoFerias}`);
+    const now = new Date();
+
+    if (dataInicioFerias && horarioInicioFerias && inicioFerias < now) {
+      newErrors.dataInicioFerias = 'A data e horário de início das férias não podem ser menores que a data e horário atual.';
+    }
+
+    if (dataRetornoFerias && retornoFerias < inicioFerias) {
+      newErrors.dataRetornoFerias = 'A data de retorno não pode ser menor que a data de início.';
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      setLoading(false);
+      return;
+    }
     try {
       const dataInicioFormatted = dataInicioFerias ? formatData(dataInicioFerias) : '';
       const dataRetornoFormatted = dataRetornoFerias ? formatData(dataRetornoFerias) : '';
@@ -197,6 +223,8 @@ function ModalVacationEdit({ openModal, onClose, user, event }) {
                       onChange={(event) => setDataInicioFerias(event.target.value)}
                       required
                     />
+                    {errors.dataInicioFerias && <p className="text-red-600 text-xs font-medium">{errors.dataInicioFerias}</p>}
+
                   </div>
                   <div className="mx-1">
                     <Label htmlFor="horarioInicioFerias" value="Horário Início" />
@@ -207,6 +235,8 @@ function ModalVacationEdit({ openModal, onClose, user, event }) {
                       onChange={(event) => setHorarioInicioFerias(event.target.value)}
                       required
                     />
+                 {errors.horarioInicioFerias && <p className="text-red-600 text-xs font-medium">{errors.horarioInicioFerias}</p>}
+
                   </div>
                 </div>
                 <div className="grid md:grid-cols-2 sm:grid-cols-1 py-2">
@@ -219,6 +249,8 @@ function ModalVacationEdit({ openModal, onClose, user, event }) {
                       onChange={(event) => setDataRetornoFerias(event.target.value)}
                       required
                     />
+                  {errors.dataRetornoFerias && <p className="text-red-600 text-xs font-medium">{errors.dataRetornoFerias}</p>}
+
                   </div>
                   <div className="mx-1">
                     <Label htmlFor="horarioRetornoFerias" value="Horário Retorno" />
@@ -229,6 +261,8 @@ function ModalVacationEdit({ openModal, onClose, user, event }) {
                       onChange={(event) => setHorarioRetornoFerias(event.target.value)}
                       required
                     />
+                    {errors.horarioRetornoFerias && <p className="text-red-600 text-xs font-medium">{errors.horarioRetornoFerias}</p>}
+
                   </div>
                 </div>
                 <div className="grid grid-cols-4 mt-4">
