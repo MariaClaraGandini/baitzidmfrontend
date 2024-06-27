@@ -12,6 +12,7 @@ import '../index.css';
 import "../assets/css/calendar.css";
 import { useAuthToken } from '../api/AuthToken';
 import { Oval } from 'react-loader-spinner';
+import URL from '../api/config'
 
 function Vacation() {
   const [openModalEdit, setOpenModalEdit] = useState(false);
@@ -24,7 +25,7 @@ function Vacation() {
   const fetchVacationEvents = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:3000/usuarios/ferias', {
+      const response = await axios.get(`${URL}/usuarios/ferias`, {
         headers: {
           Authorization: `Bearer ${token}`
         }

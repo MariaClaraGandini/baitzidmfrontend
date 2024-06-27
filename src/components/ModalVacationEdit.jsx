@@ -5,6 +5,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuthToken } from '../api/AuthToken';
 import { Oval } from 'react-loader-spinner';
+import URL from '../api/config'
 
 function ModalVacationEdit({ openModal, onClose, user, event }) {
   const { token } = useAuthToken();
@@ -62,7 +63,7 @@ function ModalVacationEdit({ openModal, onClose, user, event }) {
   async function fetchUserData(username) {
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:3000/usuarios/exibirferias/${username}`, {
+      const response = await axios.get(`${URL}/usuarios/exibirferias/${username}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -115,7 +116,7 @@ function ModalVacationEdit({ openModal, onClose, user, event }) {
 
       const selectedUser = usernames.find(user => user.cn === username);
       const samaccountnameToSend = selectedUser ? selectedUser.samaccountname : '';
-      await axios.post(`http://localhost:3000/usuarios/agendarferias/${username}`, {
+      await axios.post(`${URL}usuarios/agendarferias/${username}`, {
         dataInicioFerias: dataInicioFormatted,
         horarioInicioFerias: horarioInicioFormatted,
         dataRetornoFerias: dataRetornoFormatted,
@@ -149,7 +150,7 @@ function ModalVacationEdit({ openModal, onClose, user, event }) {
     try {
       const selectedUser = usernames.find(user => user.cn === username);
       const samaccountnameToSend = selectedUser ? selectedUser.samaccountname : '';
-      await axios.delete(`http://localhost:3000/usuarios/removerferias/${username}`, {
+      await axios.delete(`${URL}/usuarios/removerferias/${username}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -208,7 +209,7 @@ function ModalVacationEdit({ openModal, onClose, user, event }) {
                 >
                   <option value="">Selecione um usuário</option>
                   {usernames.map((user) => (
-                    <option  key={user.cn} value={user.cn}>
+                    <option  key={user.samaccountname} value={user.samaccountname}>
                       {user.samaccountname}
                     </option>
                   ))}

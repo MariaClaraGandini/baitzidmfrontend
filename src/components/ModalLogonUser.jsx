@@ -3,6 +3,8 @@ import { Button, Modal, Table, TextInput, Select } from 'flowbite-react';
 import { HiClock } from "react-icons/hi";
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+import { Oval } from 'react-loader-spinner';
+import URL from '../api/config'
 
 
 
@@ -22,18 +24,18 @@ function ModalLogonUser(user) {
     const [horariofimsexta, setHorarioFimSexta] = useState('--:--')
     const [horarioiniciosabado, setHorarioInicioSabado] = useState('--:--')
     const [horariofimsabado, setHorarioFimSabado] = useState('--:--')
+    const [errors, setErrors] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
 
     async function onCloseModal() {
         setOpenModal(false);
-
     }
-
 
     useEffect(() => {
         if (openModal && user) {
             async function fetchUserData() {
                 try {
-                    const response = await axios.get(`http://192.168.123.91:3000/usuarios/getlogonhours/${user.samaccountname}`);
+                    const response = await axios.get(`${URL}/usuarios/getlogonhours/${user.samaccountname}`);
                     const data = response.data;
                     console.log(user.samaccountname)
                     setHorarioInicioDomingo(data.horarioiniciodomingo);
@@ -55,13 +57,28 @@ function ModalLogonUser(user) {
                 }
             }
             fetchUserData();
-
         }
     }, [openModal, user]);
 
     async function onSave() {
+        const newErrors = {};
+        if (horarioiniciodomingo > horariofimdomingo) newErrors.horariodomingo = '*Horário de fim não pode ser menor que horário de início';
+        if (horarioiniciosegunda > horariofimsegunda) newErrors.horariosegunda = '*Horário de fim não pode ser menor que horário de início';
+        if (horarioinicioterca > horariofimterca) newErrors.horarioterca = '*Horário de fim não pode ser menor que horário de início';
+        if (horarioinicioquarta > horariofimquarta) newErrors.horarioquarta = '*Horário de fim não pode ser menor que horário de início';
+        if (horarioinicioquinta > horariofimquinta) newErrors.horarioquinta = '*Horário de fim não pode ser menor que horário de início';
+        if (horarioiniciosexta > horariofimsexta) newErrors.horariosexta = '*Horário de fim não pode ser menor que horário de início';
+        if (horarioiniciosabado > horariofimsabado) newErrors.horariosabado = '*Horário de fim não pode ser menor que horário de início';
+
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+        }
+
+        setIsLoading(true);
+
         try {
-            const response = await axios.post(`http://192.168.123.91:3000/usuarios/setlogonhours/${user.samaccountname}`, {
+            const response = await axios.post(`${URL}/usuarios/setlogonhours/${user.samaccountname}`, {
                 horarioiniciodomingo,
                 horariofimdomingo,
                 horarioiniciosegunda,
@@ -77,37 +94,28 @@ function ModalLogonUser(user) {
                 horarioiniciosabado,
                 horariofimsabado
             });
-            setHorarioInicioDomingo('');
-            setHorarioFimDomingo('');
-            setHorarioInicioSegunda('');
-            setHorarioFimSegunda('');
-            setHorarioInicioTerca('');
-            setHorarioInicioQuarta('');
-            setHorarioInicioQuinta('');
-            setHorarioFimQuinta('');
-            setHorarioInicioSexta('');
-            setHorarioFimSexta('');
-            setHorarioInicioSabado('');
-            setHorarioFimSabado('');
 
-
-            console.log(horarioiniciodomingo)
-            console.log('Usuário editado com sucesso:', response.data);
-            setOpenModal(false);
-
-            toast.success("Usuário atualizado com sucesso! Replicação em andamento..", {
-                autoClose: 13000 // 5000 milissegundos = 5 segundos
-            });
             setTimeout(() => {
-                window.location.reload();
-            }, 13000);
-
+                setIsLoading(false);
+                toast.success('Usuário atualizado com sucesso! Fazendo Replicação...', {
+                    autoClose: 4000,
+                    onClose: () => {
+                        setTimeout(() => {
+                            setOpenModal(false);
+                            window.location.reload();
+                        }, 4000);
+                    }
+                });
+            }, 7000);
         } catch (error) {
+            setIsLoading(false);
             console.error('Erro ao editar usuário:', error);
-            toast.error(error.response.data.msg)
-
+            toast.error(error.response.data.msg);
         }
     }
+
+
+
 
 
     return (
@@ -122,6 +130,11 @@ function ModalLogonUser(user) {
                 <Modal.Body>
                     <div className="space-y-6 ">
                         <h3 className="text-xl  font-semibold text-gray-900 dark:text-white">Horário de Login - {user.samaccountname} </h3>
+                        {isLoading ? (
+                            <div className="flex justify-center items-center h-64">
+                                <Oval color="#1658f2" height={50} width={50} />
+                            </div>
+                        ) : (
                         <form>
                             <div className="overflow-x-auto ">
                                 <Table className=' '>
@@ -173,6 +186,7 @@ function ModalLogonUser(user) {
                                                         </svg>
                                                     </span>
                                                 </div>
+
                                             </Table.Cell>
                                             <Table.Cell className='px-1.5'>
                                                 <div className="select-wrapper">
@@ -211,6 +225,8 @@ function ModalLogonUser(user) {
                                                         </svg>
                                                     </span>
                                                 </div>
+                                                {errors.horariodomingo && <p className="text-red-600 text-xs font-medium">{errors.horariodomingo}</p>}
+
                                             </Table.Cell>
                                         </Table.Row>
                                     </Table.Body>
@@ -295,6 +311,7 @@ function ModalLogonUser(user) {
                                                         </svg>
                                                     </span>
                                                 </div>
+                                                {errors.horariosegunda && <p className="text-red-600 text-xs font-medium">{errors.horariosegunda}</p>}
                                             </Table.Cell>
                                         </Table.Row>
                                     </Table.Body>
@@ -380,6 +397,8 @@ function ModalLogonUser(user) {
                                                         </svg>
                                                     </span>
                                                 </div>
+                                                {errors.horarioterca && <p className="text-red-600 text-xs font-medium">{errors.horarioterca}</p>}
+
                                             </Table.Cell>
                                         </Table.Row>
                                     </Table.Body>
@@ -463,6 +482,8 @@ function ModalLogonUser(user) {
                                                         </svg>
                                                     </span>
                                                 </div>
+                                                {errors.horarioquarta && <p className="text-red-600 text-xs font-medium">{errors.horarioquarta}</p>}
+
                                             </Table.Cell>
                                         </Table.Row>
                                     </Table.Body>
@@ -546,6 +567,8 @@ function ModalLogonUser(user) {
                                                         </svg>
                                                     </span>
                                                 </div>
+                                                {errors.horarioquinta && <p className="text-red-600 text-xs font-medium">{errors.horarioquinta}</p>}
+
                                             </Table.Cell>
                                         </Table.Row>
                                     </Table.Body>
@@ -629,6 +652,8 @@ function ModalLogonUser(user) {
                                                         </svg>
                                                     </span>
                                                 </div>
+                                                {errors.horariosexta && <p className="text-red-600 text-xs font-medium">{errors.horariosexta}</p>}
+
                                             </Table.Cell>
                                         </Table.Row>
                                     </Table.Body>
@@ -712,6 +737,8 @@ function ModalLogonUser(user) {
                                                         </svg>
                                                     </span>
                                                 </div>
+                                                {errors.horariosabado && <p className="text-red-600 text-xs font-medium">{errors.horariosabado}</p>}
+
                                             </Table.Cell>
                                         </Table.Row>
                                     </Table.Body>
@@ -729,6 +756,8 @@ function ModalLogonUser(user) {
 
                             </div>
                         </form>
+                       )}
+
                     </div>
                 </Modal.Body>
             </Modal>

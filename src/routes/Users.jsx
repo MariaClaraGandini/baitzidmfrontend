@@ -7,6 +7,7 @@ import ModalLogonUser from '../components/ModalLogonUser';
 import { Oval } from 'react-loader-spinner';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
+import URL from '../api/config'
 
 export default function Users() {
     const { token } = useAuthToken();
@@ -20,7 +21,7 @@ export default function Users() {
     const fetchUsers = async () => {
         setIsLoadingUsers(true);
         try {
-            const response = await axios.get('http://192.168.123.91:3000/usuarios/groups', {
+            const response = await axios.get(`${URL}/usuarios/groups`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -57,7 +58,7 @@ export default function Users() {
                 if (searchTerm.trim() === '') {
                     setSearchResults(users);
                 } else {
-                    const response = await axios.get(`http://192.168.123.91:3000/usuarios/pesquisar/${searchTerm}`, {
+                    const response = await axios.get(`${URL}/usuarios/pesquisar/${searchTerm}`, {
                         headers: {
                             Authorization: `Bearer ${token}`
                         }

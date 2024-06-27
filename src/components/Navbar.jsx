@@ -9,6 +9,7 @@ import { Logout } from '../api/login.js';
 import axios from 'axios'; // Importe o axios
 import { Avatar } from 'flowbite-react';
 import { useNavigate } from 'react-router-dom'; // Use useNavigate para Vite
+import URL from '../api/config'
 
 
 function Navbar() {
@@ -44,7 +45,7 @@ function Navbar() {
   useEffect(() => {
     async function checkPermission() {
       try {
-        const response = await axios.get('http://localhost:3000/usuarios/permissao', {
+        const response = await axios.get(`${URL}/usuarios/permissao`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -54,7 +55,6 @@ function Navbar() {
         
       } catch (error) {
         if (error.response && error.response.status === 402) {
-          navigate('/alterarsenha');
           setHasPermission(false);
         }
         if (error.response && error.response.status === 403 || error.response && error.response.status === 440) {

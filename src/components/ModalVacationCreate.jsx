@@ -5,6 +5,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuthToken } from '../api/AuthToken';
 import { Oval } from 'react-loader-spinner';
+import URL from '../api/config'
+
 
 function ModalVacationCreate({ openModal, onClose, user }) {
   const { token } = useAuthToken(); 
@@ -17,6 +19,7 @@ function ModalVacationCreate({ openModal, onClose, user }) {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({}); // Estado para armazenar erros
 
+
   useEffect(() => {
     if (openModal) {
       getAllUsername();
@@ -27,7 +30,7 @@ function ModalVacationCreate({ openModal, onClose, user }) {
     setLoading(true);
 
     try {
-      const response = await axios.get('http://192.168.123.91:3000/usuarios/username', {
+      const response = await axios.get(`${URL}/usuarios/username`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -45,7 +48,6 @@ function ModalVacationCreate({ openModal, onClose, user }) {
     const newErrors = {};
 
     // Validação de campos vazios
-    if (!modalidade) newErrors.modalidade = '*Preencha esse campo';
     if (!dataInicioFerias) newErrors.dataInicioFerias = '*Preencha esse campo';
     if (!dataRetornoFerias) newErrors.dataRetornoFerias = '*Preencha esse campo';
     if (!horarioInicioFerias) newErrors.horarioInicioFerias = '*Preencha esse campo';
@@ -75,7 +77,7 @@ function ModalVacationCreate({ openModal, onClose, user }) {
       const horarioInicioFormatted = horarioInicioFerias ? formatHorario(horarioInicioFerias) : '';
       const horarioRetornoFormatted = horarioRetornoFerias ? formatHorario(horarioRetornoFerias) : '';
 
-      await axios.post(`http://localhost:3000/usuarios/agendarferias/${username}`, {
+      await axios.post(`${URL}/usuarios/agendarferias/${username}`, {
         dataInicioFerias: dataInicioFormatted,
         horarioInicioFerias: horarioInicioFormatted,
         dataRetornoFerias: dataRetornoFormatted,
@@ -86,21 +88,23 @@ function ModalVacationCreate({ openModal, onClose, user }) {
         }
       });
 
-      onClose();
       resetForm();
 
-      toast.sucess('Agendamento em andamento...Aguarde.', {
-        onClose: () => {
-          setTimeout(() => {
-            window.location.reload();
-          }, 20000);
-        }
-      });
+      setTimeout(() => {
+        setLoading(false);
+        toast.success('Férias agendadas com sucesso!', {
+          autoClose: 4000,
+          onClose: () => {
+            setTimeout(() => {
+              window.location.reload();
+            }, 4000);
+          }
+        });
+      }, 9000);
 
     } catch (error) {
       console.error('Erro ao editar usuário:', error);
       toast.error(error.response.data.msg);
-    } finally {
       setLoading(false);
     }
   }
@@ -126,6 +130,7 @@ function ModalVacationCreate({ openModal, onClose, user }) {
     setErrors({});
   }
 
+
   return (
     <div>
       <ToastContainer />
@@ -142,23 +147,7 @@ function ModalVacationCreate({ openModal, onClose, user }) {
               </div>
             ) : (
             <form>
-           <div className="grid md:grid-cols-2 sm:grid-cols-1 py-2">
-           <div className="mx-1">
-           <Label htmlFor="modalidade" value="Tipo do recesso:" />
-              <Select
-                id="modalidade"
-                required
-                value={modalidade}
-                onChange={(e) => setModalidade(e.target.value)}
-                className={errors.modalidade && 'border-red-600'}
-              >
-                <option value="">Selecione uma opção</option>
-                <option value="Ferias">Férias</option>
-                <option value="Dayoff">Day OFF</option>
-              </Select>
-              {errors.modalidade && <p className="text-red-600 text-xs font-medium">{errors.modalidade}</p>}
-              </div>
-              <div className="mx-1">
+          
            <Label htmlFor="usuario" value="Usuário:" />
               <Select
                 id="usuario"
@@ -175,8 +164,6 @@ function ModalVacationCreate({ openModal, onClose, user }) {
                 ))}
               </Select>
               {errors.username && <p className="text-red-600 text-xs font-medium">{errors.username}</p>}
-              </div>
-              </div>
               <div className="grid md:grid-cols-2 sm:grid-cols-1 py-2">
                 <div className="mx-1">
                   <Label htmlFor="dataInicioFerias" value="Data da Férias" />

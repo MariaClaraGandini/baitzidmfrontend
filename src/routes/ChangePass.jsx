@@ -14,6 +14,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import { useAuthToken } from '../api/AuthToken'; // Importe o hook useAuthToken
 import  {useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // Use useNavigate para Vite
+import URL from '../api/config'
 
 import 'react-toastify/dist/ReactToastify.css'; // Importe os estilos CSS do react-toastify
 
@@ -35,61 +36,86 @@ const customTheme = createTheme({
 });
 
 export default function ChangePass() {
-    const { register, handleSubmit, formState: { errors }, reset } = useForm();
-    const { token } = useAuthToken();
-    const [user, setUser] = useState(null);
-    const [invalidCredentials, setInvalidCredentials] = useState(false); // Estado para controlar a exibição do erro
-    const [invalidCredentials1, setInvalidCredentials1] = useState(false); // Estado para controlar a exibição do erro
-    const navigate = useNavigate();
+  const { register, handleSubmit, formState: { errors }, reset } = useForm();
+  const { token } = useAuthToken();
+  const [user, setUser] = useState(null);
+  const [invalidCredentials, setInvalidCredentials] = useState(false);
+  const [invalidCredentials1, setInvalidCredentials1] = useState(false);
+  const navigate = useNavigate();
 
-    useEffect(() => {
-      if (token) {
-        const decodedToken = decodeToken(token);
-        setUser(decodedToken);
-      } 
-    }, [token]);
-  
-    const decodeToken = (token) => {
-      if (token) {
-        const tokenParts = token.split('.');
-        const payload = JSON.parse(atob(tokenParts[1]));
-        const username = payload.username;
-        return { username };
-      } else {
-        return null;
-      }
-    };
+  useEffect(() => {
+    if (token) {
+      const decodedToken = decodeToken(token);
+      setUser(decodedToken);
+    }
+  }, [token]);
 
-    const onSubmit = async (data) => {
-      try {
-        const response = await axios.post('http://localhost:3000/usuarios/alterarsenha', data, {
-          headers: {
-            Authorization: `Bearer ${token}`, // Adicionando o token JWT ao cabeçalho Authorization
-          },
-        });
-        toast.success("Senha alterada com sucesso!", {
-          autoClose: 5000 // 5000 milissegundos = 5 segundos
+  const decodeToken = (token) => {
+    if (token) {
+      const tokenParts = token.split('.');
+      const payload = JSON.parse(atob(tokenParts[1]));
+      const username = payload.username;
+      return { username };
+    } else {
+      return null;
+    }
+  };
+
+  async function checkPermission() {
+    try {
+      const response = await axios.get(`${URL}/usuarios/permissao`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       });
-      setTimeout(() => {
-          window.location.reload();
+
+      if (response.status === 201) {
+        return true;
+      }
+      return false;
+    } catch (error) {
+
+      if (error.response && error.response.status === 402 ) {
+        return false;
+      }
+      console.error('Erro ao verificar permissão:', error);
+    }
+  }
+
+  const onSubmit = async (data) => {
+    try {
+      await axios.post(`${URL}/usuarios/alterarsenha`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      toast.success("Senha alterada com sucesso!", {
+        autoClose: 5000
+      });
+
+      setTimeout(async () => {
+        const hasPermission = await checkPermission();
+        if (hasPermission) {
+          navigate('/usuarios'); // Redirecione para a página do dashboard ou outra página conforme a permissão
+        } else {
+          navigate('/'); // Redirecione para a página de usuários
+        }
       }, 5000);
-      
-        reset();
-      } catch (error) {
-        
+
+      reset();
+    } catch (error) {
       if (error.response && error.response.status === 500) {
         toast.error('Ocorreu uma falha na redefinição de senha.');
-        reset()
-        setInvalidCredentials(true); // Define o estado para exibir o erro
-
+        reset();
+        setInvalidCredentials(true);
       } else {
         console.error('Erro:', error.message);
         toast.error('Ocorreu uma falha na redefinição de senha.');
-        reset()
-        setInvalidCredentials1(true)
+        reset();
+        setInvalidCredentials1(true);
       }
-      }
-    };
+    }
+  };
 
   return (
     <div className="p-2 " style={{minHeight: '99.9vh'}}>

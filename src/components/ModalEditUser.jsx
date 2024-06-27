@@ -4,6 +4,7 @@ import { HiOutlinePencil } from "react-icons/hi";
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import { Oval } from 'react-loader-spinner';
+import URL from '../api/config'
 
 function ModalEditUser({ user }) {
     const [openModal, setOpenModal] = useState(false);
@@ -19,7 +20,7 @@ function ModalEditUser({ user }) {
     useEffect(() => {
         async function fetchUserData() {
             try {
-                const response = await axios.get(`http://localhost:3000/usuarios/exibir/${user.samaccountname}`);
+                const response = await axios.get(`${URL}/usuarios/exibir/${user.samaccountname}`);
                 // setDisplayname(response.data.displayname);
                 setGivename(response.data.givename);
                 setSn(response.data.sn);
@@ -42,7 +43,6 @@ function ModalEditUser({ user }) {
         const newErrors = {};
         if (!givename) newErrors.givename = '*Preencha esse campo';
         if (!sn) newErrors.sn = '*Preencha esse campo';
-        // if (!displayname) newErrors.displayname = '*Preencha esse campo';
         if (password && !confirmpassword) newErrors.confirmpassword = '*Preencha esse campo';
         if (!password && confirmpassword) newErrors.password = '*Preencha esse campo';
         if (password !== confirmpassword) newErrors.senhasdiferentes = 'As senhas não coincidem!';
@@ -54,34 +54,37 @@ function ModalEditUser({ user }) {
 
         setIsLoading(true);
         try {
-            const response = await axios.post(`http://localhost:3000/usuarios/editar/${user.samaccountname}`, {
+            const response = await axios.post(`${URL}/usuarios/editar/${user.samaccountname}`, {
                 givename,
                 sn,
-                // displayname,
                 password,
                 confirmpassword,
                 status
             });
             console.log('Usuário editado com sucesso:', response.data);
 
-            setOpenModal(false);
-            setPassword('');
-            setConfirmPassword('');
-            toast.success("Usuário atualizado com sucesso! Replicação em andamento..", {
-                autoClose: 13000 // 5000 milissegundos = 5 segundos
-            });
             setTimeout(() => {
-                window.location.reload();
-            }, 13000);
+                setIsLoading(false);
+            }, 8000);
+            // Atrasar a exibição do toast
+            setTimeout(() => {
+                toast.success('Usuário atualizado com sucesso! Fazendo Replicação...', {
+                    autoClose: 4000, // 12 segundos para o toast
+                    onClose: () => {
+                        setTimeout(() => {
+                            setOpenModal(false);
+                            window.location.reload();
+                        }, 4000); // 19 segundos adicionais após o toast fechar
+                    }
+                });
+            }, 8000); // Atraso de 2 segundos antes de exibir o toast
 
         } catch (error) {
             console.error('Erro ao editar usuário:', error);
             toast.error("Erro ao editar o usuário!");
-        } finally {
             setIsLoading(false);
         }
     }
-
     return (
         <div>
             <ToastContainer />
