@@ -30,23 +30,31 @@ function Vacation() {
           Authorization: `Bearer ${token}`
         }
       });
-
+  
       if (Array.isArray(response.data)) {
         const vacationEvents = response.data
           .filter(event => event && event.vacationInfo)
-          .map(event => ({
-            start: `${event.vacationInfo.dataInicioFerias}T${event.vacationInfo.horarioInicioFerias}`,
-            end: `${event.vacationInfo.dataRetornoFerias}T${event.vacationInfo.horarioRetornoFerias}`,
-            title: event.vacationInfo.taskNameDesativar,
-            extendedProps: {
-              username: event.username
-            }
-          }));
-
+          .flatMap(event => {
+            const vacationInfoArray = Array.isArray(event.vacationInfo) ? 
+              event.vacationInfo : 
+              [event.vacationInfo];
+            
+            return vacationInfoArray.map((info, index) => ({
+              id: `${info.taskNameDesativar}-${index}`,  // Adicione um id único para cada evento
+              start: `${info.dataInicioFerias}T${info.horarioInicioFerias}`,
+              end: `${info.dataRetornoFerias}T${info.horarioRetornoFerias}`,
+              title: `Férias-${event.username}`,  // Altere o título para incluir o taskNameDesativar
+              extendedProps: {
+                username: event.username,
+                vacationDetails: info  // Adicione detalhes das férias como extendedProps
+              }
+            }));
+          });
+  
         setEvents(vacationEvents);
-        console.log(response.data)
-        console.log(`eventos: ${vacationEvents}`)
-
+        console.log(response.data);
+        console.log(`eventos: ${vacationEvents}`);
+  
       } else {
         console.error('Resposta inesperada:', response.data);
       }
@@ -56,7 +64,7 @@ function Vacation() {
       setLoading(false);
     }
   }, [token]);
-
+  
   useEffect(() => {
     fetchVacationEvents();
   }, [fetchVacationEvents]);

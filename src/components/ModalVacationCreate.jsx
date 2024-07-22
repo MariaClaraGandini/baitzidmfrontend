@@ -7,9 +7,8 @@ import { useAuthToken } from '../api/AuthToken';
 import { Oval } from 'react-loader-spinner';
 import URL from '../api/config'
 
-
 function ModalVacationCreate({ openModal, onClose, user }) {
-  const { token } = useAuthToken(); 
+  const { token } = useAuthToken();
   const [username, setUsername] = useState('');
   const [usernames, setUsernames] = useState([]);
   const [dataInicioFerias, setDataInicioFerias] = useState('');
@@ -17,8 +16,7 @@ function ModalVacationCreate({ openModal, onClose, user }) {
   const [horarioInicioFerias, setHorarioInicioFerias] = useState('');
   const [horarioRetornoFerias, setHorarioRetornoFerias] = useState('');
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState({}); // Estado para armazenar erros
-
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (openModal) {
@@ -28,7 +26,6 @@ function ModalVacationCreate({ openModal, onClose, user }) {
 
   async function getAllUsername() {
     setLoading(true);
-
     try {
       const response = await axios.get(`${URL}/usuarios/username`, {
         headers: {
@@ -43,11 +40,33 @@ function ModalVacationCreate({ openModal, onClose, user }) {
     }
   }
 
-  async function onSave() {
+  function generateUniqueId() {
+    const generatedIds = new Set();
+    let id;
+    do {
+      id = Math.floor(Math.random() * 9000) + 1000;
+    } while (generatedIds.has(id));
+    generatedIds.add(id);
+    return id;
+  }
+
+  const formatData = (data) => data;
+  const formatHorario = (horario) => horario;
+
+  const resetForm = () => {
+    setDataInicioFerias('');
+    setDataRetornoFerias('');
+    setHorarioInicioFerias('');
+    setHorarioRetornoFerias('');
+    setErrors({});
+  };
+
+  const onSave = async (e) => {
+    e.preventDefault(); // Previne o comportamento padrão do formulário
+
     setLoading(true);
     const newErrors = {};
 
-    // Validação de campos vazios
     if (!dataInicioFerias) newErrors.dataInicioFerias = '*Preencha esse campo';
     if (!dataRetornoFerias) newErrors.dataRetornoFerias = '*Preencha esse campo';
     if (!horarioInicioFerias) newErrors.horarioInicioFerias = '*Preencha esse campo';
@@ -77,7 +96,10 @@ function ModalVacationCreate({ openModal, onClose, user }) {
       const horarioInicioFormatted = horarioInicioFerias ? formatHorario(horarioInicioFerias) : '';
       const horarioRetornoFormatted = horarioRetornoFerias ? formatHorario(horarioRetornoFerias) : '';
 
-      await axios.post(`${URL}/usuarios/agendarferias/${username}`, {
+      const uniqueId = generateUniqueId();
+
+      const response = await axios.post(`${URL}/usuarios/agendarferias/${username}`, {
+        id: uniqueId,
         dataInicioFerias: dataInicioFormatted,
         horarioInicioFerias: horarioInicioFormatted,
         dataRetornoFerias: dataRetornoFormatted,
@@ -88,10 +110,7 @@ function ModalVacationCreate({ openModal, onClose, user }) {
         }
       });
 
-      resetForm();
-
-      setTimeout(() => {
-        setLoading(false);
+      if (response.data && response.data.msg) {
         toast.success('Férias agendadas com sucesso!', {
           autoClose: 4000,
           onClose: () => {
@@ -100,36 +119,20 @@ function ModalVacationCreate({ openModal, onClose, user }) {
             }, 4000);
           }
         });
-      }, 9000);
+      } else {
+        toast.error('Erro inesperado ao agendar férias.');
+      }
+
+      resetForm();
+      setLoading(false);
 
     } catch (error) {
-      console.error('Erro ao editar usuário:', error);
-      toast.error(error.response.data.msg);
+      console.error('Erro ao agendar férias:', error);
+      const errorMessage = error.response?.data?.msg || 'Erro desconhecido.';
+      toast.error(errorMessage);
       setLoading(false);
     }
-  }
-
-  function formatData(date) {
-    if (!date) return '';
-    const [year, month, day] = date.split('-');
-    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-  }
-
-  function formatHorario(time) {
-    if (!time) return '';
-    const [hour, minute] = time.split(':');
-    return `${hour.padStart(2, '0')}:${minute.padStart(2, '0')}`;
-  }
-
-  function resetForm() {
-    setUsername('');
-    setDataInicioFerias('');
-    setDataRetornoFerias('');
-    setHorarioInicioFerias('');
-    setHorarioRetornoFerias('');
-    setErrors({});
-  }
-
+  };
 
   return (
     <div>
@@ -146,82 +149,87 @@ function ModalVacationCreate({ openModal, onClose, user }) {
                 <Oval color="#1658f2" height={50} width={50} />
               </div>
             ) : (
-            <form>
-          
-           <Label htmlFor="usuario" value="Usuário:" />
-              <Select
-                id="usuario"
-                required
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className={errors.username && 'border-red-600'}
-              >
-                <option value="">Selecione um usuário</option>
-                {usernames.map((user) => (
-                  <option key={user.samaccountname} value={user.samaccountname}>
-                    {user.samaccountname}
-                  </option>
-                ))}
-              </Select>
-              {errors.username && <p className="text-red-600 text-xs font-medium">{errors.username}</p>}
-              <div className="grid md:grid-cols-2 sm:grid-cols-1 py-2">
-                <div className="mx-1">
-                  <Label htmlFor="dataInicioFerias" value="Data da Férias" />
-                  <TextInput
-                    id="dataInicioFerias"
-                    type="date"
-                    value={dataInicioFerias}
-                    onChange={(event) => setDataInicioFerias(event.target.value)}
-                    required
-                    className={errors.dataInicioFerias && 'border-red-600'}
-                  />
-                  {errors.dataInicioFerias && <p className="text-red-600 text-xs font-medium">{errors.dataInicioFerias}</p>}
+              <form onSubmit={onSave}>
+                <Label htmlFor="usuario" value="Usuário:" />
+                <Select
+                  id="usuario"
+                  required
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className={errors.username && 'border-red-600'}
+                >
+                  <option value="">Selecione um usuário</option>
+                  {usernames.map((user) => (
+                    <option key={user.samaccountname} value={user.samaccountname}>
+                      {user.samaccountname}
+                    </option>
+                  ))}
+                </Select>
+                {errors.username && <p className="text-red-600 text-xs font-medium">{errors.username}</p>}
+                <div className="grid md:grid-cols-2 sm:grid-cols-1 py-2">
+                  <div className="mx-1">
+                    <Label htmlFor="dataInicioFerias" value="Data da Férias" />
+                    <TextInput
+                      id="dataInicioFerias"
+                      type="date"
+                      value={dataInicioFerias}
+                      onChange={(event) => setDataInicioFerias(event.target.value)}
+                      required
+                      className={errors.dataInicioFerias && 'border-red-600'}
+                    />
+                    {errors.dataInicioFerias && <p className="text-red-600 text-xs font-medium">{errors.dataInicioFerias}</p>}
+                  </div>
+                  <div className="mx-1">
+                    <Label htmlFor="horarioInicioFerias" value="Horário Início" />
+                    <TextInput
+                      id="horarioInicioFerias"
+                      type="time"
+                      value={horarioInicioFerias}
+                      onChange={(event) => setHorarioInicioFerias(event.target.value)}
+                      required
+                      className={errors.horarioInicioFerias && 'border-red-600'}
+                    />
+                    {errors.horarioInicioFerias && <p className="text-red-600 text-xs font-medium">{errors.horarioInicioFerias}</p>}
+                  </div>
                 </div>
-                <div className="mx-1">
-                  <Label htmlFor="horarioInicioFerias" value="Horário Início" />
-                  <TextInput
-                    id="horarioInicioFerias"
-                    type="time"
-                    value={horarioInicioFerias}
-                    onChange={(event) => setHorarioInicioFerias(event.target.value)}
-                    required
-                    className={errors.horarioInicioFerias && 'border-red-600'}
-                  />
-                  {errors.horarioInicioFerias && <p className="text-red-600 text-xs font-medium">{errors.horarioInicioFerias}</p>}
+                <div className="grid md:grid-cols-2 sm:grid-cols-1 py-2">
+                  <div className="mx-1">
+                    <Label htmlFor="dataRetornoFerias" value="Data de Retorno" />
+                    <TextInput
+                      id="dataRetornoFerias"
+                      type="date"
+                      value={dataRetornoFerias}
+                      onChange={(event) => setDataRetornoFerias(event.target.value)}
+                      required
+                      className={errors.dataRetornoFerias && 'border-red-600'}
+                    />
+                    {errors.dataRetornoFerias && <p className="text-red-600 text-xs font-medium">{errors.dataRetornoFerias}</p>}
+                  </div>
+                  <div className="mx-1">
+                    <Label htmlFor="horarioRetornoFerias" value="Horário Retorno" />
+                    <TextInput
+                      id="horarioRetornoFerias"
+                      type="time"
+                      value={horarioRetornoFerias}
+                      onChange={(event) => setHorarioRetornoFerias(event.target.value)}
+                      required
+                      className={errors.horarioRetornoFerias && 'border-red-600'}
+                    />
+                    {errors.horarioRetornoFerias && <p className="text-red-600 text-xs font-medium">{errors.horarioRetornoFerias}</p>}
+                  </div>
                 </div>
-              </div>
-              <div className="grid md:grid-cols-2 sm:grid-cols-1 py-2">
-                <div className="mx-1">
-                  <Label htmlFor="dataRetornoFerias" value="Data de Retorno" />
-                  <TextInput
-                    id="dataRetornoFerias"
-                    type="date"
-                    value={dataRetornoFerias}
-                    onChange={(event) => setDataRetornoFerias(event.target.value)}
-                    required
-                    className={errors.dataRetornoFerias && 'border-red-600'}
-                  />
-                  {errors.dataRetornoFerias && <p className="text-red-600 text-xs font-medium">{errors.dataRetornoFerias}</p>}
-                </div>
-                <div className="mx-1">
-                  <Label htmlFor="horarioRetornoFerias" value="Horário Retorno" />
-                  <TextInput
-                    id="horarioRetornoFerias"
-                    type="time"
-                    value={horarioRetornoFerias}
-                    onChange={(event) => setHorarioRetornoFerias(event.target.value)}
-                    required
-                    className={errors.horarioRetornoFerias && 'border-red-600'}
-                  />
-                  {errors.horarioRetornoFerias && <p className="text-red-600 text-xs font-medium">{errors.horarioRetornoFerias}</p>}
-                </div>
-              </div>
-              <div className="w-full mt-4">
-                 <Button onClick={onSave} className="bg-blue-500 mb-2 rounded text-white font-semibold hover:bg-blue-600">
-                  Salvar
-                </Button>
-              </div>
-            </form>
+                <Modal.Footer className='px-0 mx-0'>
+
+          <Button color="gray" onClick={onClose}>
+            Cancelar
+          </Button>
+
+          <Button color="blue" onClick={onSave}>
+            Salvar
+          </Button>
+          </Modal.Footer>
+
+              </form>
             )}
           </div>
         </Modal.Body>
@@ -231,4 +239,3 @@ function ModalVacationCreate({ openModal, onClose, user }) {
 }
 
 export default ModalVacationCreate;
-

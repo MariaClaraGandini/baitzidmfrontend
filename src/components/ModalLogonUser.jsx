@@ -97,7 +97,7 @@ function ModalLogonUser(user) {
 
             setTimeout(() => {
                 setIsLoading(false);
-                toast.success('Usuário atualizado com sucesso! Fazendo Replicação...', {
+                toast.success('Horário de logon atualizado com sucesso!', {
                     autoClose: 4000,
                     onClose: () => {
                         setTimeout(() => {

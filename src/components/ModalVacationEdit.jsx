@@ -5,76 +5,49 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuthToken } from '../api/AuthToken';
 import { Oval } from 'react-loader-spinner';
-import URL from '../api/config'
+import URL from '../api/config';
 
-function ModalVacationEdit({ openModal, onClose, user, event }) {
+function ModalVacationEdit({ openModal, onClose, event }) {
   const { token } = useAuthToken();
-  const [username, setUsername] = useState(event ? event.extendedProps.username : '');
+  const [username, setUsername] = useState('');
   const [usernames, setUsernames] = useState([]);
   const [dataInicioFerias, setDataInicioFerias] = useState('');
   const [dataRetornoFerias, setDataRetornoFerias] = useState('');
   const [horarioInicioFerias, setHorarioInicioFerias] = useState('');
   const [horarioRetornoFerias, setHorarioRetornoFerias] = useState('');
+  const [taskNameAtivar, setTaskNameAtivar] = useState('');
+  const [taskNameDesativar, setTaskNameDesativar] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState({}); // Estado para armazenar erros
-
-  function resetForm() {
-    setUsername('');
-    setDataInicioFerias('');
-    setDataRetornoFerias('');
-    setHorarioInicioFerias('');
-    setHorarioRetornoFerias('');
-  }
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    if (openModal) {
-      resetForm();
-
-      if (event) {
-        setIsEditing(true);
-        fetchUserData(event.extendedProps.username);
-      } else {
-        setIsEditing(false);
-        setUsername('');
-      }
-
+    if (openModal && event) {
+      const { extendedProps } = event;
+      setUsername(extendedProps.username);
+      setDataInicioFerias(extendedProps.vacationDetails.dataInicioFerias);
+      setDataRetornoFerias(extendedProps.vacationDetails.dataRetornoFerias);
+      setHorarioInicioFerias(extendedProps.vacationDetails.horarioInicioFerias);
+      setHorarioRetornoFerias(extendedProps.vacationDetails.horarioRetornoFerias);
+      setTaskNameDesativar(extendedProps.vacationDetails.taskNameDesativar);
+      setTaskNameAtivar(extendedProps.vacationDetails.taskNameAtivar);
+      setIsEditing(true);
       getAllUsername();
     }
+    console.log(taskNameDesativar,taskNameAtivar)
   }, [openModal, event]);
 
   async function getAllUsername() {
     setLoading(true);
     try {
-      const response = await axios.get('http://192.168.123.91:3000/usuarios/username', {
+      const response = await axios.get(`${URL}/usuarios/username`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
       setUsernames(response.data);
-      console.log(response.data)
     } catch (error) {
-      toast.error(error.response.data.msg);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function fetchUserData(username) {
-    setLoading(true);
-    try {
-      const response = await axios.get(`${URL}/usuarios/exibirferias/${username}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      setDataInicioFerias(response.data.dataInicioFerias);
-      setDataRetornoFerias(response.data.dataRetornoFerias);
-      setHorarioInicioFerias(response.data.horarioInicioFerias);
-      setHorarioRetornoFerias(response.data.horarioRetornoFerias);
-      setUsername(username);
-    } catch (error) {
-      toast.error(error.response.data.msg);
+      toast.error(error.response?.data?.msg || 'Erro ao carregar usuários.');
     } finally {
       setLoading(false);
     }
@@ -94,11 +67,11 @@ function ModalVacationEdit({ openModal, onClose, user, event }) {
     const retornoFerias = new Date(`${dataRetornoFerias}T${horarioRetornoFerias}`);
     const now = new Date();
 
-    if (dataInicioFerias && horarioInicioFerias && inicioFerias < now) {
+    if (inicioFerias < now) {
       newErrors.dataInicioFerias = 'A data e horário de início das férias não podem ser menores que a data e horário atual.';
     }
 
-    if (dataRetornoFerias && retornoFerias < inicioFerias) {
+    if (retornoFerias < inicioFerias) {
       newErrors.dataRetornoFerias = 'A data de retorno não pode ser menor que a data de início.';
     }
 
@@ -107,27 +80,35 @@ function ModalVacationEdit({ openModal, onClose, user, event }) {
       setLoading(false);
       return;
     }
+
     try {
-      const dataInicioFormatted = dataInicioFerias ? formatData(dataInicioFerias) : '';
-      const dataRetornoFormatted = dataRetornoFerias ? formatData(dataRetornoFerias) : '';
-      const horarioInicioFormatted = horarioInicioFerias ? formatHorario(horarioInicioFerias) : '';
-      const horarioRetornoFormatted = horarioRetornoFerias ? formatHorario(horarioRetornoFerias) : '';
+      const dataInicioFormatted = formatData(dataInicioFerias);
+      const dataRetornoFormatted = formatData(dataRetornoFerias);
+      const horarioInicioFormatted = formatHorario(horarioInicioFerias);
+      const horarioRetornoFormatted = formatHorario(horarioRetornoFerias);
 
+      const selectedUser = usernames.find(user => user.samaccountname === username);
+      if (!selectedUser) {
+        throw new Error('Usuário não encontrado.');
+      }
 
-      const selectedUser = usernames.find(user => user.cn === username);
-      const samaccountnameToSend = selectedUser ? selectedUser.samaccountname : '';
-      await axios.post(`${URL}usuarios/agendarferias/${username}`, {
+      const endpoint = `${URL}/usuarios/editarferias/${username}`;
+      const requestData = {
         dataInicioFerias: dataInicioFormatted,
         horarioInicioFerias: horarioInicioFormatted,
         dataRetornoFerias: dataRetornoFormatted,
         horarioRetornoFerias: horarioRetornoFormatted,
-      }, {
+        taskNameDesativar,
+        taskNameAtivar
+      };
+
+      const response = await axios.post(endpoint, requestData, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
 
-      localStorage.removeItem('vacationEvents'); // Clear cache
+      localStorage.removeItem('vacationEvents');
       onClose();
       resetForm();
       toast.success('Férias reagendada com sucesso!', {
@@ -138,8 +119,7 @@ function ModalVacationEdit({ openModal, onClose, user, event }) {
         }
       });
     } catch (error) {
-      console.log(username)
-      toast.error(error.response.data.msg);
+      toast.error(error.response?.data?.msg || 'Erro ao salvar férias.');
     } finally {
       setLoading(false);
     }
@@ -148,26 +128,18 @@ function ModalVacationEdit({ openModal, onClose, user, event }) {
   async function onRemove() {
     setLoading(true);
     try {
-      const selectedUser = usernames.find(user => user.cn === username);
-      const samaccountnameToSend = selectedUser ? selectedUser.samaccountname : '';
-      await axios.delete(`${URL}/usuarios/removerferias/${username}`, {
+      await axios.delete(`${URL}/usuarios/removerferias/${event?.id}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
-      
 
-      localStorage.removeItem('vacationEvents'); // Clear cache
+      toast.success('Agendamento excluído com sucesso!');
       onClose();
-      toast.success('Agendamento excluído com sucesso!', {
-        onClose: () => {
-          setTimeout(() => {
-            window.location.reload();
-          }, 5000);
-        }
-      });
+      localStorage.removeItem('vacationEvents');
+      window.location.reload();
     } catch (error) {
-      toast.error(error.response.data.msg);
+      toast.error(error.response?.data?.msg || 'Erro ao excluir férias.');
     } finally {
       setLoading(false);
     }
@@ -185,6 +157,15 @@ function ModalVacationEdit({ openModal, onClose, user, event }) {
     return `${hour.padStart(2, '0')}:${minute.padStart(2, '0')}`;
   }
 
+  function resetForm() {
+    setUsername('');
+    setDataInicioFerias('');
+    setDataRetornoFerias('');
+    setHorarioInicioFerias('');
+    setHorarioRetornoFerias('');
+    setErrors({});
+  }
+
   return (
     <div>
       <ToastContainer />
@@ -193,7 +174,7 @@ function ModalVacationEdit({ openModal, onClose, user, event }) {
         <Modal.Body>
           <div className="space-y-6">
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-              Férias Agendada - {username}
+              Editar Férias - {username}
             </h3>
             {loading ? (
               <div className="flex justify-center">
@@ -201,19 +182,20 @@ function ModalVacationEdit({ openModal, onClose, user, event }) {
               </div>
             ) : (
               <form>
-                <Select
+                {/* <Select
                   id="usuario"
                   required
+                  disabled={true}
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                 >
                   <option value="">Selecione um usuário</option>
                   {usernames.map((user) => (
-                    <option  key={user.samaccountname} value={user.samaccountname}>
+                    <option key={user.samaccountname} value={user.samaccountname}>
                       {user.samaccountname}
                     </option>
                   ))}
-                </Select>
+                </Select> */}
                 <div className="grid md:grid-cols-2 sm:grid-cols-1 py-2">
                   <div className="mx-1">
                     <Label htmlFor="dataInicioFerias" value="Data da Férias" />
@@ -224,25 +206,10 @@ function ModalVacationEdit({ openModal, onClose, user, event }) {
                       onChange={(event) => setDataInicioFerias(event.target.value)}
                       required
                     />
-                    {errors.dataInicioFerias && <p className="text-red-600 text-xs font-medium">{errors.dataInicioFerias}</p>}
-
+                    {errors.dataInicioFerias && <p className="text-red-600">{errors.dataInicioFerias}</p>}
                   </div>
                   <div className="mx-1">
-                    <Label htmlFor="horarioInicioFerias" value="Horário Início" />
-                    <TextInput
-                      id="horarioInicioFerias"
-                      type="time"
-                      value={horarioInicioFerias}
-                      onChange={(event) => setHorarioInicioFerias(event.target.value)}
-                      required
-                    />
-                 {errors.horarioInicioFerias && <p className="text-red-600 text-xs font-medium">{errors.horarioInicioFerias}</p>}
-
-                  </div>
-                </div>
-                <div className="grid md:grid-cols-2 sm:grid-cols-1 py-2">
-                  <div className="mx-1">
-                    <Label htmlFor="dataRetornoFerias" value="Data de Retorno" />
+                    <Label htmlFor="dataRetornoFerias" value="Data do Retorno" />
                     <TextInput
                       id="dataRetornoFerias"
                       type="date"
@@ -250,11 +217,23 @@ function ModalVacationEdit({ openModal, onClose, user, event }) {
                       onChange={(event) => setDataRetornoFerias(event.target.value)}
                       required
                     />
-                  {errors.dataRetornoFerias && <p className="text-red-600 text-xs font-medium">{errors.dataRetornoFerias}</p>}
-
+                    {errors.dataRetornoFerias && <p className="text-red-600">{errors.dataRetornoFerias}</p>}
+                  </div>
+                </div>
+                <div className="grid md:grid-cols-2 sm:grid-cols-1 py-2">
+                  <div className="mx-1">
+                    <Label htmlFor="horarioInicioFerias" value="Horário de Início" />
+                    <TextInput
+                      id="horarioInicioFerias"
+                      type="time"
+                      value={horarioInicioFerias}
+                      onChange={(event) => setHorarioInicioFerias(event.target.value)}
+                      required
+                    />
+                    {errors.horarioInicioFerias && <p className="text-red-600">{errors.horarioInicioFerias}</p>}
                   </div>
                   <div className="mx-1">
-                    <Label htmlFor="horarioRetornoFerias" value="Horário Retorno" />
+                    <Label htmlFor="horarioRetornoFerias" value="Horário do Retorno" />
                     <TextInput
                       id="horarioRetornoFerias"
                       type="time"
@@ -262,26 +241,46 @@ function ModalVacationEdit({ openModal, onClose, user, event }) {
                       onChange={(event) => setHorarioRetornoFerias(event.target.value)}
                       required
                     />
-                    {errors.horarioRetornoFerias && <p className="text-red-600 text-xs font-medium">{errors.horarioRetornoFerias}</p>}
-
+                    {errors.horarioRetornoFerias && <p className="text-red-600">{errors.horarioRetornoFerias}</p>}
                   </div>
                 </div>
-                <div className="grid grid-cols-4 mt-4">
-                  <div className="mr-1.5">
-                    <Button onClick={onRemove} className="bg-red-500 w-full mb-2 rounded text-white font-semibold removebutton">
-                      Excluir
-                    </Button>
-                  </div>
-                  <div className='ml-1.5'>
-                    <Button onClick={onSave} className="bg-blue-500 w-full mb-2 rounded text-white font-semibold hover:bg-blue-600">
-                      Salvar
-                    </Button>
-                  </div>
+                <div className="py-2">
+                  <Label htmlFor="taskNameDesativar" value="Agendamento para Desativar Usuário" />
+                  <TextInput
+                    id="taskNameDesativar"
+                    type="text"
+                    value={taskNameDesativar}
+                    onChange={(event) => setTaskNameDesativar(event.target.value)}
+                    required
+                    disabled={true}
+                  />
+                </div>
+                <div className="py-2">
+                  <Label htmlFor="taskNameAtivar" value="Agendamento para Ativar Usuário" />
+                  <TextInput
+                    id="taskNameAtivar"
+                    type="text"
+                    value={taskNameAtivar}
+                    onChange={(event) => setTaskNameAtivar(event.target.value)}
+                    required
+                     disabled={true}
+                  />
                 </div>
               </form>
             )}
           </div>
         </Modal.Body>
+        <Modal.Footer>
+          <Button color="gray" onClick={onClose}>
+            Cancelar
+          </Button>
+          <Button color="red" onClick={onRemove}>
+            Excluir
+          </Button>
+          <Button color="blue" onClick={onSave}>
+            Salvar
+          </Button>
+        </Modal.Footer>
       </Modal>
     </div>
   );
