@@ -1,31 +1,33 @@
-import  { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { AppBar, Box, Toolbar, IconButton, Typography, Menu, MenuItem, Tooltip } from '@mui/material';
 import Container from '@mui/material/Container';
 import Logo from '../assets/logo.png';
 import { Link } from 'react-router-dom';
-import { useAuthToken } from '../api/AuthToken'; // Importe o hook useAuthToken
+import { useAuthToken } from '../api/AuthToken';
 import { Logout } from '../api/login.js';
-import axios from 'axios'; // Importe o axios
+import axios from 'axios';
 import { Avatar } from 'flowbite-react';
-import { useNavigate } from 'react-router-dom'; // Use useNavigate para Vite
-import URL from '../api/config'
-
+import { useNavigate } from 'react-router-dom';
+import URL from '../api/config';
+import ModeNightIcon from '@mui/icons-material/ModeNight'; // Ícone de modo noturno
+import WbSunnyIcon from '@mui/icons-material/WbSunny';
 
 function Navbar() {
   const { token } = useAuthToken();
   const { deleteToken } = useAuthToken();
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [user, setUser] = useState(null);
-  const [hasPermission, setHasPermission] = useState(false); // Adicione o estado para indicar se o usuário tem permissão
+  const [hasPermission, setHasPermission] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const location = useLocation();
   const isUsuariosActive = location.pathname === '/usuarios';
   const isFeriasActive = location.pathname === '/ferias';
-
   const navigate = useNavigate();
+
   useEffect(() => {
     if (token) {
-      const decodedToken = decodeToken(token); // Decodificar o token JWT manualmente
+      const decodedToken = decodeToken(token);
       setUser(decodedToken);
     }
   }, [token]);
@@ -35,7 +37,6 @@ function Navbar() {
       const tokenParts = token.split('.');
       const payload = JSON.parse(atob(tokenParts[1]));
       const username = payload.username;
-      // Retorne os dados decodificados
       return { username };
     } else {
       return null;
@@ -50,9 +51,7 @@ function Navbar() {
             Authorization: `Bearer ${token}`
           }
         });
-        
-          setHasPermission(true); 
-        
+        setHasPermission(true);
       } catch (error) {
         if (error.response && error.response.status === 402) {
           setHasPermission(false);
@@ -62,20 +61,16 @@ function Navbar() {
           localStorage.removeItem('token');
           window.location.reload();
           setHasPermission(false);
-        }
-        else{
+        } else {
           console.error('Erro ao verificar permissão:', error);
-        
         }
       }
     }
     if (token) {
       checkPermission();
-      const intervalId = setInterval(checkPermission, 60000); // Verifica a autenticação a cada minuto
-
-      // Limpar intervalo ao desmontar o componente
+      const intervalId = setInterval(checkPermission, 60000);
       return () => clearInterval(intervalId);
-    } 
+    }
   }, [token, user, navigate]);
 
   const handleOpenUserMenu = (event) => {
@@ -91,11 +86,15 @@ function Navbar() {
     setUser(null);
   };
 
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+  };
+
   return (
     <AppBar
       sx={{
-        backgroundColor: 'white',
-        boxShadow: 'rgba(0.2, 0.2, 0.2, 0.1) 2px 1px 6px',
+        backgroundColor: isDarkMode ? 'black' : 'white',
+        boxShadow: 'rgba(0, 0, 0, 0.1) 2px 1px 6px',
       }}
     >
       <Container maxWidth="xl2">
@@ -114,72 +113,76 @@ function Navbar() {
           </Typography>
 
           <div className='flex items-center justify-between'>
-  <div>
-    {hasPermission && ( 
-      <div className='flex'>// Verifica se o usuário tem permissão
-     <NavLink
-     to="/usuarios"
-     style={{
-       textDecoration: 'none',
-       marginRight: '10px',
-       width: '5rem',
-       px: 2,
-       textAlign: 'center',
-       display: 'flex', // Adiciona display: flex
-       alignItems: 'center', // Centraliza verticalmente
-     }}
-   >
-     <Typography
-       sx={{
-         mt: 0.5,
-         py: 0.5,
-         textAlign: 'center',
-         color: 'gray',
-         textTransform: 'none',
-         display: 'block',
-         '&:hover': {
-           borderBottom: '3px solid #1658f2',
-           color: '#1658f2'
-         },
-         ...(isUsuariosActive && { borderBottom: '3px solid #1658f2', color: '#1658f2' })
-       }}
-     >
-       Usuários
-     </Typography>
-   </NavLink>
-     <NavLink
-     to="/ferias"
-     style={{
-       textDecoration: 'none',
-       marginRight: '10px',
-       width: '5rem',
-       px: 2,
-       textAlign: 'center',
-       display: 'flex', // Adiciona display: flex
-       alignItems: 'center', // Centraliza verticalmente
-     }}
-   >
-     <Typography
-       sx={{
-         mt: 0.5,
-         py: 0.5,
-         textAlign: 'center',
-         color: 'gray',
-         textTransform: 'none',
-         display: 'block',
-         '&:hover': {
-           borderBottom: '3px solid #1658f2',
-           color: '#1658f2'
-         },
-         ...(isFeriasActive && { borderBottom: '3px solid #1658f2', color: '#1658f2' })
-       }}
-     >
-       Férias
-     </Typography>
-   </NavLink>
-   </div>
-    )}
-  </div>
+            <IconButton
+              onClick={toggleDarkMode}
+              className={`p-2 rounded ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-gray-200 text-black'}`}
+            >
+              {isDarkMode ? <WbSunnyIcon sx={{ color: 'white' }} /> : <ModeNightIcon  />}
+            </IconButton>
+            {hasPermission && (
+              <div className='flex'>
+                <NavLink
+                  to="/usuarios"
+                  style={{
+                    textDecoration: 'none',
+                    marginRight: '10px',
+                    width: '5rem',
+                    px: 2,
+                    textAlign: 'center',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      mt: 0.5,
+                      py: 0.5,
+                      textAlign: 'center',
+                      color: isDarkMode ? 'white' : 'gray',
+                      textTransform: 'none',
+                      display: 'block',
+                      '&:hover': {
+                        borderBottom: '3px solid #1658f2',
+                        color: '#1658f2'
+                      },
+                      ...(isUsuariosActive && { borderBottom: '3px solid #1658f2', color: '#1658f2' })
+                    }}
+                  >
+                    Usuários
+                  </Typography>
+                </NavLink>
+                <NavLink
+                  to="/ferias"
+                  style={{
+                    textDecoration: 'none',
+                    marginRight: '10px',
+                    width: '5rem',
+                    px: 2,
+                    textAlign: 'center',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      mt: 0.5,
+                      py: 0.5,
+                      textAlign: 'center',
+                      color: isDarkMode ? 'white' : 'gray',
+                      textTransform: 'none',
+                      display: 'block',
+                      '&:hover': {
+                        borderBottom: '3px solid #1658f2',
+                        color: '#1658f2'
+                      },
+                      ...(isFeriasActive && { borderBottom: '3px solid #1658f2', color: '#1658f2' })
+                    }}
+                  >
+                    Férias
+                  </Typography>
+                </NavLink>
+              </div>
+            )}
             {user && (
               <Box sx={{ flexGrow: 0, px: 2 }}>
                 <Tooltip title="Open settings">
@@ -188,8 +191,8 @@ function Navbar() {
                     sx={{ p: 0, display: 'flex', alignItems: 'center', borderRadius: '0px' }}
                   >
                     <Avatar alt="Avatar" rounded />
-                    <Typography variant="subtitle1" sx={{ marginLeft: 1, color: 'gray' }}>
-                      {user.username} {/* Exibindo o nome de usuário */}
+                    <Typography variant="subtitle1" sx={{ marginLeft: 1, color: isDarkMode ? 'white' : 'gray' }}>
+                      {user.username}
                     </Typography>
                   </IconButton>
                 </Tooltip>
@@ -212,8 +215,8 @@ function Navbar() {
                 >
                   <MenuItem onClick={handleCloseUserMenu}>
                     <Link to="/alterarsenha" style={{ textDecoration: 'none' }}>
-                      <Typography textAlign="center" sx={{ color: 'gray' }}>
-                        Redifinir Senha
+                      <Typography textAlign="center" sx={{ color: isDarkMode ? 'white' : 'gray' }}>
+                        Redefinir Senha
                       </Typography>
                     </Link>
                   </MenuItem>
@@ -221,7 +224,7 @@ function Navbar() {
                     <Typography
                       onClick={handleLogout}
                       textAlign="center"
-                      sx={{ color: 'gray' }} // Alterando o cursor para parecer um botão clicável
+                      sx={{ color: isDarkMode ? 'white' : 'gray' }}
                     >
                       Sair
                     </Typography>

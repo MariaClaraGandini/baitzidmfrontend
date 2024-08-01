@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { Table } from 'flowbite-react';
 import { useAuthToken } from '../api/AuthToken';
@@ -6,8 +6,9 @@ import ModalEditUser from '../components/ModalEditUser';
 import ModalLogonUser from '../components/ModalLogonUser';
 import { Oval } from 'react-loader-spinner';
 import { useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
-import URL from '../api/config'
+import { toast } from 'react-toastify';
+import { useDebounce } from 'use-debounce';
+import URL from '../api/config';
 
 export default function Users() {
     const { token } = useAuthToken();
@@ -16,68 +17,68 @@ export default function Users() {
     const [searchResults, setSearchResults] = useState([]);
     const [permissionChecked, setPermissionChecked] = useState(false);
     const [isLoadingUsers, setIsLoadingUsers] = useState(false);
+    const [usersLoaded, setUsersLoaded] = useState(false);
+    const [needsUpdate, setNeedsUpdate] = useState(false);
     const navigate = useNavigate();
+    const [debouncedSearchTerm] = useDebounce(searchTerm, 300);
 
     const fetchUsers = async () => {
-        setIsLoadingUsers(true);
-        try {
-            const response = await axios.get(`${URL}/usuarios/groups`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
+        if (token) {
+            setIsLoadingUsers(true);
+            try {
+                const response = await axios.get(`${URL}/usuarios/groups`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                console.log(typeof response.data); // Deve ser 'object'
+                if (Array.isArray(response.data)) {
+                    setUsers(response.data);
+                    setSearchResults(response.data);
+                    setPermissionChecked(true);
+                    setUsersLoaded(true);
+                    setNeedsUpdate(false);
+                 } else {
+                    console.error('A resposta não é um array:', response.data);
+                    toast.error('Erro ao buscar usuários: resposta inválida da API');
+                 }
+            } catch (error) {
+                console.error('Erro ao buscar usuários:', error);
+                toast.error('Erro ao buscar usuários: ' + error.message);
+                if (error.response && error.response.status === 440) {
+                    navigate('/');
                 }
-            });
-            if (Array.isArray(response.data)) {
-                setUsers(response.data);
-                setSearchResults(response.data);
-                setPermissionChecked(true);
-            } else {
-                console.error('A resposta não é um array:', response.data);
-                toast.error('Erro ao buscar usuários: resposta inválida da API');
+                if (error.response && error.response.status === 402) {
+                    navigate('/alterarsenha');
+                }
+            } finally {
+                setIsLoadingUsers(false);
             }
-        } catch (error) {
-            console.error('Erro ao buscar usuários:', error);
-            toast.error('Erro ao buscar usuários: ' + error.message);
-            if (error.response && error.response.status === 440) {
-                navigate('/');
-            }
-            if (error.response && error.response.status === 402) {
-                navigate('/alterarsenha');
-            }
-        } finally {
-            setIsLoadingUsers(false);
         }
     };
 
     useEffect(() => {
-        fetchUsers();
-    }, [token, navigate]);
-
-    useEffect(() => {
-        const search = async () => {
-            try {
-                if (searchTerm.trim() === '') {
-                    setSearchResults(users);
-                } else {
-                    const response = await axios.get(`${URL}/usuarios/pesquisar/${searchTerm}`, {
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        }
-                    });
-                    if (Array.isArray(response.data)) {
-                        setSearchResults(response.data);
-                    } else {
-                        console.error('A resposta não é um array:', response.data);
-                        toast.error('Erro ao buscar usuários: resposta inválida da API');
-                    }
-                }
-            } catch (error) {
-                console.error('Erro ao buscar usuários:', error);
-                toast.error('Erro ao buscar usuários: ' + error.message);
+        const fetchData = async () => {
+            if (!usersLoaded || needsUpdate) {
+                await fetchUsers();
             }
         };
+        fetchData();
+    }, [token, navigate, usersLoaded, needsUpdate]);
 
-        search();
-    }, [searchTerm, users, token]);
+    const filteredResults = useMemo(() => {
+        if (debouncedSearchTerm.trim() === '') {
+            return users;
+        }
+        return users.filter(user => 
+            user.displayname.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
+        );
+    }, [debouncedSearchTerm, users]);
+
+    // Atualiza searchResults diretamente quando filteredResults mudar
+    useEffect(() => {
+        setSearchResults(filteredResults);
+    }, [filteredResults]);
 
     if (!permissionChecked) {
         return null;
@@ -119,9 +120,6 @@ export default function Users() {
                             </div>
                         </div>
                     </form>
-                    {/* <div className='grid flex items-center justify-items-end'>
-                        <ModalNewUser />
-                    </div> */}
                 </div>
 
                 <div className="overflow-x-auto mt-5">
@@ -145,7 +143,7 @@ export default function Users() {
                                         <Table.Cell>{user.displayname}</Table.Cell>
                                         <Table.Cell>
                                             <div className="flex space-x-2">
-                                                <ModalEditUser user={user} />
+                                                <ModalEditUser user={user} onUserUpdated={() => setNeedsUpdate(true)} />
                                                 <ModalLogonUser {...user} />
                                             </div>
                                         </Table.Cell>

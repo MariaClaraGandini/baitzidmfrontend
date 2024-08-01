@@ -128,17 +128,36 @@ function ModalVacationEdit({ openModal, onClose, event }) {
   async function onRemove() {
     setLoading(true);
     try {
-      await axios.delete(`${URL}/usuarios/removerferias/${event?.id}`, {
+      await axios.delete(`${URL}/usuarios/removerferias/${username}`, {
         headers: {
           Authorization: `Bearer ${token}`
+        },
+        data: {
+         taskNameDesativar,
+          taskNameAtivar
         }
       });
+  
+      // toast.success('Agendamento excluído com sucesso!');
+   
+        setTimeout(() => {
+          toast.success('Agendamento excluído com sucesso!', {
+              autoClose: 3000, // 12 segundos para o toast
+              onClose: () => {
+                  setTimeout(() => {
+                      onClose();
+                      localStorage.removeItem('vacationEvents');
+                      window.location.reload();
+                  }, 3000); // 19 segundos adicionais após o toast fechar
+              }
+          });
+      });
 
-      toast.success('Agendamento excluído com sucesso!');
-      onClose();
-      localStorage.removeItem('vacationEvents');
-      window.location.reload();
+
+
+        
     } catch (error) {
+      console.log(event?.id);
       toast.error(error.response?.data?.msg || 'Erro ao excluir férias.');
     } finally {
       setLoading(false);

@@ -202,3 +202,34 @@ background-color: #961f1f;
   outline: none; 
 
 }
+
+
+styles.css
+body.light-mode {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+body.dark-mode {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+/* Outras classes e estilos que você quiser alterar no modo noturno */
+.dark-mode .MuiPaper-root {
+  background-color: #1d1d1d;
+  color: #ffffff;
+}
+
+.dark-mode .MuiButton-contained {
+  background-color: #3c6cfc;
+  color: #ffffff;
+}
+
+.dark-mode .MuiTextField-root {
+  color: #ffffff;
+}
+
+.dark-mode .MuiInputLabel-root {
+  color: #ffffff;
+}

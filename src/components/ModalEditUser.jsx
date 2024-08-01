@@ -16,25 +16,25 @@ function ModalEditUser({ user }) {
     const [status, setStatus] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState({});
-
+    
     useEffect(() => {
-        async function fetchUserData() {
-            try {
-                const response = await axios.get(`${URL}/usuarios/exibir/${user.samaccountname}`);
-                // setDisplayname(response.data.displayname);
-                setGivename(response.data.givename);
-                setSn(response.data.sn);
-                setStatus(response.data.status);
-            } catch (error) {
-                toast.error(error.response.data.msg);
+        if (openModal && user) {
+            setIsLoading(true);
+            async function fetchUserData() {
+                try {
+                    const response = await axios.get(`${URL}/usuarios/exibir/${user.samaccountname}`);
+                    setGivename(response.data.givename);
+                    setSn(response.data.sn);
+                    setStatus(response.data.status);
+                    setIsLoading(false);
+                } catch (error) {
+                    toast.error(error.response.data.msg);
+                    setIsLoading(false);
+                }
             }
-        }
-        
-        if (user) {
             fetchUserData();
         }
-    }, [user]);
-
+    }, [openModal, user]);
     async function onCloseModal() {
         setOpenModal(false);
     }
