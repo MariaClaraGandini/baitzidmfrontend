@@ -15,6 +15,7 @@ import { useAuthToken } from '../api/AuthToken'; // Importe o hook useAuthToken
 import  {useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // Use useNavigate para Vite
 import URL from '../api/config'
+import { Oval } from 'react-loader-spinner';
 
 import 'react-toastify/dist/ReactToastify.css'; // Importe os estilos CSS do react-toastify
 
@@ -41,6 +42,8 @@ export default function ChangePass() {
   const [user, setUser] = useState(null);
   const [invalidCredentials, setInvalidCredentials] = useState(false);
   const [invalidCredentials1, setInvalidCredentials1] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -83,6 +86,8 @@ export default function ChangePass() {
   }
 
   const onSubmit = async (data) => {
+    setIsLoading(true);
+
     try {
       await axios.post(`${URL}/usuarios/alterarsenha`, data, {
         headers: {
@@ -92,6 +97,8 @@ export default function ChangePass() {
       toast.success("Senha alterada com sucesso!", {
         autoClose: 5000
       });
+      setIsLoading(false);
+
 
       setTimeout(async () => {
         const hasPermission = await checkPermission();
@@ -108,9 +115,13 @@ export default function ChangePass() {
         toast.error('Ocorreu uma falha na redefinição de senha.');
         reset();
         setInvalidCredentials(true);
+        setIsLoading(false);
+
       } else {
         console.error('Erro:', error.message);
         toast.error('Ocorreu uma falha na redefinição de senha.');
+        setIsLoading(false);
+
         reset();
         setInvalidCredentials1(true);
       }

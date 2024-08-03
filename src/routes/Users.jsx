@@ -9,9 +9,11 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useDebounce } from 'use-debounce';
 import URL from '../api/config';
+import { useDarkMode } from '../DarkModeContext'; 
 
 export default function Users() {
     const { token } = useAuthToken();
+    const { isDarkMode } = useDarkMode(); // Use o contexto do modo escuro
     const [users, setUsers] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
@@ -75,7 +77,6 @@ export default function Users() {
         );
     }, [debouncedSearchTerm, users]);
 
-    // Atualiza searchResults diretamente quando filteredResults mudar
     useEffect(() => {
         setSearchResults(filteredResults);
     }, [filteredResults]);
@@ -85,16 +86,16 @@ export default function Users() {
     }
 
     return (
-        <div className="h-95vh p-2 mt-8 bg-gray-100">
-            <div className="p-4 bg-white rounded-lg dark:border-gray-700 mt-14">
+        <div className={`h-95vh p-6 mt-20 ${isDarkMode ? 'body.dark-mode' : 'body.light-mode'}`}>
+            <div className={`p-6 rounded-lg ${isDarkMode ? 'bgdark2  text-white' : 'bg-white'}`}>
                 <h1 className="text-3xl font-medium mb-1">Usuários</h1>
                 <div className="grid grid-cols-3 gap-2 mb-8">
                     <form className='col-span-2'>
-                        <label className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Pesquisar</label>
+                        <label className={`mb-2 text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'} sr-only`}>Pesquisar</label>
                         <div className="relative w-full">
                             <input
                                 id="search-dropdown"
-                                className="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-lg border-2 border border-gray-100 focus:border-blue-500 focus:border-blue-500"
+                                className={`block p-2.5 w-full z-20 text-sm ${isDarkMode ? 'text-gray-300 bg-zinc-700 border-gray-600' : 'text-gray-900 bg-zinc-100 border-zinc-100'} rounded-lg focus:border-blue-500`}
                                 placeholder="Pesquisar cliente..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -102,7 +103,7 @@ export default function Users() {
                             />
                             <div className="absolute top-1 end-0 p-2.5 h-full text-white ">
                                 <svg
-                                    className="w-4 h-4 text-black"
+                                    className={`w-4 h-4 ${isDarkMode ? 'text-gray-100' : 'text-black'  }`}
                                     aria-hidden="true"
                                     xmlns="http://www.w3.org/2000/svg"
                                     fill="none"
@@ -128,19 +129,19 @@ export default function Users() {
                             <Oval color="#1658f2" height={50} width={50} />
                         </div>
                     ) : (
-                        <Table hoverable>
-                            <Table.Head className="bg-blue-50">
-                                <Table.HeadCell className="bg-blue-50">Nome</Table.HeadCell>
-                                <Table.HeadCell className="bg-blue-50">Usuário</Table.HeadCell>
-                                <Table.HeadCell className="bg-blue-50">Ações</Table.HeadCell>
+                        <Table hoverable className={`rounded border ${isDarkMode && 'border-zinc-700'} `}>
+                            <Table.Head className={`${isDarkMode ? 'bg-zinc-700' : 'bg-zinc-50 ' }`}>
+                                <Table.HeadCell className={`${isDarkMode ? 'bgtabledark text-white ' : 'bg-blue-100'}`}>Nome</Table.HeadCell>
+                                <Table.HeadCell className={`${isDarkMode ? 'bgtabledark text-white' : 'bg-blue-100'}`}>Usuário</Table.HeadCell>
+                                <Table.HeadCell className={`${isDarkMode ? 'bgtabledark text-white' : 'bg-blue-100'}`}>Ações</Table.HeadCell>
                             </Table.Head>
                             <Table.Body className="divide-y">
                                 {Array.isArray(searchResults) && searchResults.map((user) => (
-                                    <Table.Row key={user.samaccountname} className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                                        <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                                    <Table.Row key={user.samaccountname} className={`${isDarkMode ? 'bgdark2 border-zinc-700 hover:bg-zinc-700' : 'bg-white hover:bg-gray-100'}`}>
+                                        <Table.Cell className={`whitespace-nowrap font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-900'}`}>
                                             {user.givename} {user.sn}
                                         </Table.Cell>
-                                        <Table.Cell>{user.displayname}</Table.Cell>
+                                        <Table.Cell className={`${isDarkMode ? 'text-gray-300' : ''}`}>{user.displayname}</Table.Cell>
                                         <Table.Cell>
                                             <div className="flex space-x-2">
                                                 <ModalEditUser user={user} onUserUpdated={() => setNeedsUpdate(true)} />

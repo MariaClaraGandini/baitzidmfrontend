@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { AppBar, Box, Toolbar, IconButton, Typography, Menu, MenuItem, Tooltip } from '@mui/material';
 import Container from '@mui/material/Container';
@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import URL from '../api/config';
 import ModeNightIcon from '@mui/icons-material/ModeNight'; // Ícone de modo noturno
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
+import { useDarkMode } from '../DarkModeContext';
 
 function Navbar() {
   const { token } = useAuthToken();
@@ -19,7 +20,7 @@ function Navbar() {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [user, setUser] = useState(null);
   const [hasPermission, setHasPermission] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
   const location = useLocation();
   const isUsuariosActive = location.pathname === '/usuarios';
   const isFeriasActive = location.pathname === '/ferias';
@@ -56,7 +57,7 @@ function Navbar() {
         if (error.response && error.response.status === 402) {
           setHasPermission(false);
         }
-        if (error.response && error.response.status === 403 || error.response && error.response.status === 440) {
+        if (error.response && (error.response.status === 403 || error.response.status === 440)) {
           navigate('/');
           localStorage.removeItem('token');
           window.location.reload();
@@ -86,18 +87,14 @@ function Navbar() {
     setUser(null);
   };
 
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-  };
-
   return (
     <AppBar
       sx={{
-        backgroundColor: isDarkMode ? 'black' : 'white',
+        backgroundColor: isDarkMode ? 'white' : 'white',
         boxShadow: 'rgba(0, 0, 0, 0.1) 2px 1px 6px',
       }}
     >
-      <Container maxWidth="xl2">
+      <Container maxWidth="xl2" >
         <Toolbar disableGutters sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Typography variant="h6" noWrap>
             <Link to="/" style={{ textDecoration: 'none' }}>
@@ -117,7 +114,7 @@ function Navbar() {
               onClick={toggleDarkMode}
               className={`p-2 rounded ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-gray-200 text-black'}`}
             >
-              {isDarkMode ? <WbSunnyIcon sx={{ color: 'white' }} /> : <ModeNightIcon  />}
+              {isDarkMode ? <WbSunnyIcon sx={{ color: 'white', marginRight:'1rem', margin:'0.5rem'}} /> : <ModeNightIcon sx={{margin:'0.5rem'}} />}
             </IconButton>
             {hasPermission && (
               <div className='flex'>
@@ -220,13 +217,9 @@ function Navbar() {
                       </Typography>
                     </Link>
                   </MenuItem>
-                  <MenuItem sx={{ width: '100%' }} onClick={handleCloseUserMenu}>
-                    <Typography
-                      onClick={handleLogout}
-                      textAlign="center"
-                      sx={{ color: isDarkMode ? 'white' : 'gray' }}
-                    >
-                      Sair
+                  <MenuItem onClick={handleLogout}>
+                    <Typography textAlign="center" sx={{ color: isDarkMode ? 'white' : 'gray' }}>
+                      Logout
                     </Typography>
                   </MenuItem>
                 </Menu>

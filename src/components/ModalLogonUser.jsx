@@ -5,6 +5,7 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import { Oval } from 'react-loader-spinner';
 import URL from '../api/config'
+import { useDarkMode } from '../DarkModeContext'; 
 
 
 
@@ -26,6 +27,7 @@ function ModalLogonUser(user) {
     const [horariofimsabado, setHorarioFimSabado] = useState('--:--')
     const [errors, setErrors] = useState({});
     const [isLoading, setIsLoading] = useState(false);
+    const { isDarkMode } = useDarkMode();
 
     async function onCloseModal() {
         setOpenModal(false);
@@ -33,6 +35,7 @@ function ModalLogonUser(user) {
 
     useEffect(() => {
         if (openModal && user) {
+            setIsLoading(true)
             async function fetchUserData() {
                 try {
                     const response = await axios.get(`${URL}/usuarios/getlogonhours/${user.samaccountname}`);
@@ -52,8 +55,10 @@ function ModalLogonUser(user) {
                     setHorarioFimSexta(data.horariofimsexta);
                     setHorarioInicioSabado(data.horarioiniciosabado);
                     setHorarioFimSabado(data.horariofimsabado);
+                    setIsLoading(false);
                 } catch (error) {
                     toast.error(error.response.data.msg);
+                    setIsLoading(false);
                 }
             }
             fetchUserData();
@@ -103,10 +108,10 @@ function ModalLogonUser(user) {
                         setTimeout(() => {
                             setOpenModal(false);
                             window.location.reload();
-                        }, 4000);
+                        });
                     }
                 });
-            }, 7000);
+            });
         } catch (error) {
             setIsLoading(false);
             console.error('Erro ao editar usuário:', error);
@@ -122,30 +127,31 @@ function ModalLogonUser(user) {
         <div>
             <ToastContainer />
 
-            <Button className='mr-2 text-blue-500 bg-gray-50 houver:bg-gray-100 focus:outline-none' onClick={() => setOpenModal(true)}>
+            <Button color="blue" className={`mr-2 ${isDarkMode ? 'bg-zinc-600 border-0 m-0 buttonhover text-blue-500 ' : 'bg-gray-50 border-0 m-0 text-blue-400 hover:bg-gray-100 '} focus:outline-none focus:ring-0 disabled:opacity-50`}
+ onClick={() => setOpenModal(true)}>
                 <HiClock style={{ fontSize: '1rem' }} />
             </Button>
-            <Modal show={openModal} size="2xl" onClose={onCloseModal} popup className='flex items-center justify-center'>
-                <Modal.Header />
-                <Modal.Body>
-                    <div className="space-y-6 ">
-                        <h3 className="text-xl  font-semibold text-gray-900 dark:text-white">Horário de Login - {user.samaccountname} </h3>
+            <Modal show={openModal} size="2xl" onClose={onCloseModal}  style={{ zIndex: 9999 }} popup className=' flex items-center justify-center'>
+                <Modal.Header className={`${isDarkMode && 'bg-zinc-800'}`}  />
+                <Modal.Body className={`${isDarkMode && 'bg-zinc-800'}`} >
+                    <div className={`space-y-4 ${isDarkMode && 'bg-zinc-800'} `}>
+                        <h3 className={`text-xl  font-semibold  dark:text-white ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>Horário de Login - {user.samaccountname} </h3>
                         {isLoading ? (
                             <div className="flex justify-center items-center h-64">
                                 <Oval color="#1658f2" height={50} width={50} />
                             </div>
                         ) : (
                         <form>
-                            <div className="overflow-x-auto ">
-                                <Table className=' '>
-                                    <Table.Head className='p-0 m-0'>
-                                        <Table.HeadCell className="  text-center font-medium">Dia da Semana</Table.HeadCell>
-                                        <Table.HeadCell className="text-center font-medium">Horário Inicial</Table.HeadCell>
-                                        <Table.HeadCell className="text-center  font-medium">Horário Final</Table.HeadCell>
+                            <div className="overflow-x-auto max-h-[60vh] ">
+                                <Table className={`${isDarkMode && 'bg-zinc-800'}`}>
+                                    <Table.Head className={`p-0 m-0 ${isDarkMode && 'bgdark1 text-gray-100'}`}>
+                                        <Table.HeadCell className={` ${isDarkMode && 'bgdark1 text-gray-100'} text-center font-medium"`}>Dia da Semana</Table.HeadCell>
+                                        <Table.HeadCell className={` bgdark1 text-center font-medium`}>Horário Inicial</Table.HeadCell>
+                                        <Table.HeadCell className={` bgdark1 text-center  font-medium`}>Horário Final</Table.HeadCell>
 
                                     </Table.Head>
                                     <Table.Body className="divide-y border-b border-gray-50		">
-                                        <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800 py-0 px-0 m-0">
+                                        <Table.Row className={` ${isDarkMode ? 'bg-zinc-800 ' : 'bg-white '}  py-0 px-0 m-0`}>
                                             <Table.Cell className=" font-medium text-gray-900  text-center py-0 px-0 m-0">Domingo: </Table.Cell>
                                             <Table.Cell className='px-1.5'>
                                                 <div className="select-wrapper">
@@ -162,7 +168,7 @@ function ModalLogonUser(user) {
                                                         <option>06:00</option>
                                                         <option>07:00</option>
                                                         <option>08:00</option>
-                                                        <option value="09:00">09:00</option>
+                                                        <option >09:00</option>
                                                         <option>10:00</option>
                                                         <option>11:00</option>
                                                         <option>12:00</option>
@@ -224,14 +230,14 @@ function ModalLogonUser(user) {
                                                             <path d="M12 2c-5.52 0-10 4.48-10 10s4.48 10 10 10 10-4.48 10-10-4.48-10-10-10zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-9v6h2v-7h-2z" />
                                                         </svg>
                                                     </span>
+                                                    
                                                 </div>
                                                 {errors.horariodomingo && <p className="text-red-600 text-xs font-medium">{errors.horariodomingo}</p>}
-
                                             </Table.Cell>
                                         </Table.Row>
                                     </Table.Body>
                                     <Table.Body className="divide-y border-b border-gray-50	">
-                                        <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800 py-0 px-0 m-0">
+                                        <Table.Row className={` ${isDarkMode ? 'bg-zinc-800 ' : 'bg-white '}  py-0 px-0 m-0`}>
                                             <Table.Cell className=" font-medium text-gray-900  text-center py-0 px-0 m-0">Segunda-Feira: </Table.Cell>
 
                                             <Table.Cell className='px-1.5'>
@@ -316,7 +322,7 @@ function ModalLogonUser(user) {
                                         </Table.Row>
                                     </Table.Body>
                                     <Table.Body className="divide-y border-b	 border-gray-50">
-                                        <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800 py-0 px-0 m-0">
+                                        <Table.Row className={` ${isDarkMode ? 'bg-zinc-800 ' : 'bg-white '}  py-0 px-0 m-0`}>
                                             <Table.Cell className=" font-medium text-gray-900  text-center py-0 px-0 m-0">Terça-Feira: </Table.Cell>
 
                                             <Table.Cell className='px-1.5'>
@@ -403,7 +409,7 @@ function ModalLogonUser(user) {
                                         </Table.Row>
                                     </Table.Body>
                                     <Table.Body className="divide-y border-b border-gray-50	">
-                                        <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800 py-0 px-0 m-0">
+                                        <Table.Row className={` ${isDarkMode ? 'bg-zinc-800 ' : 'bg-white '}  py-0 px-0 m-0`}>
                                             <Table.Cell className=" font-medium text-gray-900  text-center py-0 px-0 m-0">Quarta-Feira: </Table.Cell>
 
                                             <Table.Cell className='px-1.5'>
@@ -488,7 +494,7 @@ function ModalLogonUser(user) {
                                         </Table.Row>
                                     </Table.Body>
                                     <Table.Body className="divide-y border-b border-gray-50	">
-                                        <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800 py-0 px-0 m-0">
+                                        <Table.Row className={` ${isDarkMode ? 'bg-zinc-800 ' : 'bg-white '}  py-0 px-0 m-0`}>
                                             <Table.Cell className=" font-medium text-gray-900  text-center py-0 px-0 m-0">Quinta-Feira: </Table.Cell>
 
                                             <Table.Cell className='px-1.5'>
@@ -573,7 +579,7 @@ function ModalLogonUser(user) {
                                         </Table.Row>
                                     </Table.Body>
                                     <Table.Body className="divide-y py-0  border-b border-gray-50	">
-                                        <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800 py-0 px-0 m-0">
+                                        <Table.Row className={` ${isDarkMode ? 'bg-zinc-800 ' : 'bg-white '}  py-0 px-0 m-0`}>
                                             <Table.Cell className=" font-medium text-gray-900  text-center py-0 px-0 m-0">Sexta-Feira: </Table.Cell>
 
                                             <Table.Cell className='px-1.5'>
@@ -658,7 +664,7 @@ function ModalLogonUser(user) {
                                         </Table.Row>
                                     </Table.Body>
                                     <Table.Body className="divide-y border-b border-gray-50">
-                                        <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800 py-0 px-0 m-0">
+                                        <Table.Row className={` ${isDarkMode ? 'bg-zinc-800 ' : 'bg-white '}  py-0 px-0 m-0`}>
                                             <Table.Cell className=" font-medium text-gray-900  text-center py-0 px-0 m-0">Sábado: </Table.Cell>
 
                                             <Table.Cell className='px-1.5'>

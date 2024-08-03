@@ -1,8 +1,10 @@
 // App.js
 import './App.css';
+import React, { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useDarkMode } from './DarkModeContext';
 
 const customTheme = createTheme({
   components: {
@@ -22,12 +24,17 @@ const customTheme = createTheme({
 });
 
 function App() {
+  const { isDarkMode } = useDarkMode();
+
+  useEffect(() => {
+    document.body.className = isDarkMode ? 'dark-mode' : 'light-mode';
+  }, [isDarkMode]);
+
   return (
     <ThemeProvider theme={customTheme}>
 
       <Navbar />
       <Outlet />
-      {/* <Footer /> */}
         </ThemeProvider>
 
   );

@@ -225,21 +225,8 @@ function ModalVacationEdit({ openModal, onClose, event }) {
                       onChange={(event) => setDataInicioFerias(event.target.value)}
                       required
                     />
-                    {errors.dataInicioFerias && <p className="text-red-600">{errors.dataInicioFerias}</p>}
+                                      {errors.dataInicioFerias && <p className="text-red-600">{errors.dataInicioFerias}</p>}
                   </div>
-                  <div className="mx-1">
-                    <Label htmlFor="dataRetornoFerias" value="Data do Retorno" />
-                    <TextInput
-                      id="dataRetornoFerias"
-                      type="date"
-                      value={dataRetornoFerias}
-                      onChange={(event) => setDataRetornoFerias(event.target.value)}
-                      required
-                    />
-                    {errors.dataRetornoFerias && <p className="text-red-600">{errors.dataRetornoFerias}</p>}
-                  </div>
-                </div>
-                <div className="grid md:grid-cols-2 sm:grid-cols-1 py-2">
                   <div className="mx-1">
                     <Label htmlFor="horarioInicioFerias" value="Horário de Início" />
                     <TextInput
@@ -250,8 +237,21 @@ function ModalVacationEdit({ openModal, onClose, event }) {
                       required
                     />
                     {errors.horarioInicioFerias && <p className="text-red-600">{errors.horarioInicioFerias}</p>}
+                  </div> 
+                </div>
+                <div className="grid md:grid-cols-2 sm:grid-cols-1 py-2">
+                <div className="mx-1">
+                    <Label htmlFor="dataRetornoFerias" value="Data do Retorno" />
+                    <TextInput
+                      id="dataRetornoFerias"
+                      type="date"
+                      value={dataRetornoFerias}
+                      onChange={(event) => setDataRetornoFerias(event.target.value)}
+                      required
+                    />
+                    {errors.dataRetornoFerias && <p className="text-red-600">{errors.dataRetornoFerias}</p>}
                   </div>
-                  <div className="mx-1">
+                 <div className="mx-1">
                     <Label htmlFor="horarioRetornoFerias" value="Horário do Retorno" />
                     <TextInput
                       id="horarioRetornoFerias"
@@ -261,7 +261,7 @@ function ModalVacationEdit({ openModal, onClose, event }) {
                       required
                     />
                     {errors.horarioRetornoFerias && <p className="text-red-600">{errors.horarioRetornoFerias}</p>}
-                  </div>
+                  </div> 
                 </div>
                 <div className="py-2">
                   <Label htmlFor="taskNameDesativar" value="Agendamento para Desativar Usuário" />

@@ -8,7 +8,6 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -17,20 +16,12 @@
   -webkit-text-size-adjust: 100%;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
 
-body {
+/* body {
   margin: 0;
   place-items: center;
 
-}
+} */
 
 h1 {
   font-size: 3.2em;
@@ -56,7 +47,7 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 } */
 
-@media (prefers-color-scheme: light) {
+/* @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
     background-color: #ffffff;
@@ -67,91 +58,11 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-}
+} */
 
 
 
 
-/* HOME - NAVEGAR */
-
-
-.navegar-item{
-  height: 60vh;
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  }
-
-.imagembackground1{
-  background-image: url("./assets/home/casamentos.png")
-
-}
-
-.imagembackground2{
-  background-image: url("./assets/home/eventos.png")
-
-}
-
-.imagembackground3{
-  background-image: url("./assets/home/festasprivadas.png")
-
-}
-
-.navegar-item1{
-  height: 50vh;
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  }
-
-
-.imagembackground4{
-  background-image: url('./assets/belamur.jpg');
-}
-
-
-/* ///////////////////////////////////FOOTER////////////////////////// */
-
-.footercontainer{
-  width: 100%;
-  height: 100%;
-  background-color: #fcf5ea;
-  position: static;
-  margin-top:2rem ;
-}
-
-.footerlogo{
-  width: 10rem;
-}
-
-.griditem{
-  display: flex;
-  justify-content: center;
-  text-align: center;
-}
-
-.navegue{
-  font-weight: bold;
-  color: #c0623c
-}
-
-.iconcontainerfooter{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 3rem;
-
-}
-
-.iconfooterimg{
-  width: 1.1rem;
-  align-items: center;
-
-}
 
 
 /* index.css */
@@ -204,20 +115,19 @@ background-color: #961f1f;
 }
 
 
-styles.css
 body.light-mode {
-  background-color: #ffffff;
+  background-color: #f5f5f5;
   color: #000000;
 }
 
 body.dark-mode {
-  background-color: #121212;
+  background-color: #27272a;
   color: #ffffff;
 }
 
 /* Outras classes e estilos que você quiser alterar no modo noturno */
 .dark-mode .MuiPaper-root {
-  background-color: #1d1d1d;
+  background-color: #232323;
   color: #ffffff;
 }
 
@@ -225,11 +135,52 @@ body.dark-mode {
   background-color: #3c6cfc;
   color: #ffffff;
 }
-
+s
 .dark-mode .MuiTextField-root {
   color: #ffffff;
 }
 
 .dark-mode .MuiInputLabel-root {
   color: #ffffff;
+}
+
+.dark-mode .MuiInputBase-root {
+  background-color: #2b2b2b;
+}
+
+.bginput input{
+  background-color: #3f3f46;
+  border-color: #2d2d31;
+  color:white
+}
+
+
+.buttonhover span{
+  background-color: #33323a;
+  color: rgb(44, 111, 236);
+}
+
+.buttonhover {
+  border-color:#0d1475;
+}
+
+.buttonhover span:hover{
+  background-color: #0d1475;
+  border-color:#0d1475;
+  color: rgb(44, 111, 236);
+}
+
+
+
+.bgdark1{
+  background-color: #37373a;
+}
+
+
+.bgdark2{
+  background-color: #29292f;
+}
+
+.bgtabledark{
+  background-color: #043886;
 }

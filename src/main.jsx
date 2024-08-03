@@ -8,11 +8,12 @@ import ErrorPage from './routes/ErrorPage.jsx';
 import Users from  './routes/Users.jsx';
 import ChangePass from './routes/ChangePass.jsx'
 import Vacation from './routes/Vacation.jsx'
+import { DarkModeProvider } from './DarkModeContext.jsx';
 
 
 const root = createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
+  <DarkModeProvider>
     <Router>
       <Routes>
         <Route path="/" element={<App />}>
@@ -25,8 +26,8 @@ root.render(
         <Route path="*" element={<ErrorPage />} />
       </Routes>
     </Router>
-  </React.StrictMode>
-);
+    </DarkModeProvider>
+  );
 
 
 
