@@ -5,7 +5,9 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuthToken } from '../api/AuthToken';
 import { Oval } from 'react-loader-spinner';
-import URL from '../api/config'
+import URL from '../api/config';
+import { useDarkMode } from '../DarkModeContext'; 
+
 
 function ModalVacationCreate({ openModal, onClose, user }) {
   const { token } = useAuthToken();
@@ -17,6 +19,7 @@ function ModalVacationCreate({ openModal, onClose, user }) {
   const [horarioRetornoFerias, setHorarioRetornoFerias] = useState('');
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const { isDarkMode } = useDarkMode();
 
   useEffect(() => {
     if (openModal) {
@@ -138,11 +141,11 @@ function ModalVacationCreate({ openModal, onClose, user }) {
     <div>
       <ToastContainer />
       <Modal show={openModal} size="2xl" onClose={onClose} popup>
-        <Modal.Header />
-        <Modal.Body>
+        <Modal.Header  className={` ${isDarkMode ? 'bgdark1 dark:bgdark1' : ' dark:bg-white bg-white '}`}/>
+        <Modal.Body className={` ${isDarkMode ? 'bgdark1 dark:bgdark1' : ' dark:bg-white bg-white'}`}>
           <div className="space-y-6">
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-              Agendar Férias - {user?.samaccountname}
+            <h3 className={`text-xl font-semibold ${isDarkMode ? 'text-gray-100' : 'dark:text-gray-900 text-gray-900'}  `}>
+              Agendar Férias  
             </h3>
             {loading ? (
               <div className="flex justify-center">
@@ -150,13 +153,13 @@ function ModalVacationCreate({ openModal, onClose, user }) {
               </div>
             ) : (
               <form onSubmit={onSave}>
-                <Label htmlFor="usuario" value="Usuário:" />
+                <Label htmlFor="usuario" value="Usuário:" className={`${isDarkMode ? 'text-gray-100' : 'text-gray-900 dark:text-gray-900'}`}/>
                 <Select
                   id="usuario"
                   required
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className={errors.username && 'border-red-600'}
+                  className={`${errors.username && 'border-red-600'} ${isDarkMode ? 'darkbgselect dark:darkbgselect': 'lightbgselect dark:lightbgselect'}`}
                 >
                   <option value="">Selecione um usuário</option>
                   {usernames.map((user) => (
@@ -168,59 +171,59 @@ function ModalVacationCreate({ openModal, onClose, user }) {
                 {errors.username && <p className="text-red-600 text-xs font-medium">{errors.username}</p>}
                 <div className="grid md:grid-cols-2 sm:grid-cols-1 py-2">
                   <div className="mx-1">
-                    <Label htmlFor="dataInicioFerias" value="Data da Férias" />
+                    <Label htmlFor="dataInicioFerias" value="Data da Férias" className={`${isDarkMode ? 'text-gray-100' : 'text-gray-900 dark:text-gray-900'}`} />
                     <TextInput
                       id="dataInicioFerias"
                       type="date"
                       value={dataInicioFerias}
                       onChange={(event) => setDataInicioFerias(event.target.value)}
                       required
-                      className={errors.dataInicioFerias && 'border-red-600'}
+                      className={` ${errors.dataInicioFerias && 'border-red-600'} ${isDarkMode ? 'bginput' : 'lightbginput'}`}
                     />
                     {errors.dataInicioFerias && <p className="text-red-600 text-xs font-medium">{errors.dataInicioFerias}</p>}
                   </div>
                   <div className="mx-1">
-                    <Label htmlFor="horarioInicioFerias" value="Horário Início" />
+                    <Label htmlFor="horarioInicioFerias" value="Horário Início" className={`${isDarkMode ? 'text-gray-100' : 'text-gray-900 dark:text-gray-900'}`}/>
                     <TextInput
                       id="horarioInicioFerias"
                       type="time"
                       value={horarioInicioFerias}
                       onChange={(event) => setHorarioInicioFerias(event.target.value)}
                       required
-                      className={errors.horarioInicioFerias && 'border-red-600'}
+                      className={` ${errors.horarioInicioFerias && 'border-red-600'} ${isDarkMode ? 'bginput' : 'lightbginput'}`}
                     />
                     {errors.horarioInicioFerias && <p className="text-red-600 text-xs font-medium">{errors.horarioInicioFerias}</p>}
                   </div>
                 </div>
                 <div className="grid md:grid-cols-2 sm:grid-cols-1 py-2">
                   <div className="mx-1">
-                    <Label htmlFor="dataRetornoFerias" value="Data de Retorno" />
+                    <Label htmlFor="dataRetornoFerias" value="Data de Retorno" className={`${isDarkMode ? 'text-gray-100' : 'text-gray-900 dark:text-gray-900'}`} />
                     <TextInput
                       id="dataRetornoFerias"
                       type="date"
                       value={dataRetornoFerias}
                       onChange={(event) => setDataRetornoFerias(event.target.value)}
                       required
-                      className={errors.dataRetornoFerias && 'border-red-600'}
+                      className={`${errors.dataRetornoFerias && 'border-red-600'} ${isDarkMode ? 'bginput' : 'lightbginput'}`}
                     />
                     {errors.dataRetornoFerias && <p className="text-red-600 text-xs font-medium">{errors.dataRetornoFerias}</p>}
                   </div>
                   <div className="mx-1">
-                    <Label htmlFor="horarioRetornoFerias" value="Horário Retorno" />
+                    <Label htmlFor="horarioRetornoFerias" value="Horário Retorno" className={`${isDarkMode ? 'text-gray-100' : 'text-gray-900 dark:text-gray-900'}`}/>
                     <TextInput
                       id="horarioRetornoFerias"
                       type="time"
                       value={horarioRetornoFerias}
                       onChange={(event) => setHorarioRetornoFerias(event.target.value)}
                       required
-                      className={errors.horarioRetornoFerias && 'border-red-600'}
+                      className={` ${errors.horarioRetornoFerias && 'border-red-600'}  ${isDarkMode ? 'bginput' : 'lightbginput'}`}
                     />
                     {errors.horarioRetornoFerias && <p className="text-red-600 text-xs font-medium">{errors.horarioRetornoFerias}</p>}
                   </div>
                 </div>
                 <Modal.Footer className='px-0 mx-0'>
 
-          <Button color="gray" onClick={onClose}>
+          <Button color="gray" onClick={onClose} >
             Cancelar
           </Button>
 

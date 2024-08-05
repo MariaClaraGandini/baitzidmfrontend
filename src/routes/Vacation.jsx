@@ -13,6 +13,7 @@ import "../assets/css/calendar.css";
 import { useAuthToken } from '../api/AuthToken';
 import { Oval } from 'react-loader-spinner';
 import URL from '../api/config'
+import { useDarkMode } from '../DarkModeContext'; 
 
 function Vacation() {
   const [openModalEdit, setOpenModalEdit] = useState(false);
@@ -21,7 +22,7 @@ function Vacation() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const { token } = useAuthToken();
-
+  const { isDarkMode } = useDarkMode();
   const fetchVacationEvents = useCallback(async () => {
     setLoading(true);
     try {
@@ -87,10 +88,14 @@ function Vacation() {
     setOpenModalCreate(false);
   };
 
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+  }, [isDarkMode]);
+
   return (
     <>
-      <div className="h-95vh p-2 mt-8 bg-gray-100 relative">
-        <div className="p-8 bg-white rounded-lg dark:border-gray-700 mt-14">
+      <div className={`h-95vh p-2 mt-8 relative`}>
+        <div className={`p-8  ${isDarkMode ? 'bgdark1' : 'bg-white '} rounded-lg  mt-14`}>
           <FullCalendar
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             initialView="dayGridMonth"

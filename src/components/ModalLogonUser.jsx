@@ -122,20 +122,19 @@ function ModalLogonUser(user) {
 
 
 
-
     return (
         <div>
             <ToastContainer />
 
-            <Button color="blue" className={`mr-2 ${isDarkMode ? 'bg-zinc-600 border-0 m-0 buttonhover text-blue-500 ' : 'bg-gray-50 border-0 m-0 text-blue-400 hover:bg-gray-100 '} focus:outline-none focus:ring-0 disabled:opacity-50`}
+            <Button color="blue" className={`mr-2 ${isDarkMode ? 'bg-zinc-600  dark:bg-zinc-600 border-0 m-0 buttonhover text-blue-500 ' : 'bg-gray-100 dark:bg-gray-100  border-0 m-0 text-blue-400 '} focus:outline-none focus:ring-0 disabled:opacity-50`}
  onClick={() => setOpenModal(true)}>
                 <HiClock style={{ fontSize: '1rem' }} />
             </Button>
             <Modal show={openModal} size="2xl" onClose={onCloseModal}  style={{ zIndex: 9999 }} popup className=' flex items-center justify-center'>
-                <Modal.Header className={`${isDarkMode && 'bg-zinc-800'}`}  />
-                <Modal.Body className={`${isDarkMode && 'bg-zinc-800'}`} >
-                    <div className={`space-y-4 ${isDarkMode && 'bg-zinc-800'} `}>
-                        <h3 className={`text-xl  font-semibold  dark:text-white ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>Horário de Login - {user.samaccountname} </h3>
+                <Modal.Header className={`${isDarkMode ? 'bg-zinc-800': 'dark:bg-white '}`}  />
+                <Modal.Body className={`${isDarkMode ? 'bg-zinc-800': 'dark:bg-white '}`} >
+                    <div className={`space-y-4 ${isDarkMode ? 'bg-zinc-800' :  'dark:bg-white'} `}>
+                        <h3 className={`text-xl  font-semibold   ${isDarkMode ? 'text-gray-100' : 'text-gray-900 dark:text-gray-900'}`}>Horário de Login - {user.samaccountname} </h3>
                         {isLoading ? (
                             <div className="flex justify-center items-center h-64">
                                 <Oval color="#1658f2" height={50} width={50} />
@@ -143,20 +142,21 @@ function ModalLogonUser(user) {
                         ) : (
                         <form>
                             <div className="overflow-x-auto max-h-[60vh] ">
-                                <Table className={`${isDarkMode && 'bg-zinc-800'}`}>
+                                <Table className={`${isDarkMode ? 'bg-zinc-800': 'dark:bg-white '}`}>
                                     <Table.Head className={`p-0 m-0 ${isDarkMode && 'bgdark1 text-gray-100'}`}>
-                                        <Table.HeadCell className={` ${isDarkMode && 'bgdark1 text-gray-100'} text-center font-medium"`}>Dia da Semana</Table.HeadCell>
-                                        <Table.HeadCell className={` bgdark1 text-center font-medium`}>Horário Inicial</Table.HeadCell>
-                                        <Table.HeadCell className={` bgdark1 text-center  font-medium`}>Horário Final</Table.HeadCell>
+                                        <Table.HeadCell className={` ${isDarkMode ?'bgdark1 dark:bgdark1 text-gray-100': 'dark:bg-gray-100 dark:text-gray-900'} text-center font-medium"`}>Dia da Semana</Table.HeadCell>
+                                        <Table.HeadCell className={` ${isDarkMode ?'bgdark1 dark:bgdark1 text-gray-100': 'dark:bg-gray-100 dark:text-gray-900'} text-center font-medium"`}>Horário Inicial</Table.HeadCell>
+                                        <Table.HeadCell className={` ${isDarkMode ?'bgdark1 dark:bgdark1 text-gray-100': 'dark:bg-gray-100 dark:text-gray-900'} text-center font-medium"`}>Horário Final</Table.HeadCell>
 
                                     </Table.Head>
-                                    <Table.Body className="divide-y border-b border-gray-50		">
+                                    <Table.Body className={`divide-y border-b ${isDarkMode ? 'border-zinc-700 ' : 'border-gray-50'}`}>
                                         <Table.Row className={` ${isDarkMode ? 'bg-zinc-800 ' : 'bg-white '}  py-0 px-0 m-0`}>
-                                            <Table.Cell className=" font-medium text-gray-900  text-center py-0 px-0 m-0">Domingo: </Table.Cell>
+                                            <Table.Cell className={` ${isDarkMode ? 'text-gray-100' : 'text-gray-900'} font-medium   text-center py-0 px-0 m-0`}>Domingo: </Table.Cell>
                                             <Table.Cell className='px-1.5'>
-                                                <div className="select-wrapper">
+                                                <div className="select-wrapper ">
 
-                                                    <Select value={horarioiniciodomingo} onChange={(event) => setHorarioInicioDomingo(event.target.value)} id="hours" required>
+<div className='darkbgselect'>
+                                                    <Select value={horarioiniciodomingo}   className={`${isDarkMode ? 'darkbgselect dark:darkbgselect': 'lightbgselect dark:lightbgselect'}`} onChange={(event) => setHorarioInicioDomingo(event.target.value)} id="hours" required>
                                                         <option>--:--</option>
 
                                                         <option>00:00</option>
@@ -185,6 +185,7 @@ function ModalLogonUser(user) {
                                                         <option>23:00</option>
 
                                                     </Select>
+                                                    </div>
                                                     <span className="custom-icon">
                                                         {/* Ícone personalizado (por exemplo, um ícone de relógio) */}
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
@@ -192,12 +193,11 @@ function ModalLogonUser(user) {
                                                         </svg>
                                                     </span>
                                                 </div>
-
                                             </Table.Cell>
                                             <Table.Cell className='px-1.5'>
                                                 <div className="select-wrapper">
 
-                                                    <Select value={horariofimdomingo} onChange={(event) => setHorarioFimDomingo(event.target.value)} id="hours" required>
+                                                    <Select value={horariofimdomingo} className={`${isDarkMode ? 'darkbgselect dark:darkbgselect': 'lightbgselect dark:lightbgselect'}`} onChange={(event) => setHorarioFimDomingo(event.target.value)} id="hours" required>
                                                         <option>--:--</option>
                                                         <option>01:00</option>
                                                         <option>02:00</option>
@@ -236,15 +236,15 @@ function ModalLogonUser(user) {
                                             </Table.Cell>
                                         </Table.Row>
                                     </Table.Body>
-                                    <Table.Body className="divide-y border-b border-gray-50	">
+                                    <Table.Body className={`divide-y border-b ${isDarkMode ? 'border-zinc-700 ' : 'border-gray-50'}`}>
                                         <Table.Row className={` ${isDarkMode ? 'bg-zinc-800 ' : 'bg-white '}  py-0 px-0 m-0`}>
-                                            <Table.Cell className=" font-medium text-gray-900  text-center py-0 px-0 m-0">Segunda-Feira: </Table.Cell>
+                                            <Table.Cell className={` ${isDarkMode ? 'text-gray-100' : 'text-gray-900'} font-medium text-center py-0 px-0 m-0`}>Segunda-Feira: </Table.Cell>
 
                                             <Table.Cell className='px-1.5'>
 
                                                 <div className="select-wrapper">
 
-                                                    <Select value={horarioiniciosegunda} onChange={(event) => setHorarioInicioSegunda(event.target.value)} id="hours" required>
+                                                    <Select value={horarioiniciosegunda} className={`${isDarkMode ? 'darkbgselect dark:darkbgselect': 'lightbgselect dark:lightbgselect'}`} onChange={(event) => setHorarioInicioSegunda(event.target.value)} id="hours" required>
                                                         <option>--:--</option>
                                                         <option>00:00</option>
                                                         <option>01:00</option>
@@ -283,7 +283,7 @@ function ModalLogonUser(user) {
                                             <Table.Cell className='px-1.5'>
                                                 <div className="select-wrapper">
 
-                                                    <Select value={horariofimsegunda} onChange={(event) => setHorarioFimSegunda(event.target.value)} id="hours" required>
+                                                    <Select value={horariofimsegunda}  className={`${isDarkMode ? 'darkbgselect dark:darkbgselect': 'lightbgselect dark:lightbgselect'}`} onChange={(event) => setHorarioFimSegunda(event.target.value)} id="hours" required>
                                                         <option>--:--</option>
                                                         <option>01:00</option>
                                                         <option>02:00</option>
@@ -321,14 +321,14 @@ function ModalLogonUser(user) {
                                             </Table.Cell>
                                         </Table.Row>
                                     </Table.Body>
-                                    <Table.Body className="divide-y border-b	 border-gray-50">
+                                    <Table.Body className={`divide-y border-b ${isDarkMode ? 'border-zinc-700 ' : 'border-gray-50'}`}>
                                         <Table.Row className={` ${isDarkMode ? 'bg-zinc-800 ' : 'bg-white '}  py-0 px-0 m-0`}>
-                                            <Table.Cell className=" font-medium text-gray-900  text-center py-0 px-0 m-0">Terça-Feira: </Table.Cell>
+                                            <Table.Cell className={` ${isDarkMode ? 'text-gray-100' : 'text-gray-900'} font-medium text-center py-0 px-0 m-0`}>Terça-Feira: </Table.Cell>
 
                                             <Table.Cell className='px-1.5'>
                                                 <div className="select-wrapper">
 
-                                                    <Select value={horarioinicioterca} onChange={(event) => setHorarioInicioTerca(event.target.value)} id="hours" required>
+                                                    <Select value={horarioinicioterca}  className={`${isDarkMode ? 'darkbgselect dark:darkbgselect': 'lightbgselect dark:lightbgselect'}`} onChange={(event) => setHorarioInicioTerca(event.target.value)} id="hours" required>
                                                         <option>--:--</option>
                                                         <option>00:00</option>
                                                         <option>01:00</option>
@@ -369,7 +369,7 @@ function ModalLogonUser(user) {
                                             <Table.Cell className='px-1.5'>
                                                 <div className="select-wrapper">
 
-                                                    <Select value={horariofimterca} onChange={(event) => setHorarioFimTerca(event.target.value)} id="hours" required>
+                                                    <Select value={horariofimterca} className={`${isDarkMode ? 'darkbgselect dark:darkbgselect': 'lightbgselect dark:lightbgselect'}`}  onChange={(event) => setHorarioFimTerca(event.target.value)} id="hours" required>
                                                          <option>--:--</option>
                                                         <option>01:00</option>
                                                         <option>02:00</option>
@@ -408,14 +408,14 @@ function ModalLogonUser(user) {
                                             </Table.Cell>
                                         </Table.Row>
                                     </Table.Body>
-                                    <Table.Body className="divide-y border-b border-gray-50	">
+                                    <Table.Body className={`divide-y border-b ${isDarkMode ? 'border-zinc-700 ' : 'border-gray-50'}`}>
                                         <Table.Row className={` ${isDarkMode ? 'bg-zinc-800 ' : 'bg-white '}  py-0 px-0 m-0`}>
-                                            <Table.Cell className=" font-medium text-gray-900  text-center py-0 px-0 m-0">Quarta-Feira: </Table.Cell>
+                                            <Table.Cell className={` ${isDarkMode ? 'text-gray-100' : 'text-gray-900'} font-medium text-center py-0 px-0 m-0`}>Quarta-Feira: </Table.Cell>
 
                                             <Table.Cell className='px-1.5'>
                                                 <div className="select-wrapper">
 
-                                                    <Select value={horarioinicioquarta} onChange={(event) => setHorarioInicioQuarta(event.target.value)} id="hours" required>
+                                                    <Select value={horarioinicioquarta} className={`${isDarkMode ? 'darkbgselect dark:darkbgselect': 'lightbgselect dark:lightbgselect'}`}  onChange={(event) => setHorarioInicioQuarta(event.target.value)} id="hours" required>
                                                     <option>--:--</option>
                                                         <option>00:00</option>
                                                         <option>01:00</option>
@@ -454,7 +454,7 @@ function ModalLogonUser(user) {
                                             <Table.Cell className='px-1.5'>
                                                 <div className="select-wrapper">
 
-                                                    <Select value={horariofimquarta} onChange={(event) => setHorarioFimQuarta(event.target.value)} id="hours" required>
+                                                    <Select value={horariofimquarta} className={`${isDarkMode ? 'darkbgselect dark:darkbgselect': 'lightbgselect dark:lightbgselect'}`}  onChange={(event) => setHorarioFimQuarta(event.target.value)} id="hours" required>
                                                     <option>--:--</option>
                                                         <option>01:00</option>
                                                         <option>02:00</option>
@@ -493,14 +493,14 @@ function ModalLogonUser(user) {
                                             </Table.Cell>
                                         </Table.Row>
                                     </Table.Body>
-                                    <Table.Body className="divide-y border-b border-gray-50	">
+                                    <Table.Body className={`divide-y border-b ${isDarkMode ? 'border-zinc-700 ' : 'border-gray-50'}`}>
                                         <Table.Row className={` ${isDarkMode ? 'bg-zinc-800 ' : 'bg-white '}  py-0 px-0 m-0`}>
-                                            <Table.Cell className=" font-medium text-gray-900  text-center py-0 px-0 m-0">Quinta-Feira: </Table.Cell>
+                                            <Table.Cell className={` ${isDarkMode ? 'text-gray-100' : 'text-gray-900'} font-medium text-center py-0 px-0 m-0`}>Quinta-Feira: </Table.Cell>
 
                                             <Table.Cell className='px-1.5'>
                                                 <div className="select-wrapper">
 
-                                                    <Select value={horarioinicioquinta} onChange={(event) => setHorarioInicioQuinta(event.target.value)} id="hours" required>
+                                                    <Select value={horarioinicioquinta} className={`${isDarkMode ? 'darkbgselect dark:darkbgselect': 'lightbgselect dark:lightbgselect'}`} onChange={(event) => setHorarioInicioQuinta(event.target.value)} id="hours" required>
                                                     <option>--:--</option>
                                                         <option>00:00</option>
                                                         <option>01:00</option>
@@ -539,7 +539,7 @@ function ModalLogonUser(user) {
                                             <Table.Cell className='px-1.5'>
                                                 <div className="select-wrapper">
 
-                                                    <Select value={horariofimquinta} onChange={(event) => setHorarioFimQuinta(event.target.value)} id="hours" required>
+                                                    <Select value={horariofimquinta} className={`${isDarkMode ? 'darkbgselect dark:darkbgselect': 'lightbgselect dark:lightbgselect'}`} onChange={(event) => setHorarioFimQuinta(event.target.value)} id="hours" required>
                                                     <option>--:--</option>
                                                         <option>01:00</option>
                                                         <option>02:00</option>
@@ -578,14 +578,14 @@ function ModalLogonUser(user) {
                                             </Table.Cell>
                                         </Table.Row>
                                     </Table.Body>
-                                    <Table.Body className="divide-y py-0  border-b border-gray-50	">
+                                    <Table.Body className={`divide-y border-b ${isDarkMode ? 'border-zinc-700 ' : 'border-gray-50'}`}>
                                         <Table.Row className={` ${isDarkMode ? 'bg-zinc-800 ' : 'bg-white '}  py-0 px-0 m-0`}>
-                                            <Table.Cell className=" font-medium text-gray-900  text-center py-0 px-0 m-0">Sexta-Feira: </Table.Cell>
+                                            <Table.Cell className={` ${isDarkMode ? 'text-gray-100' : 'text-gray-900'} font-medium text-center py-0 px-0 m-0`}>Sexta-Feira: </Table.Cell>
 
                                             <Table.Cell className='px-1.5'>
                                                 <div className="select-wrapper">
 
-                                                    <Select value={horarioiniciosexta} onChange={(event) => setHorarioInicioSexta(event.target.value)} id="hours" required>
+                                                    <Select value={horarioiniciosexta} className={`${isDarkMode ? 'darkbgselect dark:darkbgselect': 'lightbgselect dark:lightbgselect'}`}  onChange={(event) => setHorarioInicioSexta(event.target.value)} id="hours" required>
                                                     <option>--:--</option>
                                                         <option>00:00</option>
                                                         <option>01:00</option>
@@ -624,7 +624,7 @@ function ModalLogonUser(user) {
                                             <Table.Cell className='px-1.5'>
                                                 <div className="select-wrapper">
 
-                                                    <Select value={horariofimsexta} onChange={(event) => setHorarioFimSexta(event.target.value)} id="hours" required>
+                                                    <Select value={horariofimsexta} className={`${isDarkMode ? 'darkbgselect dark:darkbgselect': 'lightbgselect dark:lightbgselect'}`} onChange={(event) => setHorarioFimSexta(event.target.value)} id="hours" required>
                                                     <option>--:--</option>
                                                         <option>01:00</option>
                                                         <option>02:00</option>
@@ -663,15 +663,15 @@ function ModalLogonUser(user) {
                                             </Table.Cell>
                                         </Table.Row>
                                     </Table.Body>
-                                    <Table.Body className="divide-y border-b border-gray-50">
+                                    <Table.Body className={`divide-y border-b ${isDarkMode ? 'border-zinc-700 ' : 'border-gray-50'}`}>
                                         <Table.Row className={` ${isDarkMode ? 'bg-zinc-800 ' : 'bg-white '}  py-0 px-0 m-0`}>
-                                            <Table.Cell className=" font-medium text-gray-900  text-center py-0 px-0 m-0">Sábado: </Table.Cell>
+                                            <Table.Cell className={` ${isDarkMode ? 'text-gray-100' : 'text-gray-900'} font-medium text-center py-0 px-0 m-0`}>Sábado: </Table.Cell>
 
                                             <Table.Cell className='px-1.5'>
                                                 <div className="select-wrapper">
 
-                                                    <Select value={horarioiniciosabado} onChange={(event) => setHorarioInicioSabado(event.target.value)} id="hours" required>
-                                                    <option>--:--</option>
+                                                    <Select value={horarioiniciosabado} className={`${isDarkMode ? 'darkbgselect dark:darkbgselect': 'lightbgselect dark:lightbgselect'}`}  onChange={(event) => setHorarioInicioSabado(event.target.value)} id="hours" required>
+                                                    <option className={` ${isDarkMode && 'bg-gray-900 text-gray-100'}`}>--:--</option>
                                                         <option>00:00</option>
                                                         <option>01:00</option>
                                                         <option>02:00</option>
@@ -709,7 +709,7 @@ function ModalLogonUser(user) {
                                             <Table.Cell className='px-1.5'>
                                                 <div className="select-wrapper">
 
-                                                    <Select value={horariofimsabado} onChange={(event) => setHorarioFimSabado(event.target.value)} id="hours" required>
+                                                    <Select value={horariofimsabado}  className={`${isDarkMode ? 'darkbgselect dark:darkbgselect': 'lightbgselect dark:lightbgselect'}`} onChange={(event) => setHorarioFimSabado(event.target.value)} id="hours" required>
                                                     <option>--:--</option>
                                                         <option>01:00</option>
                                                         <option>02:00</option>
@@ -755,12 +755,11 @@ function ModalLogonUser(user) {
 
 
 
-                            <div className="w-full m-4 ml-2">
-                                <Button onClick={onSave} className='bg-blue-500 mb-2 rounded text-white font-semibold hover:bg-blue-600'>
-                                    Salvar
-                                </Button>
-
-                            </div>
+                            <div className="w-full mt-4">
+                                    <Button color="blue" onClick={onSave} className='bg-blue-500 mb-2 rounded text-white font-semibold hover:bg-blue-600'>
+                                        Salvar
+                                    </Button>
+                                </div>
                         </form>
                        )}
 

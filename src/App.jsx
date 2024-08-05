@@ -23,6 +23,7 @@ const customTheme = createTheme({
   },
 });
 
+
 function App() {
   const { isDarkMode } = useDarkMode();
 
@@ -32,7 +33,6 @@ function App() {
 
   return (
     <ThemeProvider theme={customTheme}>
-
       <Navbar />
       <Outlet />
         </ThemeProvider>

@@ -131,13 +131,13 @@ export default function Users() {
                     ) : (
                         <Table hoverable className={`rounded border ${isDarkMode && 'border-zinc-700'} `}>
                             <Table.Head className={`${isDarkMode ? 'bg-zinc-700' : 'bg-zinc-50 ' }`}>
-                                <Table.HeadCell className={`${isDarkMode ? 'bgtabledark text-white ' : 'bg-blue-100'}`}>Nome</Table.HeadCell>
-                                <Table.HeadCell className={`${isDarkMode ? 'bgtabledark text-white' : 'bg-blue-100'}`}>Usuário</Table.HeadCell>
-                                <Table.HeadCell className={`${isDarkMode ? 'bgtabledark text-white' : 'bg-blue-100'}`}>Ações</Table.HeadCell>
+                                <Table.HeadCell className={`${isDarkMode ? 'bgtabledark text-white ' : 'bg-blue-100 dark:bg-blue-100 dark:text-gray-800' }`}>Nome</Table.HeadCell>
+                                <Table.HeadCell className={`${isDarkMode ? 'bgtabledark text-white' : 'bg-blue-100 dark:bg-blue-100 dark:text-gray-800'}`}>Usuário</Table.HeadCell>
+                                <Table.HeadCell className={`${isDarkMode ? 'bgtabledark text-white' : 'bg-blue-100 dark:bg-blue-100 dark:text-gray-800'}`}>Ações</Table.HeadCell>
                             </Table.Head>
                             <Table.Body className="divide-y">
                                 {Array.isArray(searchResults) && searchResults.map((user) => (
-                                    <Table.Row key={user.samaccountname} className={`${isDarkMode ? 'bgdark2 border-zinc-700 hover:bg-zinc-700' : 'bg-white hover:bg-gray-100'}`}>
+                                    <Table.Row key={user.samaccountname} className={`${isDarkMode ? 'bgdark2 border-zinc-700 hover:bg-zinc-300' : 'bg-white hover:bg-gray-100 dark:hover:bg-gray-100'}`}>
                                         <Table.Cell className={`whitespace-nowrap font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-900'}`}>
                                             {user.givename} {user.sn}
                                         </Table.Cell>

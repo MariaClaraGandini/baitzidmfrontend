@@ -121,7 +121,7 @@ body.light-mode {
 }
 
 body.dark-mode {
-  background-color: #27272a;
+  background-color: 	#252526;
   color: #ffffff;
 }
 
@@ -154,26 +154,57 @@ s
   color:white
 }
 
+.lightbginput input{
+  background-color: #fafafa;
+  border-color: #d4d4d4;
+  color:rgb(22, 22, 22)
+}
+
+.bgselect {
+  background-color: #3f3f46;
+  border-color: #2d2d31;
+  color:white
+}
+
+.darkbgselect  select {
+  background-color: #3f3f46;
+  border-color: rgb(29, 29, 29);
+  color:white
+}
+
+.lightbgselect  select {
+  background-color: #fafafa;
+  border-color: #d4d4d4;
+  color:black
+}
+
+.dark-mode .custom-icon svg {
+  fill: white;
+}
+
+/* Estilo para o modo claro */
+.light-mode .custom-icon svg {
+  fill: black; /* ou qualquer outra cor que você prefira */
+}
 
 .buttonhover span{
-  background-color: #33323a;
+  background-color: #353538;
   color: rgb(44, 111, 236);
 }
 
-.buttonhover {
-  border-color:#0d1475;
+.buttoncancelhover span:hover{
+  background-color:#e0e0e0e1;
 }
 
 .buttonhover span:hover{
-  background-color: #0d1475;
-  border-color:#0d1475;
+  background-color: #0b3c97;
   color: rgb(44, 111, 236);
 }
 
 
 
 .bgdark1{
-  background-color: #37373a;
+  background-color: #2d2d30;
 }
 
 
@@ -181,6 +212,10 @@ s
   background-color: #29292f;
 }
 
+.bghover{
+ background-color:  #ff1b1b;
+}
+
 .bgtabledark{
-  background-color: #043886;
+  background-color: #007acc
 }
