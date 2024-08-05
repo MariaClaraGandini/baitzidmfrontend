@@ -139,10 +139,10 @@ function Navbar() {
                       textTransform: 'none',
                       display: 'block',
                       '&:hover': {
-                        borderBottom: '3px solid #1658f2',
-                        color: '#1658f2'
+                        borderBottom: isDarkMode ? '3px solid #0692F0': '3px solid #1658f2',
+                        color: isDarkMode ? '#0692F0':'#1658f2' 
                       },
-                      ...(isUsuariosActive && { borderBottom: '3px solid #1658f2', color: '#1658f2' })
+                      ...(isUsuariosActive && { borderBottom: '3px solid #1658f2', color: isDarkMode ? '#0692F0' : '#1658f2' })
                     }}
                   >
                     Usuários
@@ -169,10 +169,10 @@ function Navbar() {
                       textTransform: 'none',
                       display: 'block',
                       '&:hover': {
-                        borderBottom: '3px solid #1658f2',
-                        color: '#1658f2'
+                        borderBottom: isDarkMode ? '3px solid #0692F0': '3px solid #1658f2',
+                        color: isDarkMode ? '#0692F0':'#1658f2' 
                       },
-                      ...(isFeriasActive && { borderBottom: '3px solid #1658f2', color: '#1658f2' })
+                      ...(isFeriasActive && { borderBottom: '3px solid #1658f2', color: isDarkMode ? '#0692F0' : '#1658f2' })
                     }}
                   >
                     Férias

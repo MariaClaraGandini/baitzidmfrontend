@@ -95,7 +95,7 @@ function Vacation() {
   return (
     <>
       <div className={`h-95vh p-2 mt-8 relative`}>
-        <div className={`p-8  ${isDarkMode ? 'bgdark1' : 'bg-white '} rounded-lg  mt-14`}>
+        <div className={`p-8  ${isDarkMode ? 'bgdark3' : 'bg-white '} rounded-lg  mt-14`}>
           <FullCalendar
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             initialView="dayGridMonth"
@@ -117,7 +117,7 @@ function Vacation() {
           />
         </div>
         {loading && (
-          <div className="absolute inset-0 flex justify-center items-center bg-white bg-opacity-50">
+          <div className={` ${isDarkMode ? 'bg-zinc-800 dark:bg-zinc-800' : 'bg-wwhite dark:bg-white'} absolute inset-0 flex justify-center items-center bg-opacity-50`}>
             <Oval color="#1658f2" height={50} width={50} />
           </div>
         )}

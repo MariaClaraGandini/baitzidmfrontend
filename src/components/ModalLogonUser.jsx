@@ -6,10 +6,11 @@ import { ToastContainer, toast } from 'react-toastify';
 import { Oval } from 'react-loader-spinner';
 import URL from '../api/config'
 import { useDarkMode } from '../DarkModeContext'; 
-
+import { useAuthToken } from '../api/AuthToken';
 
 
 function ModalLogonUser(user) {
+    const { token } = useAuthToken();
     const [openModal, setOpenModal] = useState(false);
     const [horarioiniciodomingo, setHorarioInicioDomingo] = useState('--:--')
     const [horariofimdomingo, setHorarioFimDomingo] = useState('--:--')
@@ -83,7 +84,7 @@ function ModalLogonUser(user) {
         setIsLoading(true);
 
         try {
-            const response = await axios.post(`${URL}/usuarios/setlogonhours/${user.samaccountname}`, {
+            const response = await axios.post(`${URL}/usuarios/setlogonhours/${user.samaccountname}`,     {
                 horarioiniciodomingo,
                 horariofimdomingo,
                 horarioiniciosegunda,
@@ -98,8 +99,13 @@ function ModalLogonUser(user) {
                 horariofimsexta,
                 horarioiniciosabado,
                 horariofimsabado
-            });
-
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
             setTimeout(() => {
                 setIsLoading(false);
                 toast.success('Horário de logon atualizado com sucesso!', {

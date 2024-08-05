@@ -6,8 +6,10 @@ import { ToastContainer, toast } from 'react-toastify';
 import { Oval } from 'react-loader-spinner';
 import URL from '../api/config';
 import { useDarkMode } from '../DarkModeContext';
+import { useAuthToken } from '../api/AuthToken';
 
 function ModalEditUser({ user }) {
+const { token } = useAuthToken();
   const [openModal, setOpenModal] = useState(false);
   const { isDarkMode } = useDarkMode();
   const [givename, setGivename] = useState('');
@@ -62,7 +64,9 @@ function ModalEditUser({ user }) {
         password,
         confirmpassword,
         status
-      });
+      },{  headers: {
+        Authorization: `Bearer ${token}`
+    }});
       console.log('Usuário editado com sucesso:', response.data);
 
       setTimeout(() => {
@@ -90,11 +94,11 @@ function ModalEditUser({ user }) {
 
   return (
     <div>
-      <ToastContainer />
+      <ToastContainer style={{ zIndex: 9999 }} />
       <Button color="blue" className={`mr-2 ${isDarkMode ? 'bg-zinc-600 dark:bg-zinc-600 border-0 m-0 buttonhover dark:border-gray-800 text-blue-500' : 'bg-gray-100 dark:bg-gray-100 border-0 m-0 text-blue-400 hover:bg-gray-200 dark:hover:bg-gray-200'} focus:outline-none focus:ring-0 disabled:opacity-50`} onClick={() => setOpenModal(true)}>
         <HiOutlinePencil style={{ fontSize: '1rem' }} />
       </Button>
-      <Modal show={openModal} size="2xl" onClose={onCloseModal} style={{ zIndex: 9999 }} popup>
+      <Modal show={openModal} size="2xl" onClose={onCloseModal} style={{ zIndex: 9998 }} popup>
         <Modal.Header className={`${isDarkMode ? 'bg-zinc-800' : 'bg-white'}`} />
         <Modal.Body className={`${isDarkMode ? 'bg-zinc-800' : 'bg-white'}`}>
           <div className="space-y-6">

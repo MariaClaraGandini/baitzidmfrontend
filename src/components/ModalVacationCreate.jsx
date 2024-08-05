@@ -139,8 +139,8 @@ function ModalVacationCreate({ openModal, onClose, user }) {
 
   return (
     <div>
-      <ToastContainer />
-      <Modal show={openModal} size="2xl" onClose={onClose} popup>
+      <ToastContainer style={{ zIndex: 9999 }} />
+      <Modal show={openModal} size="2xl"  onClose={onClose} style={{ zIndex: 9998 }} popup>
         <Modal.Header  className={` ${isDarkMode ? 'bgdark1 dark:bgdark1' : ' dark:bg-white bg-white '}`}/>
         <Modal.Body className={` ${isDarkMode ? 'bgdark1 dark:bgdark1' : ' dark:bg-white bg-white'}`}>
           <div className="space-y-6">

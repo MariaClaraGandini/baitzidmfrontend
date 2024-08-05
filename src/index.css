@@ -192,9 +192,6 @@ s
   color: rgb(44, 111, 236);
 }
 
-.buttoncancelhover span:hover{
-  background-color:#e0e0e0e1;
-}
 
 .buttonhover span:hover{
   background-color: #0b3c97;
@@ -212,6 +209,8 @@ s
   background-color: #29292f;
 }
 
+
+
 .bghover{
  background-color:  #ff1b1b;
 }
@@ -219,3 +218,15 @@ s
 .bgtabledark{
   background-color: #007acc
 }
+
+.buttondelete  span,  .buttondelete{
+  background-color: #e25545;
+}
+
+
+
+.buttondeletehover span:hover, .buttondeletehover:hover{
+  background-color: #bb3b2b;
+
+}
+

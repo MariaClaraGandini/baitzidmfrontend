@@ -189,8 +189,8 @@ function ModalVacationEdit({ openModal, onClose, event }) {
 
   return (
     <div>
-      <ToastContainer />
-      <Modal show={openModal} size="2xl" onClose={onClose} popup>
+      <ToastContainer style={{ zIndex: 9999 }} />
+      <Modal show={openModal} size="2xl" onClose={onClose}  style={{ zIndex: 9998 }}popup>
         <Modal.Header className={` ${isDarkMode ? 'bgdark1 dark:bgdark1' : ' dark:bg-white bg-white '}`} />
         <Modal.Body className={` ${isDarkMode ? 'bgdark1 dark:bgdark1' : ' dark:bg-white bg-white'}`}>
           <div className="space-y-6">
@@ -297,11 +297,11 @@ function ModalVacationEdit({ openModal, onClose, event }) {
             )}
           </div>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer  className={` ${isDarkMode ? 'bgdark1 dark:bgdark1' : ' dark:bg-white bg-white'}`}>
           <Button color="gray" onClick={onClose}>
             Cancelar
           </Button>
-          <Button color="red" onClick={onRemove}>
+          <Button color="red" className= "buttondelete buttondeletehover  text-white" onClick={onRemove}>
             Excluir
           </Button>
           <Button color="blue" onClick={onSave}>

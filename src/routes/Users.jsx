@@ -137,7 +137,7 @@ export default function Users() {
                             </Table.Head>
                             <Table.Body className="divide-y">
                                 {Array.isArray(searchResults) && searchResults.map((user) => (
-                                    <Table.Row key={user.samaccountname} className={`${isDarkMode ? 'bgdark2 border-zinc-700 hover:bg-zinc-300' : 'bg-white hover:bg-gray-100 dark:hover:bg-gray-100'}`}>
+                                    <Table.Row key={user.samaccountname} className={`${isDarkMode ? 'bgdark2 border-zinc-700  dark:hover:bg-zinc-800' : 'bg-white hover:bg-gray-100 dark:hover:bg-gray-100'}`}>
                                         <Table.Cell className={`whitespace-nowrap font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-900'}`}>
                                             {user.givename} {user.sn}
                                         </Table.Cell>
